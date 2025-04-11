@@ -2,8 +2,26 @@ Roster:
 - Team Leads
   - Ada He
     -   [insert your info here]
-    -   https://github.com/adahe8
+    -   [Github](https://github.com/adahe8)
   - Parwiz Khan
     - [insert your info here]
-    - https://github.com/parrwiz
- 
+    - [Github](https://github.com/parrwiz) 
+ - Team Members
+  - Andrew Lam
+    -   [insert your info here]
+    -   [Github](https://github.com/anl139)
+  - Ayaka Kawano
+    - [insert your info here]
+    - [Github](https://github.com/ayakak172)
+  - Teoman Ozkan
+    -   [insert your info here]
+    -   [Github](https://github.com/teopotter64)
+  - **Insert Name Here**
+    - [insert your info here]
+    - [Github]
+  - **Insert Name Here**
+    -   [insert your info here]
+    -   [Github]
+  - **Insert Name Here**
+    - [insert your info here]
+    - [Github]
