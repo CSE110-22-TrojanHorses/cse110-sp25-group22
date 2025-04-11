@@ -6,7 +6,7 @@ Roster:
   - Parwiz Khan
     - [insert your info here]
     - [Github](https://github.com/parrwiz) 
- - Team Members
+- Team Members
   - Andrew Lam
     -   [insert your info here]
     -   [Github](https://github.com/anl139)
