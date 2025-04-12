@@ -16,9 +16,9 @@ Roster:
   - Teoman Ozkan
     -   [insert your info here]
     -   [Github](https://github.com/teopotter64)
-  - **Insert Name Here**
+  - Arturo López Vázquez
     - [insert your info here]
-    - [Github]
+    - [Github](https://github.com/Arblade555)
   - **Insert Name Here**
     -   [insert your info here]
     -   [Github]
