@@ -8,7 +8,8 @@ Roster:
     - [Github](https://github.com/parrwiz) 
 - Team Members
   - Andrew Lam
-    -   [insert your info here]
+    -   CS Transfer Student
+    -   New to Software Engineering
     -   [Github](https://github.com/anl139)
   - Ayaka Kawano
     - [insert your info here]
