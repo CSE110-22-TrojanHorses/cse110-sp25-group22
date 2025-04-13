@@ -7,7 +7,7 @@ We value **creativity and innovation** and our team is dedicated to ensuring tha
 ## **Meet Our Team**
 
 
-###Roster:
+### Roster:
 - **Team Leads**
   - Ada He
     -   I'm a 3rd year student from San Jose, studying Cognitive Science (on the Machine Learning track) and minoring in Computer Science!
