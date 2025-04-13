@@ -1,3 +1,7 @@
+**Hello Everyone we are the Trojan Horses**
+![image](https://github.com/user-attachments/assets/90664302-42ef-4928-97c9-302b67a001d6)
+
+
 Roster:
 - Team Leads
   - Ada He
