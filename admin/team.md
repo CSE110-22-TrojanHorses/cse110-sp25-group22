@@ -1,10 +1,14 @@
-**Hello Everyone we are the Trojan Horses**
+# **Hello Everyone we are the Trojan Horses**
 
-![image](https://github.com/user-attachments/assets/90664302-42ef-4928-97c9-302b67a001d6)
+![Trojan Horses Banner](https://github.com/user-attachments/assets/90664302-42ef-4928-97c9-302b67a001d6)
+
+## **Our Mission and Values**
+We value **creativity and innovation** and our team is dedicated to ensuring that everyone has the opportunity to learn and enjoy this project, regardless of their background.
+## **Meet Our Team**
 
 
-Roster:
-- Team Leads
+###Roster:
+- **Team Leads**
   - Ada He
     -   I'm a 3rd year student from San Jose, studying Cognitive Science (on the Machine Learning track) and minoring in Computer Science!
     -   I'm a UX designer for UC San Diego Library's web team, and I have some preliminary experience working with frontend frameworks (so terrible, I know).
@@ -16,7 +20,7 @@ Roster:
     -   I am Junior CS Student at Jacobs School of Engineering. I’m trying to always work on something fun and helpful.
     - Let’s make cool stuff that actually helps people.
     - [Github](https://github.com/parrwiz) 
-- Team Members
+- **Team Members**
   - Andrew Lam
     -   I'm a first-year transfer student majoring in Computer Science.
     -   I love playing RTS games, and sleeping. Hope we can work together effectively.
