@@ -3,6 +3,7 @@
 First sprint planning meeting: codifying team expectations, delegating exploratory assignment tasks
 
 ## 05/08/2025
+## 6:23 - 7:10 PM
 
 ## Attendance
 ---
