@@ -67,25 +67,25 @@ First sprint planning meeting: codifying team expectations, delegating explorato
       2. design team will flesh this out from the MVP, visualizing interactions and finalizing some choices
    2. Timeline
    - **Sprint 1: Setup**
-      1. **Sunday, May 11 -> Design & Setup Phase** 
+     -  **Sunday, May 11 -> Design & Setup Phase** 
          - DevOps pipeline set up, coding style guide set, tool choices for testing and code coherence set
    - **Sprint 2: Design & Dev**
-      2. **Tuesday, May 13** Design decisions: interfaces update and feedback session after class
-         - confirm minimum starting set of features
-         - DevOps team will create issues from these
-      3. **Thursday, May 17** Standup: development progress check
-         - team works on feature implementation from designs
-         - if design revisits must be made, discuss wit team and make edits
+     -  **Tuesday, May 13** Design decisions: interfaces update and feedback session after class
+        -  confirm minimum starting set of features
+        -  DevOps team will create issues from these
+     - **Thursday, May 17** Standup: development progress check
+       - team works on feature implementation from designs
+       - if design revisits must be made, discuss wit team and make edits
    - **Sprint 3: Development**
-      4. **Sunday, May 20** Standup (remote): progress check with development
-         - code review and cross tests
-         - if issues closed, support others with blockers or self assign from backlog
-      5. **Tuesday, May 22** Standup: development progress check
-         - code review
-         - Thursday is last code review: finish implementation work before then
-      6. **Thursday, May 24** Standup
-         - last code review, hands off for feature implementation
-         - come up with plan and timeline for user testing
+     - **Sunday, May 20** Standup (remote): progress check with development
+       - code review and cross tests
+       - if issues closed, support others with blockers or self assign from backlog
+     - **Tuesday, May 22** Standup: development progress check
+       - code review
+       - Thursday is last code review: finish implementation work before then
+     - **Thursday, May 24** Standup
+       - last code review, hands off for feature implementation
+       - come up with plan and timeline for user testing
    - **Sprint 4-5: User Testing & Iteration**
      - test with users and other teams
      - get feedback from professor and TAs
@@ -95,7 +95,7 @@ First sprint planning meeting: codifying team expectations, delegating explorato
      - optimize
    - **Submit project Friday Week 10, June 6**
   
-4. **To-dos**
+1. **To-dos**
    1. CI/CD Pipeline
       1. tools to consider: make a list
          1. Performance - WCAG checker for HTML: AxE
@@ -109,7 +109,7 @@ First sprint planning meeting: codifying team expectations, delegating explorato
       2. research into style tools: make a doc or slides to share with the team
          1. ESLint, Prettier
    4. When do we meet on Saturday to present findings and make decisions?
-5. **Sprint Meeting Schedule**
+2. **Sprint Meeting Schedule**
    - After lecture Tuesdays and Thursdays weekly
    - Remote meeting on Saturday or Thursday
    - Slack check-ins
