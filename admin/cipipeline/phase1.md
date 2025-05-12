@@ -9,10 +9,10 @@ This document provides a concise status update on our current CI/CD pipeline for
 1.**Unit Testing**  
    • Jest runs on PR and main branch merges, with coverage thresholds enforced.
 
-2. **Documentation Generation**  
+2.**Documentation Generation**  
    • JSDoc generates HTML docs, published under `/docs` on successful test runs.
 
-3. **Build GitHub Website**  
+3.**Build GitHub Website**  
    • Automated build of the documentation website upon commit.
 
    
