@@ -1,0 +1,17 @@
+name: Generate Documentation
+
+on: [push]
+
+jobs:
+  createProjectDocs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm install
+      - name: Build docs
+        uses: adahe8/jsdoc-action@v1
+        with:
+          source_dir: ../source
+          recurse: true
+          output_dir: ../specs/docs
