@@ -1,6 +1,6 @@
 {
   "source": {
-    "include": ["./source"]
+    "include": ["source"]
   },
   "opts": {
     "destination": "specs/docs"
