@@ -36,6 +36,3 @@ This document provides a concise status update on our current CI/CD pipeline for
    • HTML/CSS linting via Prettier and ESLint.  
    • Ensures consistent code style before commits.
 
----
-
-**End of Report**
