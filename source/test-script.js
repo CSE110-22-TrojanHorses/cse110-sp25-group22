@@ -11,5 +11,5 @@ export function multiply(a, b) {
 }
 
 export function divide(a, b) {
-  return a * b; // purposefully broken to check test pipeline
+  return a / b; // purposefully broken to check test pipeline
 }
