@@ -77,7 +77,7 @@ End on a positive note by sharing things we're looking forward to!
 ## Summary and Actions
 
 - [] follow up with Hui
-- [] design team: look over [incremental feature list]() and approve or edit by tonight
+- [] design team: look over [incremental feature list](https://docs.google.com/document/d/1118rDkpawTvaSTfGA66s567zb0_56iI4xkwAWmuf40U/edit?tab=t.0#heading=h.tl5gcb8fzdfy) and approve or edit by tonight
   - [] then send it into the main team channel
 - [] DevOps and leads @adahe8 @anl139 @parrwiz @rabulsara02, write features up into our GitHub issues backlog
 - [] Assign issues to team
