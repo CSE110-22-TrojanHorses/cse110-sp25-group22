@@ -1,13 +1,18 @@
-# Template for Non-standup meeting
---- 
-i.e. Sprint planning or retro meetings  
-Led by:  
+# Sprint X Planning
+
+---
+
+i.e. For sprint planning or retro meetings  
+Led by: _name_
 
 ## Date
+
 ---
 
 ## Attendance
+
 ---
+
 - [] Ada
 - [] Parwiz
 - [] Kevin William
@@ -19,15 +24,18 @@ Led by:
 - [] Hui
 - [] Gaurav
 - [] Teoman
-  
-## Agenda
----
 
+## Agenda
+
+---
 
 ## Once Around the Table
+
 ---
+
 End on a positive note by sharing things we're looking forward to!
 
 ## Summary and Actions
+
 - must do: follow up with @absences
 - etc.
