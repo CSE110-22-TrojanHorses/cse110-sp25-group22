@@ -28,13 +28,13 @@
 
 ---
 
-- **Meeting reminders: ** every week after class on Tuesdays and Thursdays, + one additional meeting on Sunday
+- **Meeting reminders:** every week after class on Tuesdays and Thursdays, + one additional meeting on Sunday
   - Tuesday: sprint planning
   - Thursday: sprint retro (for the previous week's sprint)
   - Sunday (@ 4 pm): sprint review
 - Keep an eye out for soft assignments on Canvas: project tasks graded at the end of the quarter, but for which there are checkpoints over the next weeks
   - sprint retros: checkpoints 5/18, 5.25, 6/1
-  - sprint reviews: checkpoints 5/18. 5/25. 6/1
+  - sprint reviews: checkpoints 5/18, 5/25, 6/1
   - **this is why it's important for you to come to meetings!**
 
 ## Updates & Goals
