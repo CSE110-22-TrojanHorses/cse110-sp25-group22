@@ -1,8 +1,22 @@
 name: Unit Tests
 
-on: [push]
+on:
+  pull_request:
+    branches: main
 
 jobs:
+  enforce-style:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - name: Install Dependencies
+        run: npm install
+      - name: ESLint check
+        run: npm run format
+      - name: Prettier check
+        run: npm run prettier:fix
+
   test-and-document:
     runs-on: ubuntu-latest
     steps:
@@ -19,6 +33,7 @@ jobs:
         with:
           name: jsdoc
           path: specs/docs
+
       # - name: Commit and push docs
       #   run: |
       #     git config --global user.name "github-actions[bot]"

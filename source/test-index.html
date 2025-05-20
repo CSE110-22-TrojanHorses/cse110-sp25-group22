@@ -1,37 +1,43 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mockup for Pipeline Test</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mockup for Pipeline Test</title>
+    <!-- Main Stylesheet & Scripts -->
+    <link rel="stylesheet" href="assets/styles/global.css" />
+    <script src="./test-script.js" type="module"></script>
+  </head>
 
-  <!-- Main Stylesheet & Scripts -->
-  <link rel="stylesheet" href="assets/styles/global.css" />
-  <script src="./test-script.js" type="module"></script>
-</head>
-
-<body>
-  <header>
-    <nav>
-      <p>Home</p>
-      <p>Create</p>
-    </nav>
-  </header>
-  <main>
-    <section id="create-card">
-      <header>
-        <h2>Build Your Own Card</h2>
-      </header>
-      <div id="space">
-        <input type="range" name="volume" id="volume" value="50" min="0" max="100" step="1" />
-        <img src="assets/icons/volume-level-2.svg" alt="Volume level 2" />
-      </div>
-      <button>Play Sound</button>
-      <audio class="hidden" src=""></audio>
-    </section>
-  </main>
-</body>
-
+  <body>
+    <header>
+      <nav>
+        <p>Home</p>
+        <p>Create</p>
+      </nav>
+    </header>
+    <main>
+      <section id="create-card">
+        <header>
+          <h2>Build Your Own Card</h2>
+        </header>
+        <div id="space">
+          <input
+            type="range"
+            name="volume"
+            id="volume"
+            value="50"
+            min="0"
+            max="100"
+            step="1"
+          />
+          <img src="assets/icons/volume-level-2.svg" alt="Volume level 2" />
+        </div>
+        <button>Play Sound</button>
+        <audio class="hidden" src=""></audio>
+      </section>
+    </main>
+  </body>
 </html>

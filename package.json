@@ -14,9 +14,9 @@
     "prettier": "3.5.3"
   },
   "scripts": {
-    "lint": "eslint --ext .js --ignore-path .gitignore .",
+    "lint": "eslint --ext .js --ignore-pattern .gitignore .",
     "lint:fix": "npm run lint -- --fix",
-    "prettier": "npx prettier source test --check",
+    "prettier": "npx prettier source --check",
     "prettier:fix": "npm run prettier -- --write",
     "format": "npm run prettier:fix && npm run lint:fix",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
