@@ -1,4 +1,4 @@
-/*global HTMLElement*/
+// eslint-disable-next-line no-undef
 class NavBar extends HTMLElement {
     
     /**
@@ -8,7 +8,7 @@ class NavBar extends HTMLElement {
         super();
         const shadow = this.attachShadow({mode: "open"});
 
-        /*global document*/
+        // eslint-disable-next-line no-undef
         const nav = document.createElement("nav");
 
         // Sets up buttons in navigation bar
@@ -17,6 +17,7 @@ class NavBar extends HTMLElement {
         <button id="create"></button>`; // Add onclick when edit page is created
 
         // Sets up style of navigation bar
+        // eslint-disable-next-line no-undef
         let style = document.createElement("style");
         style.innerHTML = `
         button {
@@ -51,5 +52,5 @@ class NavBar extends HTMLElement {
 }
 
 // Defines element name to create NavBar
-/*global customElements*/
+// eslint-disable-next-line no-undef
 customElements.define('nav-bar', NavBar);
