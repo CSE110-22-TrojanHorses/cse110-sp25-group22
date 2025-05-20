@@ -1,3 +1,4 @@
+/*global HTMLElement*/
 class NavBar extends HTMLElement {
     
     /**
@@ -6,6 +7,8 @@ class NavBar extends HTMLElement {
     constructor() {
         super();
         const shadow = this.attachShadow({mode: "open"});
+
+        /*global document*/
         const nav = document.createElement("nav");
 
         // Sets up buttons in navigation bar
@@ -48,4 +51,5 @@ class NavBar extends HTMLElement {
 }
 
 // Defines element name to create NavBar
+/*global customElements*/
 customElements.define('nav-bar', NavBar);
