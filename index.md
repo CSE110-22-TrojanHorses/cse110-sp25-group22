@@ -71,7 +71,7 @@ Our team number, 22, is the number for Titanium on the periodic table! Following
 
 - I'm a second year student majoring in Math-CS.
 - My hobbies are watching horror movies, drawing, and listening to music. I hope to have fun this quarter!
-  - Github](https://github.com/ayakak172)
+- [Github](https://github.com/ayakak172)
 
 #### **Teoman Ozkan**
 
