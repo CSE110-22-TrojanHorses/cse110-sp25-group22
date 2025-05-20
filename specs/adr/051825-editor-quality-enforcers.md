@@ -1,6 +1,6 @@
 ---
 status: "{accepted}"
-date: { 2025-05-18 when the decision was last updated }
+date: { 2025-05-18 }
 decision-makers: { Ada He, Andrew Lam, Teoman Ozakan, Alexander Tataoian }
 ---
 

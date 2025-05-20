@@ -1,0 +1,8 @@
+{
+  "source": {
+    "include": ["source"]
+  },
+  "opts": {
+    "destination": "specs/docs"
+  }
+}

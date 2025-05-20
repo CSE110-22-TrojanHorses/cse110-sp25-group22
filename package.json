@@ -1,0 +1,29 @@
+{
+  "name": "cse110-sp25-group22",
+  "version": "1.0.0",
+  "description": "[View our Team page](admin/team.md)",
+  "main": "index.js",
+  "devDependencies": {
+    "@eslint/css": "^0.7.0",
+    "@eslint/js": "^9.26.0",
+    "eslint": "^9.26.0",
+    "eslint-config-prettier": "^10.1.5",
+    "globals": "^16.1.0",
+    "jest": "^29.7.0",
+    "jsdoc": "^4.0.4",
+    "prettier": "3.5.3"
+  },
+  "scripts": {
+    "lint": "eslint --ext .js --ignore-pattern .gitignore .",
+    "lint:fix": "npm run lint -- --fix",
+    "prettier": "npx prettier source --check",
+    "prettier:fix": "npm run prettier -- --write",
+    "format": "npm run prettier:fix && npm run lint:fix",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "type": "module",
+  "jest": {
+    "transform": {},
+    "verbose": true
+  }
+}
