@@ -1,24 +1,10 @@
-const Mode = {
+/*const Mode = {
     SCROLL: 0,
     EDIT: 1
-}; //can add more modes later on, we will work with this for right now
+};*/ //can add more modes later on, we will work with this for right now
 
 class ToolBar extends HTMLElement{
-    constructor(){
-        super();
-        let mode = Mode['SCROLL'];
-        const shadow = this.attachShadow({mode:'open'});
-        const featureIcons = document.createElement('div');
-        featureIcons.className = 'featureicons';
-        const style = document.createElement('style');
-        this.buttons = [];
-        for(let i = 0; i < 4; i++) {
-            let button = document.createElement('button');
-            this.customizeButton(button, i);
-            this.buttons.push(button);
-            featureIcons.appendChild(button);
-        }
-        style.textContent = `
+    toolBarStyleContent = `
         html, body, main {width: 100%; height: 100%;}
 
         .pagetop {
@@ -170,6 +156,21 @@ class ToolBar extends HTMLElement{
                 background-color: transparent;
             }
     }*/`;
+    constructor(){
+        super();
+        //let mode = Mode['SCROLL'];
+        const shadow = this.attachShadow({mode:'open'});
+        const featureIcons = document.createElement('div');
+        featureIcons.className = 'featureicons';
+        const style = document.createElement('style');
+        this.buttons = [];
+        for(let i = 0; i < 4; i++) {
+            let button = document.createElement('button');
+            this.customizeButton(button, i);
+            this.buttons.push(button);
+            featureIcons.appendChild(button);
+        }
+        style.textContent = this.toolBarStyleContent;
         shadow.appendChild(featureIcons);
         shadow.appendChild(style);
     }

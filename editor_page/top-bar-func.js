@@ -1,17 +1,5 @@
 class TopBar extends HTMLElement{
-    constructor(){
-        super();
-        const shadow = this.attachShadow({mode:'open'});
-        const style = document.createElement('style');
-        this.buttons = [];
-        for(let i = 0; i < 5; i++){
-            let button = document.createElement('button');
-            this.customizeButton(button, i);
-            this.buttons.push(button);
-            shadow.appendChild(button);
-        }
-        style.textContent = 
-        `
+    topBarStyleContent = `
         html, body, main {width: 100%; height: 100%;}
 
         .pagetop {
@@ -162,8 +150,19 @@ class TopBar extends HTMLElement{
                 border-color: black;
                 background-color: transparent;
             }
-        }*/
-        `;
+        }*/`;
+    constructor(){
+        super();
+        const shadow = this.attachShadow({mode:'open'});
+        const style = document.createElement('style');
+        this.buttons = [];
+        for(let i = 0; i < 5; i++){
+            let button = document.createElement('button');
+            this.customizeButton(button, i);
+            this.buttons.push(button);
+            shadow.appendChild(button);
+        }
+        style.textContent = this.topBarStyleContent;
         shadow.appendChild(style);
 
     }
