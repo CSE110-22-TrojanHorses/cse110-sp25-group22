@@ -24,7 +24,7 @@ jobs:
       - name: Install Dependenceis
         run: npm install
       - name: Unit Test
-        run: npm test ./__tests__/unit.test.js
+        run: npm test:unit
       - name: Generate Documentation
         run: npx jsdoc -c jsdoc.json
 

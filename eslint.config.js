@@ -9,7 +9,7 @@ export default defineConfig([
     plugins: { js },
     extends: ["js/recommended"],
   },
-  { files: ["**/*.{js,mjs,cjs}"], languageOptions: { globals: globals.node } },
+  { files: ["**/*.{js,mjs,cjs}"], languageOptions: { globals: globals.node,...globals.jest,page: "readonly"  } },
   {
     files: ["**/*.css"],
     plugins: { css },
