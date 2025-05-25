@@ -14,12 +14,12 @@ class NavBar extends HTMLElement {
         // Sets up buttons in navigation bar
         nav.innerHTML = `
         <button id="home" onclick="window.open('homepage.html', '_self')"></button>
-        <button id="create"></button>`; // Add onclick when edit page is created
+        <button id="create" onclick="window.open('editor_page/index.html', '_self')"></button>`; // Add onclick when edit page is created
 
         // Sets up style of navigation bar
         // eslint-disable-next-line no-undef
         let style = document.createElement("style");
-        style.innerHTML = `
+        style.textContent = `
         button {
             width: 50px;
             height: 50px;
@@ -28,11 +28,11 @@ class NavBar extends HTMLElement {
             border: 0px;
         }
         #home {
-            background-image: url("assets/home_button.png");
+            background-image: url("editor_page/assets/top-bar-imgs/home_button.png");
         }
 
         #create {
-            background-image: url("assets/plus_button.png");
+            background-image: url("plus_button.png");
         }
 
         nav {

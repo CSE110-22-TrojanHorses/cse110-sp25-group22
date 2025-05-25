@@ -173,7 +173,8 @@ class TopBar extends HTMLElement{
             case 0:
                 button.innerHTML = `<img src="assets/top-bar-imgs/apps.png" alt="Diagram">`;
                 button.addEventListener('click', function(){
-                    alert('Home clicked!');
+                    window.location.href = "../homepage.html";
+                    // alert('Home clicked!');
                 })
                 button.className = 'topleftimg';
                 break;
