@@ -20,7 +20,7 @@ const ciPipelineOptions = {
           '--disable-gpu'
               ]
     },
-    server: baseOptions.server
+    server: baseOptions.server,
 }
 
 module.exports = ci ? ciPipelineOptions : baseOptions;
