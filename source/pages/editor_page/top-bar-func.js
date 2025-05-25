@@ -1,5 +1,5 @@
-class TopBar extends HTMLElement{
-    topBarStyleContent = `
+class TopBar extends HTMLElement {
+  topBarStyleContent = `
         html, body, main {width: 100%; height: 100%;}
 
         .pagetop {
@@ -151,64 +151,63 @@ class TopBar extends HTMLElement{
                 background-color: transparent;
             }
         }*/`;
-    constructor(){
-        super();
-        const shadow = this.attachShadow({mode:'open'});
-        const style = document.createElement('style');
-        this.buttons = [];
-        for(let i = 0; i < 5; i++){
-            let button = document.createElement('button');
-            this.customizeButton(button, i);
-            this.buttons.push(button);
-            shadow.appendChild(button);
-        }
-        style.textContent = this.topBarStyleContent;
-        shadow.appendChild(style);
-
+  constructor() {
+    super();
+    const shadow = this.attachShadow({ mode: "open" });
+    const style = document.createElement("style");
+    this.buttons = [];
+    for (let i = 0; i < 5; i++) {
+      let button = document.createElement("button");
+      this.customizeButton(button, i);
+      this.buttons.push(button);
+      shadow.appendChild(button);
     }
+    style.textContent = this.topBarStyleContent;
+    shadow.appendChild(style);
+  }
 
-    customizeButton(button, buttonNum){
-        switch(buttonNum){
-            case 0:
-                button.innerHTML = `<img src="assets/top-bar-imgs/apps.png" alt="Diagram">`;
-                button.addEventListener('click', function(){
-                    window.location.href = "../homepage.html";
-                    // alert('Home clicked!');
-                })
-                button.className = 'topleftimg';
-                break;
-            case 1:
-                button.innerHTML = `<img src="assets/top-bar-imgs/circle-user.png" alt="Diagram">`;
-                button.addEventListener('click', function(){
-                    alert('Profile clicked!');
-                })
-                button.className = 'toprightimg';
-                break;
-            case 2:
-                button.innerHTML = `<img src="assets/top-bar-imgs/disk.png" alt="Diagram">`;
-                button.addEventListener('click', function(){
-                    alert('Save clicked!');
-                })
-                button.className = 'save';
-                break;
-            case 3:
-                button.innerHTML = `<img src="assets/top-bar-imgs/download.png" alt="Diagram">`;
-                button.addEventListener('click', function(){
-                    alert('Download clicked!');
-                })
-                button.className = 'download';
-                break;
-            case 4:
-                button.innerHTML = `<img src="assets/top-bar-imgs/share.png" alt="Diagram">`;
-                button.addEventListener('click', function(){
-                    alert('Share clicked!');
-                })
-                button.className = 'share';
-                break;
-        }
+  customizeButton(button, buttonNum) {
+    switch (buttonNum) {
+      case 0:
+        button.innerHTML = `<img src="../../assets/icons/top-bar-icons/apps.png" alt="Diagram">`;
+        button.addEventListener("click", function () {
+          window.location.href = "../homepage.html";
+          // alert('Home clicked!');
+        });
+        button.className = "topleftimg";
+        break;
+      case 1:
+        button.innerHTML = `<img src="../../assets/icons/top-bar-icons/circle-user.png" alt="Diagram">`;
+        button.addEventListener("click", function () {
+          alert("Profile clicked!");
+        });
+        button.className = "toprightimg";
+        break;
+      case 2:
+        button.innerHTML = `<img src="../../assets/icons/top-bar-icons/disk.png" alt="Diagram">`;
+        button.addEventListener("click", function () {
+          alert("Save clicked!");
+        });
+        button.className = "save";
+        break;
+      case 3:
+        button.innerHTML = `<img src="../../assets/icons/top-bar-icons/download.png" alt="Diagram">`;
+        button.addEventListener("click", function () {
+          alert("Download clicked!");
+        });
+        button.className = "download";
+        break;
+      case 4:
+        button.innerHTML = `<img src="../../assets/icons/top-bar-icons/share.png" alt="Diagram">`;
+        button.addEventListener("click", function () {
+          alert("Share clicked!");
+        });
+        button.className = "share";
+        break;
     }
+  }
 }
-customElements.define('top-bar', TopBar);
+customElements.define("top-bar", TopBar);
 
 //  <button class="topleftimg" onclick="alert('Home clicked!')"><img src="assets/top-bar-imgs/apps.png" alt="Diagram"></button>
 //             <button class="toprightimg" onclick="alert('Profile clicked!')"><img src="assets/top-bar-imgs/circle-user.png" alt="Diagram"></button>

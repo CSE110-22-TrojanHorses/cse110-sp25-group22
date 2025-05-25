@@ -3,8 +3,8 @@
     EDIT: 1
 };*/ //can add more modes later on, we will work with this for right now
 
-class ToolBar extends HTMLElement{
-    toolBarStyleContent = `
+class ToolBar extends HTMLElement {
+  toolBarStyleContent = `
         html, body, main {width: 100%; height: 100%;}
 
         .pagetop {
@@ -156,63 +156,60 @@ class ToolBar extends HTMLElement{
                 background-color: transparent;
             }
     }*/`;
-    constructor(){
-        super();
-        //let mode = Mode['SCROLL'];
-        const shadow = this.attachShadow({mode:'open'});
-        const featureIcons = document.createElement('div');
-        featureIcons.className = 'featureicons';
-        const style = document.createElement('style');
-        this.buttons = [];
-        for(let i = 0; i < 4; i++) {
-            let button = document.createElement('button');
-            this.customizeButton(button, i);
-            this.buttons.push(button);
-            featureIcons.appendChild(button);
-        }
-        style.textContent = this.toolBarStyleContent;
-        shadow.appendChild(featureIcons);
-        shadow.appendChild(style);
+  constructor() {
+    super();
+    //let mode = Mode['SCROLL'];
+    const shadow = this.attachShadow({ mode: "open" });
+    const featureIcons = document.createElement("div");
+    featureIcons.className = "featureicons";
+    const style = document.createElement("style");
+    this.buttons = [];
+    for (let i = 0; i < 4; i++) {
+      let button = document.createElement("button");
+      this.customizeButton(button, i);
+      this.buttons.push(button);
+      featureIcons.appendChild(button);
     }
+    style.textContent = this.toolBarStyleContent;
+    shadow.appendChild(featureIcons);
+    shadow.appendChild(style);
+  }
 
-    customizeButton(button, buttonNum){
-
-        switch(buttonNum){
-            case 0:
-                button.innerHTML = `<img src="assets/tool-bar-imgs/location-arrow.png" alt="Diagram">`;
-                button.addEventListener('click', function(){
-                    alert('Select clicked!');
-                })
-                button.className = 'select';
-                break;
-            case 1:
-                button.innerHTML = `<img src="assets/tool-bar-imgs/add-image.png" alt="Diagram">`;
-                button.addEventListener('click', function(){
-                    alert('Add Image clicked!');
-                })
-                button.className = 'addImage';
-                break;
-            case 2:
-                button.innerHTML = `<img  src="assets/tool-bar-imgs/resources.png" alt="Diagram">`;
-                button.addEventListener('click', function(){
-                    alert('Shapes clicked!');
-                })
-                button.className = 'shapes';
-                break;
-            case 3:
-                button.innerHTML = `<img  src="assets/tool-bar-imgs/text.png" alt="Diagram">`;
-                button.addEventListener('click', function(){
-                    alert('Add Text clicked!');
-                })
-                button.className = 'addText';
-                break;
-        }
+  customizeButton(button, buttonNum) {
+    switch (buttonNum) {
+      case 0:
+        button.innerHTML = `<img src="../../assets/icons/tool-bar-icons/location-arrow.png" alt="Diagram">`;
+        button.addEventListener("click", function () {
+          alert("Select clicked!");
+        });
+        button.className = "select";
+        break;
+      case 1:
+        button.innerHTML = `<img src="../../assets/icons/tool-bar-icons/add-image.png" alt="Diagram">`;
+        button.addEventListener("click", function () {
+          alert("Add Image clicked!");
+        });
+        button.className = "addImage";
+        break;
+      case 2:
+        button.innerHTML = `<img  src="../../assets/icons/tool-bar-icons/resources.png" alt="Diagram">`;
+        button.addEventListener("click", function () {
+          alert("Shapes clicked!");
+        });
+        button.className = "shapes";
+        break;
+      case 3:
+        button.innerHTML = `<img  src="../../assets/icons/tool-bar-icons/text.png" alt="Diagram">`;
+        button.addEventListener("click", function () {
+          alert("Add Text clicked!");
+        });
+        button.className = "addText";
+        break;
     }
+  }
 }
 
-customElements.define('tool-bar', ToolBar);
-
-
+customElements.define("tool-bar", ToolBar);
 
 //  <div class="featurebar"></div>
 //         <div class="featureicons">
