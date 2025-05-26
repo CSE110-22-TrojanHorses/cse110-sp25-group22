@@ -24,7 +24,7 @@
     "prettier": "npx prettier source --check",
     "prettier:fix": "npm run prettier -- --write",
     "format": "npm run prettier:fix && npm run lint:fix",
-    "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js __tests__/unit.test.js",
+    "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config=jest.unit.config.mjs __tests__/unit.test.js",
     "start": "parcel test.html --port 9999",
     "build": "parcel build test.html",
     "test:e2e": "jest __tests__/test.test.js --maxWorkers=1",

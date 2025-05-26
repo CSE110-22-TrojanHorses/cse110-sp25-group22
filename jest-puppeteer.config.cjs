@@ -18,7 +18,7 @@ const ciPipelineOptions = {
           '--disable-setuid-sandbox',
           '--disable-accelerated-2d-canvas',
           '--disable-gpu'
-              ]
+              ],
     },
     server: baseOptions.server,
 }
