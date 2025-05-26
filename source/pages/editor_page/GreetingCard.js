@@ -29,7 +29,7 @@ class GreetingCard extends HTMLElement {
 
         // feel free to fix this part, it's just a prototype
         const img = document.createElement('img');
-        img.src = '../assets/icons/example.png'; // custom image link
+        img.src = '../../assets/icons/example.png'; // custom image link
         img.alt = 'Cover Image';
         img.classList.add('cover-image');
 
@@ -107,7 +107,7 @@ class GreetingCard extends HTMLElement {
         this.shadowRoot.querySelector('.outside').classList.remove('hidden');
     }
 
-    setCoverImage(url) {
+    setCoverImage(url) { //set image by url. might be useful
         if (this._img) {
             this._img.src = url;
         }

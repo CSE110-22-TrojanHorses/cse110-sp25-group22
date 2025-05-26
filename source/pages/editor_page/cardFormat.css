@@ -7,21 +7,25 @@
 
 .card {
   display: flex;
-  gap: 10px;
+  gap: 20px;
   border: 2px solid #333;
   padding: 10px;
   background-color: white;
   transition: transform 0.5s ease-in-out;
+  width: 950px;      /* FIXED WIDTH */
+  height: 700px;     /* FIXED HEIGHT */
 }
 
 .page {
-  width: 300px;
-  height: 450px;
+  width: 450px;
+  height: 650px;
   border: 1px dashed #aaa;
   background-color: #f9f9f9;
   padding: 10px;
   box-sizing: border-box;
   overflow: auto;
+  margin-top: 15px;
+  
 }
 
 .page h2 {
@@ -45,17 +49,15 @@
   margin-top: 20px;
 }
 
-button {
-  padding: 8px 14px;
-  font-size: 14px;
-  cursor: pointer;
+.view-toggle button {
+  padding: 10px 16px;
   background-color: #008cba;
-  border: none;
   color: white;
-  border-radius: 5px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
 }
-
-button:hover {
+.view-toggle button:hover {
   background-color: #005f79;
 }
 
@@ -63,6 +65,7 @@ button:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 0 8px;
 }
 
 .page-label {
@@ -76,4 +79,8 @@ button:hover {
 .placeholder {
   color: #aaa;
   pointer-events: none;
+}
+
+.page-label {
+  font-size: 18px;
 }
