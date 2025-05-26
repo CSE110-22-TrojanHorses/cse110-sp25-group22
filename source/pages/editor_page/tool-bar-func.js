@@ -2,7 +2,6 @@
     SCROLL: 0,
     EDIT: 1
 };*/ //can add more modes later on, we will work with this for right now
-
 class ToolBar extends HTMLElement {
   toolBarStyleContent = `
         html, body, main {width: 100%; height: 100%;}
@@ -141,37 +140,65 @@ class ToolBar extends HTMLElement {
         body {
             overflow: hidden;
         }
+    `;
 
-        /*@media screen and (max-width: 1022px) and (max-height: 544px) {
-            .cardFront {
-                position: absolute;
-                height: 100px;
-                width: 100px;
-                background-color: black;
-                top: 193.5px;
-                left: 422px;
-                border-width: 2px;
-                border-style: solid;
-                border-color: black;
-                background-color: transparent;
-            }
-    }*/`;
   constructor() {
     super();
-    //let mode = Mode['SCROLL'];
     const shadow = this.attachShadow({ mode: "open" });
     const featureIcons = document.createElement("div");
     featureIcons.className = "featureicons";
-    const style = document.createElement("style");
+
+    // define this.buttons
     this.buttons = [];
+
     for (let i = 0; i < 4; i++) {
       let button = document.createElement("button");
       this.customizeButton(button, i);
       this.buttons.push(button);
       featureIcons.appendChild(button);
     }
+
+    // Create and configure color picker
+    const colorWrapper = document.createElement("div");
+    colorWrapper.style.marginTop = "300px";
+    colorWrapper.style.textAlign = "center";
+
+    const colorCircle = document.createElement("div");
+    colorCircle.id = "color-circle";
+    colorCircle.style.width = "24px";
+    colorCircle.style.height = "24px";
+    colorCircle.style.borderRadius = "50%";
+    colorCircle.style.backgroundColor = "#cccccc";
+    colorCircle.style.border = "1px solid #888";
+    colorCircle.style.cursor = "pointer";
+    colorCircle.title = "Pick background color";
+
+    const colorInput = document.createElement("input");
+    colorInput.type = "color";
+    colorInput.style.display = "none";
+
+    colorCircle.addEventListener("click", () => colorInput.click());
+
+    colorInput.addEventListener("input", (e) => {
+      const color = e.target.value;
+      colorCircle.style.backgroundColor = color;
+
+      const card = document.querySelector(".cardFront");
+      if (card) {
+        card.style.backgroundColor = color;
+      }
+    });
+
+    colorWrapper.appendChild(colorCircle);
+    colorWrapper.appendChild(colorInput);
+
+    // ✅ define style element
+    const style = document.createElement("style");
     style.textContent = this.toolBarStyleContent;
+
+    // Append everything to shadow DOM
     shadow.appendChild(featureIcons);
+    shadow.appendChild(colorWrapper);
     shadow.appendChild(style);
   }
 
