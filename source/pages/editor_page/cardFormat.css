@@ -1,0 +1,86 @@
+.card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.card {
+  display: flex;
+  gap: 20px;
+  border: 2px solid #333;
+  padding: 10px;
+  background-color: white;
+  transition: transform 0.5s ease-in-out;
+  width: 950px;      /* FIXED WIDTH */
+  height: 700px;     /* FIXED HEIGHT */
+}
+
+.page {
+  width: 450px;
+  height: 650px;
+  border: 1px dashed #aaa;
+  background-color: #f9f9f9;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: auto;
+  margin-top: 15px;
+  
+}
+
+.page h2 {
+  text-align: center;
+}
+
+.cover-image {
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+.view-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.view-toggle button {
+  padding: 10px 16px;
+  background-color: #008cba;
+  color: white;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+.view-toggle button:hover {
+  background-color: #005f79;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 8px;
+}
+
+.page-label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  text-transform: lowercase;
+  color: #333;
+  font-size: 14px;
+}
+
+.placeholder {
+  color: #aaa;
+  pointer-events: none;
+}
+
+.page-label {
+  font-size: 18px;
+}
