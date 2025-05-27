@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Testing Workflow
 
 on:
   pull_request:
@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Dependenceis
         run: npm install
-      - name: testing workflow
+      - name: Unit Test
         run: npm run test:unit
       - name: Generate Documentation
         run: npx jsdoc -c jsdoc.json
