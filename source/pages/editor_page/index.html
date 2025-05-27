@@ -3,9 +3,11 @@
   <head>
     <title>Editor Page</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="cardFormat.css">
     <script src="index.js" type="application/javascript"></script>
     <script src="tool-bar-func.js" type="application/javascript"></script>
     <script src="top-bar-func.js" type="application/javascript"></script>
+    <script src="GreetingCard.js" type="application/javascript"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   </head>
@@ -18,9 +20,14 @@
             <button class="download" onclick="alert('Download clicked!')"><img src="assets/top-bar-imgs/download.png" alt="Diagram"></button>
             <button class="share" onclick="alert('Share clicked!')"><img src="assets/top-bar-imgs/share.png" alt="Diagram"></button> -->
             <div class="topsquare"></div>
-            <button class="flip" onclick="alert('Flip clicked!')">Flip Card</button>
-            <div class="cardFront"></div>
+            <!-- <button class="flip" onclick="alert('Flip clicked!')">Flip Card</button> -->
+            <!-- <div class="cardFront"></div> -->
         </div>
+        <div class="view-toggle">
+            <button id="flip-inside">Flip to Inside</button>
+            <button id="flip-outside" class="hidden">Flip to Outside</button>
+        </div>
+        <greeting-card></greeting-card>
         <div class="featurebar"></div>
         <!-- <div class="featureicons">
             <button class="select" onclick="alert('Select clicked!')"><img src="location-arrow.png" alt="Diagram"></button>
