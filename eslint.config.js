@@ -15,11 +15,11 @@ export default defineConfig([
     },
     extends: ["js/recommended"],
   },
-  { files: ["**/*.{js,mjs,cjs}"], languageOptions: { globals: globals.node } },
+  { files: ["**/*.{js,mjs,cjs}"], languageOptions: { globals: {...globals.node, ...globals.jest},  }, },
   {
     files: ["**/*.css"],
     plugins: { css },
     language: "css/css",
     extends: ["css/recommended"],
-  },
+  },  
 ]);
