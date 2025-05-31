@@ -41,7 +41,7 @@
    2. [Card flip functionality](https://github.com/orgs/CSE110-22-TrojanHorses/projects/1/views/1?pane=issue&itemId=111243756&issue=CSE110-22-TrojanHorses%7Ccse110-sp25-group22%7C10) -> @bathui, wait on pushed changes from Alex and Teoman
    3. [Image drag and drop](https://github.com/CSE110-22-TrojanHorses/cse110-sp25-group22/issues/15) -> @arturo
       1. @Hui will back up on Saturday if stuck
-   4. [Adding font styling options (bold, italic, underline, basic browser fonts, different font sizes](https://github.com/CSE110-22-TrojanHorses/cse110-sp25-group22/issues/18) -> @andrew @alex
+   4. [Allowing users to add additional text boxes](https://github.com/CSE110-22-TrojanHorses/cse110-sp25-group22/issues/18) -> @andrew @alex
    5. [Documentation for current functions w/ JSDocs template](https://github.com/CSE110-22-TrojanHorses/cse110-sp25-group22/issues/30) -> @parwizz
    6. [Download card feature](https://github.com/CSE110-22-TrojanHorses/cse110-sp25-group22/issues/12) -> @rahulbulsara
    7. [Save card to local storage with button press](https://github.com/CSE110-22-TrojanHorses/cse110-sp25-group22/issues/11) -> @adahe8 @ayaka
