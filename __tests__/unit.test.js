@@ -1,7 +1,6 @@
-/* eslint-disable no-undef */
 // unit.test.js
 
-import { add, subtract, multiply, divide } from "../source/test-script.js";
+import { add, subtract, multiply, divide } from "../source/testScript.js";
 
 test("should test add", () => {
   expect(add(2, 4)).toBe(6);
