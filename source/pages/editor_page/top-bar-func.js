@@ -1,4 +1,16 @@
+/**
+ * Custom Web Component representing the horizontal top bar.
+ * Includes buttons for home, profile, save, download, and share.
+ * Basically, all the buttons you expect but probably won’t click, we fixing it as i write this, i think, maybe, who knows.
+ * @customElement
+ * @extends HTMLElement
+ */
 class TopBar extends HTMLElement {
+    /**
+   * CSS styling for the top bar component.
+   * Declared as a class field to allow easy modification and access.
+   * @type {string}
+   */
   topBarStyleContent = `
         html, body, main {width: 100%; height: 100%;}
 
@@ -151,6 +163,10 @@ class TopBar extends HTMLElement {
                 background-color: transparent;
             }
         }*/`;
+  /**
+   * Constructs the top bar, creates buttons, assigns styles, and loads everything into Shadow DOM.
+   * If it doesn’t show up, blame the browser, or CSS, or you.
+   */
   constructor() {
     super();
     const shadow = this.attachShadow({ mode: "open" });
@@ -165,6 +181,12 @@ class TopBar extends HTMLElement {
     style.textContent = this.topBarStyleContent;
     shadow.appendChild(style);
   }
+  /**
+   * Customizes each button based on its index.
+   * Assigns icons, click events, and CSS classes.
+   * @param {HTMLButtonElement} button - The button element to customize.
+   * @param {number} buttonNum - The index of the button to determine its functionality.
+   */
 
   customizeButton(button, buttonNum) {
     switch (buttonNum) {
@@ -207,6 +229,9 @@ class TopBar extends HTMLElement {
     }
   }
 }
+/**
+ * Registers the <top-bar> web component so it can actually be used in HTML.
+ */
 customElements.define("top-bar", TopBar);
 
 //  <button class="topleftimg" onclick="alert('Home clicked!')"><img src="assets/top-bar-imgs/apps.png" alt="Diagram"></button>
