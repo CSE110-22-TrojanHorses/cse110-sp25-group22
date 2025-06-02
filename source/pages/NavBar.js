@@ -1,6 +1,13 @@
+/**
+ * Masterfully handcrafted Custom Web Component representing the navigation bar.
+ * Gives you two buttons: one to go home and one to start “creating” things.
+ * @customElement
+ * @extends HTMLElement
+ */
 class NavBar extends HTMLElement {
-  /**
-   * Creates Navigation Bar
+    /**
+   * Constructs the navigation bar, creates two buttons (Home and Create),
+   * for now dark mode CSS on it, and inserts everything into Shadow DOM.
    */
   constructor() {
     super();
@@ -15,6 +22,10 @@ class NavBar extends HTMLElement {
 
     // Sets up style of navigation bar
     let style = document.createElement("style");
+    /**
+     * CSS to make the buttons square, black, and hopefully aesthetic.
+     * @type {string}
+     */
     style.textContent = `
         button {
             width: 50px;
@@ -51,5 +62,7 @@ class NavBar extends HTMLElement {
   }
 }
 
-// Defines element name to create NavBar
+/**
+ * Registers the <nav-bar> custom element, because otherwise it’s just a meaningless tag.
+ */
 customElements.define("nav-bar", NavBar);
