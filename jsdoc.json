@@ -1,8 +1,11 @@
 {
   "source": {
-    "include": ["source"]
+    "include": ["."],
+    "includePattern": ".+\\.js$",
+    "excludePattern": "(node_modules|docs|__tests__|.*\\.test\\.js)"
   },
   "opts": {
-    "destination": "specs/docs"
+    "destination": "./docs",
+    "template": "node_modules/minami"
   }
 }

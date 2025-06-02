@@ -16,7 +16,8 @@
     "jsdoc": "^4.0.4",
     "parcel": "^2.15.1",
     "prettier": "3.5.3",
-    "puppeteer": "^24.9.0"
+    "puppeteer": "^24.9.0",
+    "taffydb": "^2.7.3"
   },
   "scripts": {
     "lint": "eslint --ext .js --ignore-pattern .gitignore .",
