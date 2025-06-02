@@ -1,9 +1,16 @@
-/*const Mode = {
-    SCROLL: 0,
-    EDIT: 1
-};*/ //can add more modes later on, we will work with this for right now
-
+/**
+ * Custom Web Component representing the vertical tool bar.
+ * Gives you four buttons to pretend you're designing something serious:
+ * Select, Add Image, Add Shapes, Add Text.
+ * @customElement
+ * @extends HTMLElement
+ */
 class ToolBar extends HTMLElement {
+   /**
+   * CSS styling for the toolbar component.
+   * Declared as a class field to keep it clean and organized.
+   * @type {string}
+   */
   toolBarStyleContent = `
         html, body, main {width: 100%; height: 100%;}
 
@@ -156,6 +163,11 @@ class ToolBar extends HTMLElement {
                 background-color: transparent;
             }
     }*/`;
+
+   /**
+   * Constructs the toolbar, creates buttons, styles everything, and puts it all in Shadow DOM.
+   * If this breaks, you’re left with an empty page and confusion, but our code is guaranteed not to crash.
+   */
   constructor() {
     super();
     //let mode = Mode['SCROLL'];
@@ -174,7 +186,15 @@ class ToolBar extends HTMLElement {
     shadow.appendChild(featureIcons);
     shadow.appendChild(style);
   }
-
+  /**
+   * Customizes the toolbar button depending on its position.
+   * This method is called during the construction of the toolbar.
+   * It sets the inner HTML of the button, adds an event listener for click events,
+   * and assigns a class name to the button for styling purposes.
+   * 
+   * @param {HTMLButtonElement} button - The button to be customized.
+   * @param {number} buttonNum - Index indicating which tool the button is (0: select, 1: add image, etc.).
+   */
   customizeButton(button, buttonNum) {
     switch (buttonNum) {
       case 0:
@@ -208,7 +228,9 @@ class ToolBar extends HTMLElement {
     }
   }
 }
-
+/**
+ * Registers the <tool-bar> web component.
+ */
 customElements.define("tool-bar", ToolBar);
 
 //  <div class="featurebar"></div>
