@@ -1,0 +1,35 @@
+name: Auto-generate JSDoc
+#the paths will run it when .js file changes
+#also will run it if the jsdoc.json changes
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.js'
+      - 'jsdocs.js'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Generate Docs with Custom Script
+        run: node jsdocs.js
+        
+      - name: Commit & Push Docs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          git diff --quiet && git diff --staged --quiet || git commit -m "📝 Auto-generated custom docs"
+          git push
