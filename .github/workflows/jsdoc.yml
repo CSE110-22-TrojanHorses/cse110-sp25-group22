@@ -1,6 +1,5 @@
 name: Auto-generate JSDoc
-#the paths will run it when .js file changes
-#also will run it if the jsdoc.json changes
+
 on:
   push:
     branches: [main]
@@ -23,9 +22,12 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Generate Docs with Custom Script
+      - name: Install Dependencies (if any)
+        run: npm install || true  # will skip silently if no package.json
+
+      - name: Run Custom JSDoc Generator
         run: node jsdocs.js
-        
+
       - name: Commit & Push Docs
         run: |
           git config user.name "github-actions[bot]"
