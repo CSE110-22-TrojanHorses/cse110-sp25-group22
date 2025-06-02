@@ -32,7 +32,6 @@ class GreetingCard extends HTMLElement {
     const message = document.createElement("p");
     message.textContent = "Front Message";
     frontCover.append(title, img, message);
-
     outside.append(backCover, frontCover);
 
     // Inside Contents
