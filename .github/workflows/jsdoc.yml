@@ -5,13 +5,14 @@ on:
   push:
     branches: [main]
     paths:
-      - '**.js'      
-      - 'jsdoc.json' 
+      - '**.js'
+      - 'jsdocs.js'
+
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write 
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -21,18 +22,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-      
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Generate JSDoc
-        run: npx jsdoc -c jsdoc.json
-
-      - name: Commit & push generated docs
+      - name: Generate Docs with Custom Script
+        run: node jsdocs.js
+        
+      - name: Commit & Push Docs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/
-          git diff --quiet && git diff --staged --quiet || git commit -m "Auto generated JSDoc update"
+          git diff --quiet && git diff --staged --quiet || git commit -m "📝 Auto-generated custom docs"
           git push
