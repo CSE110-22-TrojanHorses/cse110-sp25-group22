@@ -1,14 +1,4 @@
-/**
- * A handcrafted greeting card web component. 
- * Comes with editable front, back, and inside pages just like your own arts & crafts, but with JavaScript.
- * @customElement
- * @extends HTMLElement
- */
 class GreetingCard extends HTMLElement {
-    /**
-     * Creates the greeting card, builds Shadow DOM,
-     * adds some styles on and divs into place.
-     */
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
@@ -17,11 +7,11 @@ class GreetingCard extends HTMLElement {
         style.setAttribute('rel', 'stylesheet');
         style.setAttribute('href', 'cardFormat.css');
 
-        // This is the container to encapsulate inside and outside i.e the holy grail of the card
+        // This is the container to encapsulate inside and outside
         const container = document.createElement('div');
         container.classList.add('card-container');
 
-        //  Outside of the card 
+        // Outside covers
         const outside = document.createElement('div');
         outside.classList.add('card', 'outside');
 
@@ -49,7 +39,7 @@ class GreetingCard extends HTMLElement {
         frontCover.append(title, img, message);
         outside.append(backCover, frontCover);
 
-        // Inside of the card
+        // Inside Contents
         const inside = document.createElement('div');
         inside.classList.add('card', 'inside', 'hidden');
 
@@ -91,11 +81,11 @@ class GreetingCard extends HTMLElement {
         this._img = img;
         this._rightPage = rightPage;
 
-        // Store the image URL in local storage because apparently that's still a thing
+        // Save image change
         img.addEventListener('load', () => {
             localStorage.setItem(this._storageKeys.imageURL, img.src);
         });
-        // If user starts typing,  the placeholder goes away before it embarrasses us all
+        // Remove placeholder when user types
         rightPage.addEventListener('input', () => {
             const placeholder = rightPage.querySelector('.placeholder');
             if (placeholder)
@@ -105,26 +95,18 @@ class GreetingCard extends HTMLElement {
 
     }
 
-    /**
-     * Shows the inside of the card.
-     * Yes, it flips!
-     */    showInside() {
+    // when we show inside contents, we should hide outside cover
+    showInside() {
         this.shadowRoot.querySelector('.inside').classList.remove('hidden');
         this.shadowRoot.querySelector('.outside').classList.add('hidden');
     }
 
-    /**
-     * Brings back the outside cover.
-     * Useful when you're cant think of what to write inside.
-     */    
+    // when we show outside covers, we should hide inside contents
     showOutside() {
         this.shadowRoot.querySelector('.inside').classList.add('hidden');
         this.shadowRoot.querySelector('.outside').classList.remove('hidden');
     }
-     /**
-     * Changes the cover image.
-     * @param {string} url - A direct link to an image. 
-     */
+
     setCoverImage(url) { //set image by url. might be useful
         if (this._img) {
             this._img.src = url;
@@ -132,10 +114,7 @@ class GreetingCard extends HTMLElement {
     }
 }
 
-/**
- * Hook up flip buttons after the DOM actually loads.
- * Handles switching between front and inside view of the greeting card.
- */
+//It handles how the toggle functionality
 window.addEventListener('DOMContentLoaded', () => {
     const card = document.querySelector('greeting-card');
     const flipInside = document.getElementById('flip-inside');
@@ -155,8 +134,5 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 
-/**
- * Registers the <greeting-card> custom element
- */
 
 customElements.define('greeting-card', GreetingCard);
