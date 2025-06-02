@@ -33,7 +33,7 @@ jobs:
         with:
           name: jsdoc
           path: specs/docs
-  e2e-tests: 
+  e2e-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -42,7 +42,6 @@ jobs:
 
       - name: Install dependencies
         run: npm install --ignore-scripts
-
 
       - name: Run E2E tests
         run: npm run test:e2e
@@ -56,3 +55,11 @@ jobs:
       #     git push
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  pages-setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run app on github pages
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: "../../source/pages/homepage.html"
