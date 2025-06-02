@@ -22,7 +22,7 @@ class TopBar extends HTMLElement {
       case 0:
         button.innerHTML = `<img src="../../assets/icons/top-bar-icons/apps.png" alt="Diagram">`;
         button.addEventListener("click", function () {
-          window.location.href = "../homepage.html";
+          window.location.href = escape("../homepage.html");
         });
         button.className = "topleftimg";
         break;

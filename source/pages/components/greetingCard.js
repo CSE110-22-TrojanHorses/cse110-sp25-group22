@@ -2,7 +2,6 @@ class GreetingCard extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-
     const style = document.createElement("link");
     style.setAttribute("rel", "stylesheet");
     style.setAttribute("href", "cardFormat.css");
@@ -19,11 +18,9 @@ class GreetingCard extends HTMLElement {
     backCover.setAttribute("type", "text");
     backCover.setAttribute("value", "Back Cover");
     backCover.classList.add("page", "back-cover");
-
     const frontCover = document.createElement("div");
     frontCover.classList.add("page", "front-cover");
     frontCover.contentEditable = true;
-
     const title = document.createElement("h2");
     title.textContent = "Front Cover Title";
 
@@ -32,11 +29,10 @@ class GreetingCard extends HTMLElement {
     img.src = "../../assets/icons/example.png"; // custom image link
     img.alt = "Cover Image";
     img.classList.add("cover-image");
-
     const message = document.createElement("p");
     message.textContent = "Front Message";
-
     frontCover.append(title, img, message);
+
     outside.append(backCover, frontCover);
 
     // Inside Contents
@@ -46,26 +42,17 @@ class GreetingCard extends HTMLElement {
     // Left page
     const leftWrapper = document.createElement("div");
     leftWrapper.classList.add("page-wrapper");
-
     const leftLabel = document.createElement("div");
-    leftLabel.classList.add("page-label");
-    leftLabel.textContent = "Left Page";
-
     const leftPage = document.createElement("input");
     leftPage.setAttribute("type", "text");
     leftPage.setAttribute("placeholder", "Left Page");
     leftPage.classList.add("page", "left");
-
     leftWrapper.append(leftLabel, leftPage);
 
     // Right page
     const rightWrapper = document.createElement("div");
     rightWrapper.classList.add("page-wrapper");
-
     const rightLabel = document.createElement("div");
-    rightLabel.classList.add("page-label");
-    rightLabel.textContent = "Right Page";
-
     const rightPage = document.createElement("input");
     rightPage.setAttribute("type", "text");
     rightPage.setAttribute(
@@ -73,14 +60,12 @@ class GreetingCard extends HTMLElement {
       "Feel free to write your custom contents..."
     );
     rightPage.classList.add("page", "right");
-
     rightWrapper.append(rightLabel, rightPage);
 
     inside.append(leftWrapper, rightWrapper);
     container.append(outside, inside);
 
     this.shadowRoot.append(style, container);
-
     this._img = img;
     this._rightPage = rightPage;
 
