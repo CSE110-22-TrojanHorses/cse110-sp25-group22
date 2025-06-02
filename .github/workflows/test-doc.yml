@@ -55,11 +55,3 @@ jobs:
       #     git push
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  pages-setup:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run app on github pages
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: "../../source/pages/homepage.html"
