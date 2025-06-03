@@ -176,6 +176,13 @@ class ToolBar extends HTMLElement {
   }
 
   customizeButton(button, buttonNum) {
+    // function for opening the popup when inserting an image
+    // its counterpart, closePopup is defined at the bottom of this doc
+    function openPopUp(){
+      let popup = document.getElementById("imgPopUp");
+      popup.classList.add("openImgPopUp");
+    }
+
     switch (buttonNum) {
       case 0:
         button.innerHTML = `<img src="../../assets/icons/tool-bar-icons/location-arrow.png" alt="Diagram">`;
@@ -187,7 +194,22 @@ class ToolBar extends HTMLElement {
       case 1:
         button.innerHTML = `<img src="../../assets/icons/tool-bar-icons/add-image.png" alt="Diagram">`;
         button.addEventListener("click", function () {
-          alert("Add Image clicked!");
+          // opens the popup for dropping/dragging an image
+          openPopUp();
+
+          // registering the changes in the image uploaded
+          // and adding the drag function
+          const dropArea = document.getElementById("dropArea");
+          const inputFile = document.getElementById("inputFile");
+          //const imgView = document.getElementById("imgView");
+
+          inputFile.addEventListener("change", uploadImage);
+
+          dropArea.addEventListener("dragover", function(e) {
+            e.preventDefault();
+            inputFile.files = e.dataTransfer.files;
+          });
+
         });
         button.className = "addImage";
         break;
@@ -208,7 +230,13 @@ class ToolBar extends HTMLElement {
     }
   }
 }
+// Script for imgPopUp
 
+//function for closing the popup 
+function closePopUp(){
+  let popup = document.getElementById("imgPopUp");
+  popup.classList.remove("openImgPopUp");
+}
 customElements.define("tool-bar", ToolBar);
 
 //  <div class="featurebar"></div>

@@ -27,6 +27,21 @@
             <button id="flip-inside">Flip to Inside</button>
             <button id="flip-outside" class="hidden">Flip to Outside</button>
         </div>
+        <!-- Written by Arturo. the popup will be hidden with the css-->>
+        <div class = "imgPopUp" id="imgPopUp">
+          <h3>Please insert image here</h3>
+          <label for="inputFile" id="dropArea">
+            <input type="file" accept="image/*"id="inputFile" hidden>
+            <div id="imgView">
+                <img src="../../assets/icons/tool-bar-icons/upload-icon.png" alt="Diagram">
+                <p>Drag and Drop here or click here <br> to upload image</p>
+                <span>Upload any images from desktop</span>
+            </div>
+          </label>
+          <button type="button" onclick="closePopUp()">Left Side</button>
+          <button type="button" onclick="closePopUp()">Right Side</button>
+          <button type="button" onclick="closePopUp()">Close</button>
+        </div>
         <greeting-card></greeting-card>
         <div class="featurebar"></div>
         <!-- <div class="featureicons">
@@ -35,7 +50,6 @@
             <button class="shapes" onclick="alert('Shapes clicked!')"><img  src="resources.png" alt="Diagram"></button>
             <button class="addText" onclick="alert('Add Text clicked!')"><img  src="text.png" alt="Diagram"></button>
         </div> -->
-        
     </main>
   </body>
 </html>
