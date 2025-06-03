@@ -1,6 +1,8 @@
 class ToolBar extends HTMLElement {
   constructor() {
     super();
+    this.addingCardElem = false;
+    this.mode = "edit";
     this.attachShadow({ mode: "open" });
     const style = document.createElement("link");
     style.setAttribute("rel", "stylesheet");
@@ -23,6 +25,8 @@ class ToolBar extends HTMLElement {
         button.innerHTML = `<img src="../../assets/icons/tool-bar-icons/location-arrow.png" alt="Diagram">`;
         button.addEventListener("click", function () {
           alert("Select clicked!");
+          this.addingCardElem = false;
+          this.mode = "select";
         });
         button.className = "select";
         break;
@@ -30,13 +34,18 @@ class ToolBar extends HTMLElement {
         button.innerHTML = `<img src="../../assets/icons/tool-bar-icons/add-image.png" alt="Diagram">`;
         button.addEventListener("click", function () {
           alert("Add Image clicked!");
+          this.addingCardElem = true;
+          this.mode = "image";
         });
         button.className = "addImage";
+        
         break;
       case 2:
         button.innerHTML = `<img  src="../../assets/icons/tool-bar-icons/resources.png" alt="Diagram">`;
         button.addEventListener("click", function () {
           alert("Shapes clicked!");
+          this.addingCardElem = true;
+          this.mode = "shape";
         });
         button.className = "shapes";
         break;
@@ -44,6 +53,8 @@ class ToolBar extends HTMLElement {
         button.innerHTML = `<img  src="../../assets/icons/tool-bar-icons/text.png" alt="Diagram">`;
         button.addEventListener("click", function () {
           alert("Add Text clicked!");
+          this.addingCardElem = true;
+          this.mode = "textBox";
         });
         button.className = "addText";
         break;

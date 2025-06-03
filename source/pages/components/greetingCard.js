@@ -1,6 +1,7 @@
 class GreetingCard extends HTMLElement {
   constructor() {
     super();
+    this.facingInside = false;
     this.attachShadow({ mode: "open" });
     const style = document.createElement("link");
     style.setAttribute("rel", "stylesheet");
@@ -67,7 +68,7 @@ class GreetingCard extends HTMLElement {
     this.shadowRoot.append(style, container);
     this._img = img;
     this._rightPage = rightPage;
-
+    
     // Save image change
     img.addEventListener("load", () => {
       localStorage.setItem(this._storageKeys.imageURL, img.src);
@@ -92,25 +93,63 @@ class GreetingCard extends HTMLElement {
       this._img.src = url;
     }
   }
+
+  addCardElement(type, x, y){
+    let cardFace;
+    if(this.facingInside)
+      cardFace = document.querySelector("inside");
+    else
+      cardFace = document.querySelector("outside");
+    if(type === "textBox"){
+      const cardElem = document.createElement("card-element");
+      cardElem.setAttribute("type", "textBox");
+      cardElem.setAttribute("pos", `${x},${y}`); //delivering string separating x and y by a comma
+      cardFace.appendChild(cardElem);//adds the card element to either the inside or outside face of the card (depending on this.facingInside)
+    }
+  }
+  
 }
+
+
 
 //handles toggle functionality
 window.addEventListener("DOMContentLoaded", () => {
   const card = document.querySelector("greeting-card");
   const flipInside = document.getElementById("flip-inside");
   const flipOutside = document.getElementById("flip-outside");
-
+  const toolBar = document.querySelector("tool-bar");
   flipInside.addEventListener("click", () => {
     card.showInside();
     flipInside.classList.add("hidden");
     flipOutside.classList.remove("hidden");
+    card.facingInside = true;
   });
 
   flipOutside.addEventListener("click", () => {
     card.showOutside();
     flipOutside.classList.add("hidden");
     flipInside.classList.remove("hidden");
+    card.facingInside = false;
   });
+
+  card.addEventListener("mouseover", () => {
+    if(toolBar.mode === "textBox"){
+      card.style.cursor = "text";//when in text mode cursor changes!
+    }
+    else{
+      card.style.cursor = "pointer";
+    }
+  });
+
+  card.addEventListener("click", (e) => {
+    if(toolBar.mode === "textBox"){
+      card.addCardElement("textBox", e.clientX, e.clientY);
+    }
+    //once text box click in 
+    toolBar.mode = "edit";
+    toolBar.addingCardElem = false;
+  })
+
 });
 
 customElements.define("greeting-card", GreetingCard);
