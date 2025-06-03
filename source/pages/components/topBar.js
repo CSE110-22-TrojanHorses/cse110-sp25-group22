@@ -28,49 +28,7 @@ class TopBar extends HTMLElement {
         break;
       case 1:
         button.innerHTML = `<img src="../../assets/icons/top-bar-icons/disk.png" alt="Diagram">`;
-        button.addEventListener("click", async function () {
-          if (document.querySelector("greeting-card")) {
-            // get card DOM
-            const card = document.querySelector("greeting-card").shadowRoot;
-
-            // get inside and outside of cards
-            const inside = card.querySelector(".inside");
-            const outside = card.querySelector(".outside");
-
-            // array of element types that are used
-            const elementTypes = ["img", "input", "h2", "p"];
-
-            // storage object to stringify
-            const storage = {};
-            storage.insideElements = [];
-            storage.outsideElements = [];
-
-            // store arrays for each element type and get the outerHTML for each element
-            for (let i = 0; i < elementTypes.length; i++) {
-              const insideElementList = Array.from(inside.getElementsByTagName(elementTypes[i]));
-              for (let j = 0; j < insideElementList.length; j++) {
-                if (elementTypes[i] == "input") {
-                  insideElementList[j] = [insideElementList[j].outerHTML, insideElementList[j].value]; 
-                } else {
-                  insideElementList[j] = insideElementList[j].outerHTML;
-                }
-              }
-              const outsideElementList = Array.from(outside.getElementsByTagName(elementTypes[i]));
-              for (let j = 0; j < outsideElementList.length; j++) {
-                if (elementTypes[i] == "input") {
-                  outsideElementList[j] = [outsideElementList[j].outerHTML, outsideElementList[j].value]; 
-                } else {
-                  outsideElementList[j] = outsideElementList[j].outerHTML;
-                }
-              }
-              storage.insideElements.push(insideElementList);
-              storage.outsideElements.push(outsideElementList);
-            }
-
-            // adds data to local storage
-            localStorage.setItem("card data", JSON.stringify(storage));
-          }
-        });
+        button.addEventListener("click", this.saveButton);
         button.className = "save";
         break;
       case 2:
@@ -94,6 +52,70 @@ class TopBar extends HTMLElement {
         });
         button.className = "toprightimg";
         break;
+    }
+  }
+
+  /**
+   * Saves elements in greeting card to local storage
+   */
+  saveButton() {
+    if (document.querySelector("greeting-card")) {
+      // get card DOM
+      const card = document.querySelector("greeting-card").shadowRoot;
+
+      // get inside and outside of cards
+      const pages = card.querySelectorAll(".page-wrapper");
+      const leftPage = pages[0];
+      const rightPage = pages[1];
+      const back = card.querySelector(".back-cover");
+      const front = card.querySelector(".front-cover")
+
+      // array of element types that are used
+      const elementTypes = ["img", "input", "h2", "p"];
+
+      // storage object to stringify
+      const storage = {};
+      storage.leftElements = [];
+      storage.rightElements = [];
+      storage.backElements = [];
+      storage.frontElements = [];
+
+      // gets elements of each type within each container
+      for (let i = 0; i < elementTypes.length; i++) {
+        const leftElementList = getElements(leftPage, elementTypes[i]);
+        const rightElementList = getElements(rightPage, elementTypes[i]);
+        const backElementList = getElements(back, elementTypes[i]);
+        const frontElementList = getElements(front, elementTypes[i]);
+
+        storage.leftElements.push(leftElementList);
+        storage.rightElements.push(rightElementList);
+        storage.backElements.push(backElementList);
+        storage.frontElements.push(frontElementList);
+      }
+
+      // adds data to local storage
+      localStorage.setItem("card data", JSON.stringify(storage));
+    }
+
+    /**
+     * Gets elements of a specified type within the container
+     * 
+     * @param {Element} container 
+     * @param {string} type 
+     * @returns {Element[]} List of elements of a specified type
+     */
+    function getElements(container, type) {
+      // creates array from elements of a specified type
+      let elements = Array.from(container.getElementsByTagName(type));
+      for (let i = 0; i < elements.length; i++) {
+        // gets outerHTML and value for inputs, gets only outerHTML for other element types
+        if (type == "input") {
+          elements[i] = [elements[i].outerHTML, elements[i].value];
+        } else {
+          elements[i] = elements[i].outerHTML;
+        }
+      }
+      return elements;
     }
   }
 }
