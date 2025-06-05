@@ -47,7 +47,7 @@ class GreetingCard extends HTMLElement {
     leftPage.setAttribute("type", "text");
     leftPage.setAttribute("placeholder", "Left Page");
     leftPage.classList.add("page", "left");
-    leftWrapper.append(leftLabel, leftPage);
+    // leftWrapper.append(leftLabel, leftPage);
 
     // Right page
     const rightWrapper = document.createElement("div");
@@ -60,7 +60,7 @@ class GreetingCard extends HTMLElement {
       "Feel free to write your custom contents..."
     );
     rightPage.classList.add("page", "right");
-    rightWrapper.append(rightLabel, rightPage);
+    // rightWrapper.append(rightLabel, rightPage);
 
     inside.append(leftWrapper, rightWrapper);
     container.append(outside, inside);
@@ -94,20 +94,22 @@ class GreetingCard extends HTMLElement {
     }
   }
 
-  addCardElement(type, x, y){
-    let cardFace;
-    if(this.facingInside)
-      cardFace = document.querySelector("inside");
-    else
-      cardFace = document.querySelector("outside");
-    if(type === "textBox"){
-      const cardElem = document.createElement("card-element");
-      cardElem.setAttribute("type", "textBox");
-      cardElem.setAttribute("pos", `${x},${y}`); //delivering string separating x and y by a comma
-      cardFace.appendChild(cardElem);//adds the card element to either the inside or outside face of the card (depending on this.facingInside)
-    }
+  addCardElement(type, x, y) {
+  let cardFace;
+  if (this.facingInside)
+    cardFace = this.shadowRoot.querySelector(".inside");
+  else
+    cardFace = this.shadowRoot.querySelector(".outside");
+
+  if (type === "textBox") {
+    const cardElem = document.createElement("card-element");
+    cardElem.setAttribute("type", "textBox");
+    cardElem.setAttribute("pos", `${x},${y}`);
+    console.log("Appending card element:", cardElem);
+    cardFace.append(cardElem);
   }
-  
+}
+
 }
 
 
@@ -117,7 +119,8 @@ window.addEventListener("DOMContentLoaded", () => {
   const card = document.querySelector("greeting-card");
   const flipInside = document.getElementById("flip-inside");
   const flipOutside = document.getElementById("flip-outside");
-  const toolBar = document.querySelector("tool-bar");
+  let toolBar = document.querySelector("tool-bar");
+  console.log(toolBar);
   flipInside.addEventListener("click", () => {
     card.showInside();
     flipInside.classList.add("hidden");
@@ -133,22 +136,28 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   card.addEventListener("mouseover", () => {
+    
     if(toolBar.mode === "textBox"){
       card.style.cursor = "text";//when in text mode cursor changes!
+      // console.log("Bruh");
     }
-    else{
-      card.style.cursor = "pointer";
-    }
+    // else{
+    //   card.style.cursor = "pointer";
+    // }
   });
 
-  card.addEventListener("click", (e) => {
-    if(toolBar.mode === "textBox"){
-      card.addCardElement("textBox", e.clientX, e.clientY);
-    }
-    //once text box click in 
-    toolBar.mode = "edit";
-    toolBar.addingCardElem = false;
-  })
+card.addEventListener("click", (e) => {
+  // console.log(e.target.tagName);
+  if (toolBar.mode === "textBox") {
+    card.addCardElement("textBox", e.clientX, e.clientY);
+    console.log("Added text box element!");
+  }
+ else {
+    console.log("Not saved", e.target.value);
+
+  }
+});
+
 
 });
 

@@ -1,4 +1,5 @@
 class ToolBar extends HTMLElement {
+     
   constructor() {
     super();
     this.addingCardElem = false;
@@ -9,6 +10,7 @@ class ToolBar extends HTMLElement {
     style.setAttribute("href", "navBars.css");
     const toolbar = document.createElement("div");
     toolbar.className = "features";
+
     this.buttons = [];
     for (let i = 0; i < 4; i++) {
       let button = document.createElement("button");
@@ -18,6 +20,21 @@ class ToolBar extends HTMLElement {
     }
     this.shadowRoot.append(style, toolbar);
   }
+
+  // static get observedAttributes() {
+  //   return ["addingCardElem", "mode"];
+  // }
+
+  // attributeChangedCallback(name, oldVal, newVal){
+  //   if(name === "mode"){
+  //       this.mode = newVal;
+  //       if(this.mode !== "select" || this.mode !== "edit")
+  //         this.addingCardElem = true;
+  //       else
+  //         this.addingCardElem = false;
+  //   }
+
+  // }
 
   customizeButton(button, buttonNum) {
     switch (buttonNum) {
@@ -51,11 +68,15 @@ class ToolBar extends HTMLElement {
         break;
       case 3:
         button.innerHTML = `<img  src="../../assets/icons/tool-bar-icons/text.png" alt="Diagram">`;
-        button.addEventListener("click", function () {
-          alert("Add Text clicked!");
-          this.addingCardElem = true;
-          this.mode = "textBox";
-        });
+      
+
+        button.addEventListener("click", () => {
+  this.addingCardElem = true;
+  this.mode = "textBox";
+  console.log("Mode set to:", this.mode); 
+});
+
+
         button.className = "addText";
         break;
     }

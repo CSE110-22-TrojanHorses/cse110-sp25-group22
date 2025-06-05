@@ -8,15 +8,17 @@ class CardElement extends HTMLElement{
     // const style = document.createElement("style");
   }
 
-   static get observedAttributes() {
+  static get observedAttributes() {
     return ["type", "pos"];
   }
 
   attributeChangedCallback(name, oldVal, newVal){
+    console.log("callbac called");
     if(name === "type"){
         this.createElement(newVal)
     } else if(name === "pos"){
-        this.moveElem(newVal);
+        if(oldVal !== newVal)
+            this.moveElem(newVal);
     }
 
   }
@@ -25,13 +27,14 @@ class CardElement extends HTMLElement{
     if(type === "textBox")
         this.makeTextBox();
   }
-  
+
   makeTextBox(){
     const form = document.createElement("form");
-    const input = document.createElement("input");
-    input.type = "text";
-    input.placeholder = "Start text here...";
-    form.appendChild(input);
+    const textArea = document.createElement("textarea");
+    textArea.rows = "text";
+    textArea.placeholder = "Start text here...";
+    form.appendChild(textArea);
+    form.style.border = "1px solid red";
     this.shadow.appendChild(form);
   }
 
@@ -43,7 +46,16 @@ class CardElement extends HTMLElement{
 //     const image
 //   }
   moveElem(pos){
-
+    let [x, y] = pos.split(","); //gets str values of x and y
+    this.x = Number(x);
+    this.y = Number(y);
+    const form = this.shadow.querySelector("form");
+    const textArea = form.querySelector("textarea");
+    form.style.position = "absolute";
+    form.style.left = `${this.x}px`;
+    form.style.top = `${this.y}px`; //set
+    textArea.style.width = `300px`;
+    textArea.style.height = `50px`;
   }
 }
 customElements.define("card-element", CardElement);
