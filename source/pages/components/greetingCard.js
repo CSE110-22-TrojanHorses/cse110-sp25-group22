@@ -34,19 +34,10 @@ class GreetingCard extends HTMLElement {
     const rightWrapper = document.createElement("div");
     rightWrapper.classList.add("page-wrapper", "right");
 
-    // if (localStorage.getItem("card data")) {
-    //   this.loadData();
-    // } else {
-    //   this.init();
-    // }
-
-    
     outside.append(backCover, frontCover);
     inside.append(leftWrapper, rightWrapper);
     container.append(outside, inside);
     this.shadowRoot.append(style, container);
-    console.log(container.getElementsByTagName("*"));
-
   }
 
   /**
@@ -98,19 +89,54 @@ class GreetingCard extends HTMLElement {
 
     this._img = img;
     this._rightPage = rightPage;
-
-    // Save image change
-    img.addEventListener("load", () => {
-      localStorage.setItem(this._storageKeys.imageURL, img.src);
-    });
   }
 
   /**
    * Fills greeting card content based on stored data
    */
   loadData() {
+    // Get pages from document
+    const backCover = this.shadowRoot.querySelector(".back-cover");
+    const frontCover = this.shadowRoot.querySelector(".front-cover");
+    const leftWrapper = this.shadowRoot.querySelector(".page-wrapper.left");
+    const rightWrapper = this.shadowRoot.querySelector(".page-wrapper.right");
+
+    // Get card data
+    const cardData = JSON.parse(localStorage.getItem("card data"));
+    this.populateContainer(backCover, cardData.backElements);
+    this.populateContainer(frontCover, cardData.frontElements);
+    this.populateContainer(leftWrapper, cardData.leftElements);
+    this.populateContainer(rightWrapper, cardData.rightElements);
 
   }
+
+  /**
+   * Adds elements to container based on stored card data
+   * @param {HTMLElement} container 
+   * @param {Array} elementList 
+   */
+  populateContainer(container, elementList) {
+    for (let i = 0; i < elementList.length; i++) {
+      let element;
+
+      // temporary container to put outerHTML into
+      const tmp = document.createElement("div");
+      tmp.innerHTML = elementList[i][1];
+
+      // gets element from temporary container
+      if (elementList[i][0] == "IMG") {
+        element = tmp.querySelector("img");
+      } else {
+        element = tmp.querySelector("input");
+        element.setAttribute("value", elementList[i][2]);
+      }
+
+      // adds element to container and remove temporary container
+      container.append(element);
+      tmp.remove();
+    }
+  }
+
 
   /**
    * Hide outside contents and show inside contents
@@ -143,7 +169,11 @@ class GreetingCard extends HTMLElement {
 //handles toggle functionality
 window.addEventListener("DOMContentLoaded", () => {
   const card = document.querySelector("greeting-card");
-  card.init();
+  if (localStorage.getItem("card data")) {
+    card.loadData();
+  } else {
+    card.init();
+  }
   const flipInside = document.getElementById("flip-inside");
   const flipOutside = document.getElementById("flip-outside");
 
