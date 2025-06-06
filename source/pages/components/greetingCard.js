@@ -9,49 +9,84 @@ class GreetingCard extends HTMLElement {
     // This is the container to encapsulate inside and outside
     const container = document.createElement("div");
     container.classList.add("card-container");
-
+    
     // Outside covers
     const outside = document.createElement("div");
     outside.classList.add("card", "outside");
-
-    const backCover = document.createElement("input");
-    backCover.setAttribute("type", "text");
-    backCover.setAttribute("value", "Back Cover");
-    backCover.classList.add("page", "back-cover");
-    const frontCover = document.createElement("div");
-    frontCover.classList.add("page", "front-cover");
-    frontCover.contentEditable = true;
-    const title = document.createElement("h2");
-    title.textContent = "Front Cover Title";
-
-    // feel free to fix this part, it's just a prototype
-    const img = document.createElement("img");
-    img.src = "../../assets/icons/example.png"; // custom image link
-    img.alt = "Cover Image";
-    img.classList.add("cover-image");
-    const message = document.createElement("p");
-    message.textContent = "Front Message";
-    frontCover.append(title, img, message);
-    outside.append(backCover, frontCover);
-
+    
     // Inside Contents
     const inside = document.createElement("div");
     inside.classList.add("card", "inside", "hidden");
+    
+    // Back page
+    const backCover = document.createElement("div");
+    backCover.classList.add("page", "back-cover");
+
+    // Front page
+    const frontCover = document.createElement("div");
+    frontCover.classList.add("page", "front-cover");
 
     // Left page
     const leftWrapper = document.createElement("div");
-    leftWrapper.classList.add("page-wrapper");
-    const leftLabel = document.createElement("div");
+    leftWrapper.classList.add("page-wrapper", "left");
+    
+    // Right page
+    const rightWrapper = document.createElement("div");
+    rightWrapper.classList.add("page-wrapper", "right");
+
+    // if (localStorage.getItem("card data")) {
+    //   this.loadData();
+    // } else {
+    //   this.init();
+    // }
+
+    
+    outside.append(backCover, frontCover);
+    inside.append(leftWrapper, rightWrapper);
+    container.append(outside, inside);
+    this.shadowRoot.append(style, container);
+    console.log(container.getElementsByTagName("*"));
+
+  }
+
+  /**
+   * Initializes greeting card content
+   */
+  init() {
+    // Get pages from document
+    const backCover = this.shadowRoot.querySelector(".back-cover");
+    const frontCover = this.shadowRoot.querySelector(".front-cover");
+    const leftWrapper = this.shadowRoot.querySelector(".page-wrapper.left");
+    const rightWrapper = this.shadowRoot.querySelector(".page-wrapper.right");
+
+    // Back elements
+    const backText = document.createElement("input");
+    backText.setAttribute("type", "text");
+    backText.setAttribute("value", "Back Cover");
+    backCover.append(backText);
+
+    // Front elements
+    frontCover.contentEditable = true;
+    const title = document.createElement("input");
+    title.setAttribute("type", "text");
+    title.setAttribute("value", "Front Cover Title");
+    const img = document.createElement("img");
+    img.src = "../../assets/icons/example.png";
+    img.alt = "Cover Image";
+    img.classList.add("cover-image");
+    const message = document.createElement("input");
+    message.setAttribute("type", "text");
+    message.setAttribute("value", "Front Message");
+    frontCover.append(title, img, message);
+
+    // Left page elements
     const leftPage = document.createElement("input");
     leftPage.setAttribute("type", "text");
     leftPage.setAttribute("placeholder", "Left Page");
     leftPage.classList.add("page", "left");
-    leftWrapper.append(leftLabel, leftPage);
+    leftWrapper.append(leftPage);
 
-    // Right page
-    const rightWrapper = document.createElement("div");
-    rightWrapper.classList.add("page-wrapper");
-    const rightLabel = document.createElement("div");
+    // Right page elements
     const rightPage = document.createElement("input");
     rightPage.setAttribute("type", "text");
     rightPage.setAttribute(
@@ -59,12 +94,8 @@ class GreetingCard extends HTMLElement {
       "Feel free to write your custom contents..."
     );
     rightPage.classList.add("page", "right");
-    rightWrapper.append(rightLabel, rightPage);
+    rightWrapper.append(rightPage);
 
-    inside.append(leftWrapper, rightWrapper);
-    container.append(outside, inside);
-
-    this.shadowRoot.append(style, container);
     this._img = img;
     this._rightPage = rightPage;
 
@@ -74,18 +105,33 @@ class GreetingCard extends HTMLElement {
     });
   }
 
-  // when we show inside contents, we should hide outside cover
+  /**
+   * Fills greeting card content based on stored data
+   */
+  loadData() {
+
+  }
+
+  /**
+   * Hide outside contents and show inside contents
+   */
   showInside() {
     this.shadowRoot.querySelector(".inside").classList.remove("hidden");
     this.shadowRoot.querySelector(".outside").classList.add("hidden");
   }
 
-  // when we show outside covers, we should hide inside contents
+  /**
+   * Hide inside contents and show outside contents
+   */
   showOutside() {
     this.shadowRoot.querySelector(".inside").classList.add("hidden");
     this.shadowRoot.querySelector(".outside").classList.remove("hidden");
   }
 
+  /**
+   * Sets the image source to the given URL
+   * @param {URL} url 
+   */
   setCoverImage(url) {
     //set image by url. might be useful
     if (this._img) {
@@ -97,6 +143,7 @@ class GreetingCard extends HTMLElement {
 //handles toggle functionality
 window.addEventListener("DOMContentLoaded", () => {
   const card = document.querySelector("greeting-card");
+  card.init();
   const flipInside = document.getElementById("flip-inside");
   const flipOutside = document.getElementById("flip-outside");
 
