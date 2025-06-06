@@ -214,8 +214,49 @@ class TopBar extends HTMLElement {
         break;
       case 3:
         button.innerHTML = `<img src="../../assets/icons/top-bar-icons/download.png" alt="Diagram">`;
-        button.addEventListener("click", function () {
-          alert("Download clicked!");
+        button.addEventListener("click", async function () {
+          try{
+            const greetingCard = document.querySelector('greeting-card');
+            const shadow = greetingCard?.shadowRoot;
+
+            const visibleCard = shadow.querySelector('.card:not(.hidden)');
+            if (!visibleCard){
+              alert("Could not find a visible card to export.");
+              return;
+            }
+
+            const canvas = await html2canvas(visibleCard, {
+              scale: 2,
+              useCORS: true
+            });
+
+            const imgData = canvas.toDataURL('image/png');
+            const {jsPDF} = window.jspdf;
+            const pdf = new jsPDF('landscape', 'pt', 'a4');
+
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
+
+            // scale
+            const ratio = Math.min(pageWidth / imgWidth, pageHeight / imgHeight);
+            const scaledWidth = imgWidth * ratio;
+            const scaledHeight = imgHeight * ratio;
+
+            // center
+            const x = (pageWidth - scaledWidth) / 2;
+            const y = (pageHeight - scaledHeight) / 2;
+
+
+            pdf.addImage(imgData, 'PNG', x, y, scaledWidth, scaledHeight);
+            pdf.save('greeting-card.pdf');
+          } catch (err) {
+            console.error("Download error:", err);
+            alert("Something went wrong when downloading!");
+          }
+          // alert("Download clicked!");
         });
         button.className = "download";
         break;

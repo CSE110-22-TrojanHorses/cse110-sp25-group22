@@ -12,6 +12,9 @@ class GreetingCard extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
+        this._storageKeys = {
+            imageURL: 'greetingCardImage'
+          };        
 
         const style = document.createElement('link');
         style.setAttribute('rel', 'stylesheet');
