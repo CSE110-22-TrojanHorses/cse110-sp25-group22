@@ -95,9 +95,9 @@ class TopBar extends HTMLElement {
       for (let i = 0; i < elements.length; i++) {
         // gets outerHTML and value for inputs, gets only outerHTML for other element types
         if (elements[i].tagName == "INPUT") {
-          elements[i] = [elements[i].outerHTML, elements[i].value];
+          elements[i] = [elements[i].tagName, elements[i].outerHTML, elements[i].value];
         } else {
-          elements[i] = elements[i].outerHTML;
+          elements[i] = [elements[i].tagName, elements[i].outerHTML];
         }
       }
       return elements;
