@@ -1,4 +1,4 @@
-# Sprint 2 Retro
+# Sprint 3 Retro
 
 ---
 
