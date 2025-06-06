@@ -172,7 +172,8 @@ class ToolBar extends HTMLElement {
       return;
     }
 
-    const shapeList = ["square", "rectangle", "circle", "triangle", "star", "heart"];
+    // Removed "star" and "heart"
+    const shapeList = ["square", "rectangle", "circle", "triangle"];
     this.shapeMenu = document.createElement("div");
     this.shapeMenu.classList.add("shape-menu");
     this.shapeMenu.style.display = "flex";
