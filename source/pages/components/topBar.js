@@ -70,46 +70,31 @@ class TopBar extends HTMLElement {
       const back = card.querySelector(".back-cover");
       const front = card.querySelector(".front-cover")
 
-      // array of element types that are used
-      const elementTypes = ["img", "input", "h2", "p"];
-
       // storage object to stringify
       const storage = {};
-      storage.leftElements = [];
-      storage.rightElements = [];
-      storage.backElements = [];
-      storage.frontElements = [];
 
-      // gets elements of each type within each container
-      for (let i = 0; i < elementTypes.length; i++) {
-        const leftElementList = getElements(leftPage, elementTypes[i]);
-        const rightElementList = getElements(rightPage, elementTypes[i]);
-        const backElementList = getElements(back, elementTypes[i]);
-        const frontElementList = getElements(front, elementTypes[i]);
-
-        storage.leftElements.push(leftElementList);
-        storage.rightElements.push(rightElementList);
-        storage.backElements.push(backElementList);
-        storage.frontElements.push(frontElementList);
-      }
+      // gets elements in order within each container
+      storage.leftElements = getElements(leftPage);
+      storage.rightElements = getElements(rightPage);
+      storage.backElements = getElements(back);
+      storage.frontElements = getElements(front);
 
       // adds data to local storage
       localStorage.setItem("card data", JSON.stringify(storage));
     }
 
     /**
-     * Gets elements of a specified type within the container
+     * Gets elements within the container
      * 
      * @param {Element} container 
-     * @param {string} type 
-     * @returns {Element[]} List of elements of a specified type
+     * @returns {Element[]} List of elements in order
      */
-    function getElements(container, type) {
-      // creates array from elements of a specified type
-      let elements = Array.from(container.getElementsByTagName(type));
+    function getElements(container) {
+      // creates array from elements
+      let elements = Array.from(container.getElementsByTagName("*"));
       for (let i = 0; i < elements.length; i++) {
         // gets outerHTML and value for inputs, gets only outerHTML for other element types
-        if (type == "input") {
+        if (elements[i].tagName == "INPUT") {
           elements[i] = [elements[i].outerHTML, elements[i].value];
         } else {
           elements[i] = elements[i].outerHTML;
