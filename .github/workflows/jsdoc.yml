@@ -27,7 +27,8 @@ jobs:
         run: npm install
 
       - name: Generate JSDoc
-        run: npm run docs #for this i added the command in package.json scripts for cleaner loook
+        run: npm run docs # See docs command in package.json
+
 
       - name: Disable Jekyll
         run: touch docs/.nojekyll
