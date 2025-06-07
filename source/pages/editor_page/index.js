@@ -1,7 +1,18 @@
-// Track selected tool and editable shape
+/**
+ * index.js
+ *
+ * Powers the greeting card editor:
+ * - Adds shapes to the card
+ * - Allows dragging, resizing, recoloring
+ * - Handles shape selection and deselection
+ * - Deletes shape on Backspace/Delete
+ */
+
+// Track the selected shape from the toolbar
 window.selectedShape = null;
 let activeShape = null;
 
+// When a toolbar button is clicked
 window.addEventListener("shape-selected", (e) => {
   window.selectedShape = e.detail;
   document.body.style.cursor = "pointer";
@@ -12,6 +23,7 @@ window.addEventListener("DOMContentLoaded", init);
 function init() {
   const mainElem = document.querySelector("main");
   const topBarContainer = document.querySelector("div.pagetop");
+
   const toolBar = document.createElement("tool-bar");
   const topBar = document.createElement("top-bar");
   mainElem.appendChild(toolBar);
@@ -30,7 +42,7 @@ function init() {
   shapesContainer.style.height = "100%";
   card.appendChild(shapesContainer);
 
-  // Add shape to card
+  // Add a shape to the card
   card.addEventListener("click", (e) => {
     if (!window.selectedShape) return;
 
@@ -38,12 +50,7 @@ function init() {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    // Skip star and heart (optional: remove this block if already removed from toolbar)
-    if (window.selectedShape === "star" || window.selectedShape === "heart") {
-      return;
-    }
-
-    let shape = document.createElement("div");
+    const shape = document.createElement("div");
     shape.style.position = "absolute";
     shape.style.left = `${x - 100}px`;
     shape.style.top = `${y - 100}px`;
@@ -51,26 +58,26 @@ function init() {
 
     switch (window.selectedShape) {
       case "square":
-        shape.classList.add("square-shape");
+        shape.className = "square-shape";
         shape.style.width = "200px";
         shape.style.height = "200px";
         shape.style.backgroundColor = "red";
         break;
       case "rectangle":
-        shape.classList.add("rectangle-shape");
+        shape.className = "rectangle-shape";
         shape.style.width = "300px";
         shape.style.height = "150px";
         shape.style.backgroundColor = "red";
         break;
       case "circle":
-        shape.classList.add("circle-shape");
+        shape.className = "circle-shape";
         shape.style.width = "200px";
         shape.style.height = "200px";
         shape.style.borderRadius = "50%";
         shape.style.backgroundColor = "red";
         break;
       case "triangle":
-        shape.classList.add("triangle-shape");
+        shape.className = "triangle-shape";
         shape.style.width = "0";
         shape.style.height = "0";
         shape.style.borderLeft = "100px solid transparent";
@@ -81,45 +88,54 @@ function init() {
     }
 
     shapesContainer.appendChild(shape);
-    addResizeHandles(shape);
     window.selectedShape = null;
     document.body.style.cursor = "default";
     document.querySelectorAll(".shape-button").forEach(btn => btn.classList.remove("selected"));
   });
 
-  // Select shape for editing
+  // Shape selection and recolor
   shapesContainer.addEventListener("click", (e) => {
-    const target = e.target.closest(".square-shape, .rectangle-shape, .circle-shape, .triangle-shape");
-    if (!target) return;
+    if (e.target.classList.contains("resizer")) return;
+
+    const shape = e.target.closest(".square-shape, .rectangle-shape, .circle-shape, .triangle-shape");
+    if (!shape) return;
 
     if (activeShape) activeShape.classList.remove("active-shape");
-    activeShape = target;
+    activeShape = shape;
     activeShape.classList.add("active-shape");
 
-    const colorInput = document.createElement("input");
-    colorInput.type = "color";
-    colorInput.style.position = "absolute";
-    colorInput.style.left = `${e.clientX}px`;
-    colorInput.style.top = `${e.clientY}px`;
-    colorInput.style.zIndex = 9999;
+    if (!activeShape.querySelector(".resizer")) {
+      addResizeHandles(activeShape);
+    }
 
-    colorInput.addEventListener("input", () => {
+    document.querySelectorAll("input[type='color']").forEach(picker => picker.remove());
+
+    const colorPicker = document.createElement("input");
+    colorPicker.type = "color";
+    colorPicker.style.position = "fixed";
+    colorPicker.style.left = `${e.clientX}px`;
+    colorPicker.style.top = `${e.clientY}px`;
+    colorPicker.style.zIndex = 9999;
+
+    colorPicker.addEventListener("input", (event) => {
+      if (!activeShape) return;
+      const color = event.target.value;
       if (activeShape.classList.contains("triangle-shape")) {
-        activeShape.style.borderBottomColor = colorInput.value;
+        activeShape.style.borderBottomColor = color;
       } else {
-        activeShape.style.backgroundColor = colorInput.value;
+        activeShape.style.backgroundColor = color;
       }
     });
 
-    colorInput.addEventListener("blur", () => {
-      colorInput.remove();
+    colorPicker.addEventListener("blur", () => {
+      colorPicker.remove();
     });
 
-    document.body.appendChild(colorInput);
-    colorInput.focus();
+    document.body.appendChild(colorPicker);
+    colorPicker.focus();
   });
 
-  // Dragging
+  // Dragging shapes
   let selectedShape = null;
   let offsetX = 0;
   let offsetY = 0;
@@ -139,9 +155,16 @@ function init() {
 
   function handleDrag(e) {
     if (!selectedShape) return;
+
     const parentRect = shapesContainer.getBoundingClientRect();
-    const x = e.clientX - parentRect.left - offsetX;
-    const y = e.clientY - parentRect.top - offsetY;
+    const shapeRect = selectedShape.getBoundingClientRect();
+
+    let x = e.clientX - parentRect.left - offsetX;
+    let y = e.clientY - parentRect.top - offsetY;
+
+    x = Math.max(0, Math.min(x, shapesContainer.clientWidth - shapeRect.width));
+    y = Math.max(0, Math.min(y, shapesContainer.clientHeight - shapeRect.height));
+
     selectedShape.style.left = `${x}px`;
     selectedShape.style.top = `${y}px`;
   }
@@ -152,22 +175,28 @@ function init() {
     selectedShape = null;
   }
 
+  // Add resizer
   function addResizeHandles(shape) {
     const resizer = document.createElement("div");
-    resizer.style.width = "10px";
-    resizer.style.height = "10px";
-    resizer.style.background = "black";
-    resizer.style.position = "absolute";
-    resizer.style.right = "0";
-    resizer.style.bottom = "0";
-    resizer.style.cursor = "se-resize";
-    resizer.style.zIndex = 10;
+    resizer.className = "resizer";
+    Object.assign(resizer.style, {
+      width: "10px",
+      height: "10px",
+      background: "black",
+      position: "absolute",
+      right: "0",
+      bottom: "0",
+      cursor: "se-resize",
+      zIndex: "10"
+    });
 
     shape.appendChild(resizer);
 
     let isResizing = false;
+
     resizer.addEventListener("mousedown", (e) => {
       e.stopPropagation();
+      if (!shape.classList.contains("active-shape")) return;
       isResizing = true;
       document.addEventListener("mousemove", resize);
       document.addEventListener("mouseup", stopResize);
@@ -197,11 +226,21 @@ function init() {
   }
 }
 
-// Deselect shape if clicking outside
+// Deselect shape on outside click
 document.addEventListener("mousedown", (e) => {
   const isShape = e.target.closest(".square-shape, .rectangle-shape, .circle-shape, .triangle-shape");
   if (!isShape && activeShape) {
     activeShape.classList.remove("active-shape");
+    const resizer = activeShape.querySelector(".resizer");
+    if (resizer) resizer.style.background = "transparent";
+    activeShape = null;
+  }
+});
+
+// Delete active shape with Backspace/Delete
+document.addEventListener("keydown", (e) => {
+  if ((e.key === "Backspace" || e.key === "Delete") && activeShape) {
+    activeShape.remove();
     activeShape = null;
   }
 });
