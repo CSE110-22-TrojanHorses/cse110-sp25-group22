@@ -19,7 +19,7 @@
     "puppeteer": "^24.9.0"
   },
   "scripts": {
-    "lint": "eslint --ext .js --ignore-pattern .gitignore .",
+    "lint": "eslint --ext .js . --ignore-pattern docs/ --ignore-pattern .gitignore",
     "lint:fix": "npm run lint -- --fix",
     "prettier": "npx prettier source --check",
     "prettier:fix": "npm run prettier -- --write",
