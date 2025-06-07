@@ -85,7 +85,8 @@ class TopBar extends HTMLElement {
       storage.frontElements = getElements(front);
 
       let date = new Date();
-      storage.time = `Last Sync: ${date.getMonth() + 1}/${date.getDay() + 1}/${date.getFullYear()} @ ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+      storage.time = `Last Sync: ${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDay() + 1).padStart(2, "0")}/${date.getFullYear()} @ 
+                      ${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}:${String(date.getSeconds()).padStart(2, "0")}`
 
       // adds data to local storage
       const curCard = localStorage.getItem("current card");
