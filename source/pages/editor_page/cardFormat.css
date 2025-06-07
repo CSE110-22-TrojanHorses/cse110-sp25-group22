@@ -31,12 +31,10 @@
   margin-top: 15px;
 }
 
-.page h2 {
+.page-wrapper input {
   text-align: center;
-}
-
-.page input {
   width: 90%;
+  border: 0px;
 }
 
 .cover-image {
