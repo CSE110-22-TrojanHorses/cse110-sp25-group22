@@ -9,9 +9,18 @@ class NavBar extends HTMLElement {
     const nav = document.createElement("nav");
 
     // Sets up buttons in navigation bar
-    nav.innerHTML = `
-        <button id="home" onclick="window.open('../home_page/homepage.html', '_self')"></button>
-        <button id="create" onclick="window.open('../editor_page/index.html', '_self')"></button>`; // Add onclick when edit page is created
+    const homeButton = document.createElement("button");
+    homeButton.addEventListener("click", () => {
+      window.open('../home_page/homepage.html', '_self');
+    })
+    homeButton.id = "home";
+    const addButton = document.createElement("button");
+    addButton.addEventListener("click", () => {
+      localStorage.setItem("current card", "NEW");
+      window.open('../editor_page/index.html', '_self');
+    })
+    addButton.id = "create";
+    nav.append(homeButton, addButton);
 
     // Sets up style of navigation bar
     const style = document.createElement("link");

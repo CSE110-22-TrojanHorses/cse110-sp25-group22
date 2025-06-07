@@ -79,8 +79,18 @@ class TopBar extends HTMLElement {
       storage.backElements = getElements(back);
       storage.frontElements = getElements(front);
 
+      let date = new Date();
+      storage.time = `Last Sync: ${date.getMonth() + 1}/${date.getDay() + 1}/${date.getFullYear()} @ ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+
       // adds data to local storage
-      localStorage.setItem("card data", JSON.stringify(storage));
+      const curCard = localStorage.getItem("current card");
+      if (!curCard || curCard == "NEW") {
+        const cardName = `card ${localStorage.length}`
+        localStorage.setItem(cardName, JSON.stringify(storage));
+        localStorage.setItem("current card", cardName)
+      } else {
+        localStorage.setItem(curCard, JSON.stringify(storage));
+      }
     }
 
     /**

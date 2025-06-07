@@ -93,9 +93,10 @@ class GreetingCard extends HTMLElement {
   }
 
   /**
-   * Fills greeting card content based on stored data
+   * Fills greeting card content based on stored data with specified key
+   * @param {string} key 
    */
-  loadData() {
+  loadData(key) {
     // Get pages from document
     const backCover = this.shadowRoot.querySelector(".page-wrapper.back");
     const frontCover = this.shadowRoot.querySelector(".page-wrapper.front");
@@ -103,7 +104,7 @@ class GreetingCard extends HTMLElement {
     const rightWrapper = this.shadowRoot.querySelector(".page-wrapper.right");
 
     // Get card data
-    const cardData = JSON.parse(localStorage.getItem("card data"));
+    const cardData = JSON.parse(localStorage.getItem(key));
     this.populateContainer(backCover, cardData.backElements);
     this.populateContainer(frontCover, cardData.frontElements);
     this.populateContainer(leftWrapper, cardData.leftElements);
@@ -170,8 +171,13 @@ class GreetingCard extends HTMLElement {
 //handles toggle functionality
 window.addEventListener("DOMContentLoaded", () => {
   const card = document.querySelector("greeting-card");
-  if (localStorage.getItem("card data")) {
-    card.loadData();
+  if (localStorage.getItem("current card")) {
+    const key = localStorage.getItem("current card");
+    if (localStorage.getItem(key)) {
+      card.loadData(key);
+    } else {
+      card.init();
+    }
   } else {
     card.init();
   }
