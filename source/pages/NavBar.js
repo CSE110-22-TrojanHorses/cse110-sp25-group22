@@ -15,8 +15,7 @@ class NavBar extends HTMLElement {
       <button class="shape-button" data-shape="circle" title="Circle">⚫</button>
       <button class="shape-button" data-shape="rectangle" title="Rectangle">▭</button>
       <button class="shape-button" data-shape="triangle" title="Triangle">🔺</button>
-      <button class="shape-button" data-shape="star" title="Star">⭐</button>
-      <button class="shape-button" data-shape="heart" title="Heart">❤️</button>
+      
 
       <!-- Navigation Buttons -->
       <button id="home" onclick="window.open('homepage.html', '_self')"></button>
@@ -24,6 +23,29 @@ class NavBar extends HTMLElement {
     `;
 
     // Sets up style of navigation bar
+    /**
+    Creates and injects a <style> tag with component-scoped CSS.
+    Styles defined for:
+    - General buttons
+    - Navigation buttons with background icons
+    - Shape buttons with hover effects and "selected" highlighting
+    - Flex layout for the nav bar
+    */
+
+    /**
+    Replaced external stylesheet with inline <style> element.
+    Original version loaded "homepage.css" via <link>:
+
+    // Sets up style of navigation bar
+    const style = document.createElement("link");
+    style.setAttribute("rel", "stylesheet");
+    style.setAttribute("href", "homepage.css");
+    this.shadowRoot.append(style, nav);
+
+    This version uses JavaScript-defined styles scoped inside the shadow DOM.
+    Benefit: All styles are self-contained in the component.
+ */
+
     let style = document.createElement("style");
     style.textContent = `
       button {
@@ -74,20 +96,29 @@ class NavBar extends HTMLElement {
       }
     `;
 
+    // Append nav and style to shadow DOM
     shadow.append(nav);
     shadow.append(style);
 
-    // Add interactivity for shape selection
+    /**
+     Adds interactivity to the shape buttons:
+     - Adds a click event listener to each shape button.
+     - When clicked:
+     - Dispatches a "shape-selected" CustomEvent from `window` with the shape name as detail.
+     - Updates button appearance to reflect current selection. 
+     This allows the parent application to listen for shape selection and update the canvas accordingly.
+     */
     const buttons = shadow.querySelectorAll(".shape-button");
     buttons.forEach(button => {
-  button.addEventListener("click", () => {
-    const selected = button.getAttribute("data-shape");
+      button.addEventListener("click", () => {
+      const selected = button.getAttribute("data-shape");
     
     // Dispatch a custom event with shape name
     window.dispatchEvent(new CustomEvent("shape-selected", {
       detail: selected
     }));
 
+    // Toggle selected state visually
     buttons.forEach(btn => btn.classList.remove("selected"));
     button.classList.add("selected");
   });
