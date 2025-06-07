@@ -227,15 +227,15 @@ function init() {
 }
 
 // Deselect shape on outside click
-document.addEventListener("mousedown", (e) => {
+/*document.addEventListener("mousedown", (e) => {
   const isShape = e.target.closest(".square-shape, .rectangle-shape, .circle-shape, .triangle-shape");
-  if (!isShape && activeShape) {
+  if (!isShape && e.target != document.querySelectorAll("input[type='color']")) {
     activeShape.classList.remove("active-shape");
     const resizer = activeShape.querySelector(".resizer");
     if (resizer) resizer.style.background = "transparent";
     activeShape = null;
   }
-});
+});*/
 
 // Delete active shape with Backspace/Delete
 document.addEventListener("keydown", (e) => {
