@@ -2,6 +2,12 @@
 const ci = Boolean(process.env.CI || false);
 
 const baseOptions = {
+    launch: {
+    headless: false,
+    slowMo: 100 // Show browser locally
+      // Optional: slows down Puppeteer so you can see steps
+      //     // Optional: opens DevTools for debugging
+  },
     server: {
         command: 'npm run start',
         port: 9999
@@ -11,7 +17,7 @@ const baseOptions = {
 const ciPipelineOptions = {
     launch: {
         executablePath: '/usr/bin/google-chrome-stable',
-        headless: true,
+        headless: false,
         args: [
           '--ignore-certificate-errors',
           '--no-sandbox',
