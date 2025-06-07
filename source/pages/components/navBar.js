@@ -14,6 +14,8 @@ class NavBar extends HTMLElement {
       window.open('../home_page/homepage.html', '_self');
     })
     homeButton.id = "home";
+
+    // if add is clicked, then set the current card to NEW so that a new card is initialized
     const addButton = document.createElement("button");
     addButton.addEventListener("click", () => {
       localStorage.setItem("current card", "NEW");

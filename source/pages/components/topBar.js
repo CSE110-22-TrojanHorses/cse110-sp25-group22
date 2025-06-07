@@ -17,6 +17,11 @@ class TopBar extends HTMLElement {
     this.shadowRoot.append(style, container);
   }
 
+  /**
+   * Sets functionality for button based on button number
+   * @param {HTMLButtonElement} button - button element to add the functionality to
+   * @param {number} buttonNum - number of the button
+   */
   customizeButton(button, buttonNum) {
     switch (buttonNum) {
       case 0:
@@ -84,19 +89,19 @@ class TopBar extends HTMLElement {
 
       // adds data to local storage
       const curCard = localStorage.getItem("current card");
-      if (!curCard || curCard == "NEW") {
+      if (!curCard || curCard == "NEW") {  // adds new data to local storage
         const cardName = `card ${localStorage.length}`
         localStorage.setItem(cardName, JSON.stringify(storage));
         localStorage.setItem("current card", cardName)
       } else {
-        localStorage.setItem(curCard, JSON.stringify(storage));
+        localStorage.setItem(curCard, JSON.stringify(storage)); // updates data that is stored
       }
     }
 
     /**
      * Gets elements within the container
      * 
-     * @param {Element} container 
+     * @param {Element} container - The container that the elements are contained in
      * @returns {Element[]} List of elements in order
      */
     function getElements(container) {

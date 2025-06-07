@@ -94,7 +94,7 @@ class GreetingCard extends HTMLElement {
 
   /**
    * Fills greeting card content based on stored data with specified key
-   * @param {string} key 
+   * @param {string} key - key to use to get the stored data
    */
   loadData(key) {
     // Get pages from document
@@ -114,8 +114,8 @@ class GreetingCard extends HTMLElement {
 
   /**
    * Adds elements to container based on stored card data
-   * @param {HTMLElement} container 
-   * @param {Array} elementList 
+   * @param {HTMLElement} container - container where the elements are added to
+   * @param {Array} elementList - list of elements to add
    */
   populateContainer(container, elementList) {
     for (let i = 0; i < elementList.length; i++) {
@@ -168,9 +168,10 @@ class GreetingCard extends HTMLElement {
   }
 }
 
-//handles toggle functionality
 window.addEventListener("DOMContentLoaded", () => {
   const card = document.querySelector("greeting-card");
+
+  // loads data if the current card data exists in storage, otherwise initialize card with default
   if (localStorage.getItem("current card")) {
     const key = localStorage.getItem("current card");
     if (localStorage.getItem(key)) {
@@ -184,6 +185,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const flipInside = document.getElementById("flip-inside");
   const flipOutside = document.getElementById("flip-outside");
 
+  // handles toggle functionality
   flipInside.addEventListener("click", () => {
     card.showInside();
     flipInside.classList.add("hidden");
