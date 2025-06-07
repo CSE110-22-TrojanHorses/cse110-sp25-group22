@@ -1,8 +1,10 @@
+/* Make the full page fill the entire screen */
 html, body, main {
   width: 100%;
   height: 100%;
 }
 
+/* Top bar section (for buttons like save/share/etc.) */
 .pagetop {
   position: relative;
   height: 80px;
@@ -11,6 +13,7 @@ html, body, main {
   margin-left: -9px;
 }
 
+/* Solid black top bar background */
 .topsquare {
   height: 80px;
   width: 110%;
@@ -20,6 +23,7 @@ html, body, main {
   z-index: 1;
 }
 
+/* Top-left icon button (e.g., home/apps) */
 .topleftimg {
   position: absolute;
   top: 20px;
@@ -28,6 +32,7 @@ html, body, main {
   z-index: 2;
 }
 
+/* Top-right icon button (e.g., profile) */
 .toprightimg {
   position: absolute;
   top: 20px;
@@ -36,25 +41,25 @@ html, body, main {
   z-index: 2;
 }
 
+/* Default size for icons */
 img {
   height: 44px;
   width: 44px;
 }
 
+/* Save/Download/Share button positioning */
 .save {
   position: absolute;
   z-index: 2;
   left: 100px;
   top: 20px;
 }
-
 .download {
   position: absolute;
   z-index: 2;
   left: 180px;
   top: 20px;
 }
-
 .share {
   position: absolute;
   z-index: 2;
@@ -62,6 +67,7 @@ img {
   top: 20px;
 }
 
+/* Flip card button */
 .flip {
   position: absolute;
   border: black;
@@ -72,15 +78,18 @@ img {
   left: 722px;
 }
 
+/* Remove default button styles */
 button {
   border: none;
   background: none;
 }
 
+/* Light hover effect */
 button:hover {
   background-color: rgb(244, 192, 127);
 }
 
+/* Side toolbar container */
 .featurebar {
   height: 350px;
   width: 100px;
@@ -94,6 +103,7 @@ button:hover {
   z-index: 1;
 }
 
+/* Icons inside the toolbar */
 .featureicons {
   position: relative;
   left: 56px;
@@ -101,11 +111,13 @@ button:hover {
   z-index: 2;
 }
 
+/* Tool buttons in the sidebar */
 .select { position: absolute; bottom: 335px; }
 .addText { position: absolute; bottom: 250px; }
 .shapes { position: absolute; bottom: 165px; }
 .addImage { position: absolute; bottom: 80px; }
 
+/* Front side of the greeting card */
 .cardFront {
   position: absolute;
   height: 346px;
@@ -116,11 +128,14 @@ button:hover {
   border: 2px solid black;
 }
 
+/* Prevent scrollbars */
 body {
   overflow: hidden;
 }
 
-/* SHAPE STYLES */
+/*SHAPE STYLES*/
+
+/* Basic shape container */
 .shape {
   position: absolute;
   width: 200px;
@@ -129,19 +144,23 @@ body {
   cursor: move;
 }
 
+/* Circle shape */
 .shape.circle {
   border-radius: 50%;
 }
 
+/* Square shape – already covered by default .shape */
 .shape.square {
-  /* default size already applies */
+  /* nothing extra needed */
 }
 
+/* Rectangle shape – manually overriding size */
 .shape.rectangle {
   width: 300px !important;
   height: 150px !important;
 }
 
+/* Triangle made with borders (no background) */
 .shape.triangle {
   width: 0;
   height: 0;
@@ -151,23 +170,9 @@ body {
   background: none;
 }
 
-.shape.star {
-  background-color: gold;
-  clip-path: polygon(
-    50% 0%, 61% 35%, 98% 35%,
-    68% 57%, 79% 91%,
-    50% 70%, 21% 91%,
-    32% 57%, 2% 35%,
-    39% 35%
-  );
-}
+/* We currently don't support heart or star shapes, so their styles are removed */
 
-.shape.heart {
-  background-color: pink;
-  clip-path: path("M24.6,4.6c-3.2,0-5.9,2.4-6.6,5.6c-0.7-3.2-3.4-5.6-6.6-5.6c-3.9,0-7,3.1-7,7c0,6.1,6.6,10.9,13.1,15.5c6.6-4.6,13.1-9.4,13.1-15.5C31.6,7.7,28.5,4.6,24.6,4.6z");
-}
-
-/* Highlight selected shape for editing */
+/* Highlight when a shape is selected */
 .active-shape {
   outline: 3px dashed yellow;
 }
