@@ -22,7 +22,7 @@ class TopBar extends HTMLElement {
       case 0:
         button.innerHTML = `<img src="../../assets/icons/top-bar-icons/apps.png" alt="Diagram">`;
         button.addEventListener("click", function () {
-          window.location.href = escape("../homepage.html");
+          window.location.href = escape("../home_page/homepage.html");
         });
         button.className = "topleftimg";
         break;
@@ -65,10 +65,10 @@ class TopBar extends HTMLElement {
 
       // get inside and outside of cards
       const pages = card.querySelectorAll(".page-wrapper");
-      const leftPage = pages[0];
-      const rightPage = pages[1];
-      const back = card.querySelector(".back-cover");
-      const front = card.querySelector(".front-cover")
+      const back = pages[0];
+      const front = pages[1];
+      const leftPage = pages[2];
+      const rightPage = pages[3];
 
       // storage object to stringify
       const storage = {};
