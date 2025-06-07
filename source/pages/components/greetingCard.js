@@ -20,11 +20,11 @@ class GreetingCard extends HTMLElement {
     
     // Back page
     const backCover = document.createElement("div");
-    backCover.classList.add("page", "back-cover");
+    backCover.classList.add("page-wrapper", "back");
 
     // Front page
     const frontCover = document.createElement("div");
-    frontCover.classList.add("page", "front-cover");
+    frontCover.classList.add("page-wrapper", "front");
 
     // Left page
     const leftWrapper = document.createElement("div");
@@ -45,15 +45,16 @@ class GreetingCard extends HTMLElement {
    */
   init() {
     // Get pages from document
-    const backCover = this.shadowRoot.querySelector(".back-cover");
-    const frontCover = this.shadowRoot.querySelector(".front-cover");
+    const backCover = this.shadowRoot.querySelector(".page-wrapper.back");
+    const frontCover = this.shadowRoot.querySelector(".page-wrapper.front");
     const leftWrapper = this.shadowRoot.querySelector(".page-wrapper.left");
     const rightWrapper = this.shadowRoot.querySelector(".page-wrapper.right");
 
     // Back elements
     const backText = document.createElement("input");
     backText.setAttribute("type", "text");
-    backText.setAttribute("value", "Back Cover");
+    backText.setAttribute("placeholder", "Back Cover");
+    backText.classList.add("page", "back");
     backCover.append(backText);
 
     // Front elements
@@ -96,8 +97,8 @@ class GreetingCard extends HTMLElement {
    */
   loadData() {
     // Get pages from document
-    const backCover = this.shadowRoot.querySelector(".back-cover");
-    const frontCover = this.shadowRoot.querySelector(".front-cover");
+    const backCover = this.shadowRoot.querySelector(".page-wrapper.back");
+    const frontCover = this.shadowRoot.querySelector(".page-wrapper.front");
     const leftWrapper = this.shadowRoot.querySelector(".page-wrapper.left");
     const rightWrapper = this.shadowRoot.querySelector(".page-wrapper.right");
 
