@@ -1,73 +1,35 @@
-/* Make the full page fill the entire screen */
-html, body, main {
+html,
+body,
+main {
   width: 100%;
   height: 100%;
+  margin: 0px;
+  margin-bottom: 0.5rem;
+  padding: 0px;
+  overflow-x: hidden;
 }
 
-/* Top bar section (for buttons like save/share/etc.) */
-.pagetop {
-  position: relative;
+.navcontainer {
+  padding-left: 2rem;
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
   height: 80px;
-  width: 110%;
-  margin-top: -9px;
-  margin-left: -9px;
-}
-
-/* Solid black top bar background */
-.topsquare {
-  height: 80px;
-  width: 110%;
-  top: 0px;
+  width: 100%;
   background-color: black;
-  position: absolute;
   z-index: 1;
 }
 
-/* Top-left icon button (e.g., home/apps) */
-.topleftimg {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background-color: black;
-  z-index: 2;
-}
-
-/* Top-right icon button (e.g., profile) */
 .toprightimg {
-  position: absolute;
-  top: 20px;
-  left: 95vw;
-  background-color: black;
-  z-index: 2;
+  margin-left: auto;
+  margin-right: 4rem;
 }
 
-/* Default size for icons */
 img {
   height: 44px;
   width: 44px;
 }
 
-/* Save/Download/Share button positioning */
-.save {
-  position: absolute;
-  z-index: 2;
-  left: 100px;
-  top: 20px;
-}
-.download {
-  position: absolute;
-  z-index: 2;
-  left: 180px;
-  top: 20px;
-}
-.share {
-  position: absolute;
-  z-index: 2;
-  left: 260px;
-  top: 20px;
-}
-
-/* Flip card button */
 .flip {
   position: absolute;
   border: black;
@@ -78,15 +40,24 @@ img {
   left: 722px;
 }
 
-/* Remove default button styles */
 button {
   border: none;
   background: none;
 }
 
-/* Light hover effect */
 button:hover {
   background-color: rgb(244, 192, 127);
+}
+
+.features {
+  padding: 1rem;
+  border: solid black 3px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 2rem;
+  justify-content: space-around;
+  margin-right: 5rem;
 }
 
 /* Side toolbar container */
@@ -176,3 +147,4 @@ body {
 .active-shape {
   outline: 3px dashed yellow;
 }
+

@@ -15,21 +15,23 @@ let activeShape = null;
 // When a toolbar button is clicked
 window.addEventListener("shape-selected", (e) => {
   window.selectedShape = e.detail;
+  console.log(e.detail);
   document.body.style.cursor = "pointer";
 });
 
 window.addEventListener("DOMContentLoaded", init);
 
 function init() {
-  const mainElem = document.querySelector("main");
-  const topBarContainer = document.querySelector("div.pagetop");
+  // const mainElem = document.querySelector("main");
+  // const topBarContainer = document.querySelector("div.pagetop");
 
-  const toolBar = document.createElement("tool-bar");
-  const topBar = document.createElement("top-bar");
-  mainElem.appendChild(toolBar);
-  topBarContainer.appendChild(topBar);
-
-  const card = document.querySelector(".cardFront");
+  // const toolBar = document.querySelector("tool-bar");
+  // const topBar = document.querySelector("top-bar");
+  // mainElem.appendChild(toolBar);
+  // topBarContainer.appendChild(topBar);
+ 
+  // const card = document.querySelector(".cardFront");
+  const card = document.querySelector(".card.outside");
   if (!card) {
     console.error("Error: .cardFront element not found.");
     return;

@@ -1,77 +1,42 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <title>Editor Page</title>
-
-    <!-- Using our main stylesheet instead of separate CSS files -->
-    <link rel="stylesheet" href="style.css">
-
-    <!-- Scripts for handling logic in our toolbar, top bar, and main editor page -->
-    <script src="shapes.js" type="application/javascript"></script>
-    <script src="tool-bar-func.js" type="application/javascript"></script>
-    <script src="top-bar-func.js" type="application/javascript"></script>
-
-    <!-- Basic meta tags for proper rendering and responsiveness -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <link rel="stylesheet" href="navBars.css" />
+    <link rel="stylesheet" href="cardFormat.css" />
+    <script
+      src="../components/toolBar.js"
+      type="application/javascript"
+    ></script>
+    <script
+      src="../editor_page/shapes.js"
+      type="application/javascript"
+    ></script>
+    <script
+      src="../components/topBar.js"
+      type="application/javascript"
+    ></script>
+    <script
+      src="../components/greetingCard.js"
+      type="application/javascript"
+    ></script>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    />
   </head>
   <body>
     <main>
-
-        <!-- Top section of the page (header) -->
-        <div class="pagetop">
-
-            <!-- Leaving these toolbar buttons commented for now — we might add them later -->
-            <!-- 
-            <button class="topleftimg" onclick="alert('Home clicked!')">
-              <img src="assets/top-bar-imgs/apps.png" alt="Home">
-            </button>
-            <button class="toprightimg" onclick="alert('Profile clicked!')">
-              <img src="assets/top-bar-imgs/circle-user.png" alt="Profile">
-            </button>
-            <button class="save" onclick="alert('Save clicked!')">
-              <img src="assets/top-bar-imgs/disk.png" alt="Save">
-            </button>
-            <button class="download" onclick="alert('Download clicked!')">
-              <img src="assets/top-bar-imgs/download.png" alt="Download">
-            </button>
-            <button class="share" onclick="alert('Share clicked!')">
-              <img src="assets/top-bar-imgs/share.png" alt="Share">
-            </button>
-            -->
-
-            <!-- Just a placeholder div for spacing or styling -->
-            <div class="topsquare"></div>
-
-            <!-- Flip button — this lets the user flip the card between front and inside -->
-            <button class="flip" onclick="alert('Flip clicked!')">Flip Card</button>
-
-            <!-- This is where the front of the card goes -->
-            <div class="cardFront"></div>
-        </div>
-
-        <!-- Placeholder for the toolbar area — buttons/tools might go here -->
-        <div class="featurebar"></div>
-
-        <!-- Commented out for now: extra card elements or tools we might add later -->
-        <!-- 
-        <div class="card"></div>
-        <div class="featureicons">
-          <button class="select" onclick="alert('Select clicked!')">
-            <img src="location-arrow.png" alt="Select">
-          </button>
-          <button class="addImage" onclick="alert('Add Image clicked!')">
-            <img src="add-image.png" alt="Add Image">
-          </button>
-          <button class="shapes" onclick="alert('Shapes clicked!')">
-            <img src="resources.png" alt="Shapes">
-          </button>
-          <button class="addText" onclick="alert('Add Text clicked!')">
-            <img src="text.png" alt="Add Text">
-          </button>
-        </div>
-        -->
-        
+      <top-bar></top-bar>
+      <div class="view-toggle">
+        <button id="flip-inside">Flip to Inside</button>
+        <button id="flip-outside" class="hidden">Flip to Outside</button>
+      </div>
+      <div class="content">
+        <tool-bar></tool-bar>
+        <greeting-card></greeting-card>
+      </div>
     </main>
   </body>
 </html>
