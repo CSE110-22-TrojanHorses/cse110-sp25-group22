@@ -123,23 +123,6 @@ class GreetingCard extends HTMLElement {
     cardElem.setAttribute("pos", `${newX},${newY}`);
     // console.log("Appending card element:", cardElem);
     cardFace.append(cardElem);
-    // if (type === "textBox") {
-    //   const cardElem = document.createElement("card-element");
-    //   cardElem.setAttribute("type", "textBox");
-    //   cardElem.setAttribute("pos", `${newX},${newY}`);
-    //   // console.log("Appending card element:", cardElem);
-    //   cardFace.append(cardElem);
-    // }
-    // else if(type === "shape") {
-    //   const cardElem = document.createElement("card-element");
-    //   cardElem.setAttribute("type", "shape");
-    //   cardElem.setAttribute("pos", `${newX},${newY}`);
-    //   // console.log("Appending card element:", cardElem);
-    //   cardFace.append(cardElem);
-    // }
-    // else if(type === "image"){
-    //   //something
-    // }
   }
 }
 
