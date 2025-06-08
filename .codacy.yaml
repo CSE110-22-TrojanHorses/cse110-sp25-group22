@@ -1,18 +1,17 @@
 engines:
   eslint:
+    enabled: true
     exclude_paths:
-      - docs/
-      - docs/**/*.js
-      - docs/**/*.html
+      - docs/**
   csslint:
+    enabled: true
     exclude_paths:
-      - docs/
-      - docs/**/*.css
+      - docs/**
   eslint-jsx:
+    enabled: true
     exclude_paths:
-      - docs/
-      - docs/**/*.js
+      - docs/**
   stylelint:
+    enabled: true
     exclude_paths:
-      - docs/
-      - docs/**/*.css
+      - docs/**
