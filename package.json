@@ -24,6 +24,8 @@
     "prettier": "npx prettier source --check",
     "prettier:fix": "npm run prettier -- --write",
     "format": "npm run prettier:fix && npm run lint:fix",
+    "start": "parcel source/pages/home_page/homepage.html--port 9999",
+    "build": "parcel build source/pages/home_page/homepage.html",
     "test:e2e": "jest __tests__/*.test.js --maxWorkers=1",
     "test:all": "npm run test:e2e"
   },
