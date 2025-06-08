@@ -11,3 +11,4 @@ engines:
   stylelint:
     exclude_paths:
       - docs/
+      
