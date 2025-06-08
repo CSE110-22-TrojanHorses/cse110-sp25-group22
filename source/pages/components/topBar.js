@@ -103,18 +103,30 @@ class TopBar extends HTMLElement {
      * Gets elements within the container
      * 
      * @param {Element} container - The container that the elements are contained in
-     * @returns {Element[]} List of elements in order
+     * @returns {Object[]} List of structured element data
      */
     function getElements(container) {
       // creates array from elements
-      let elements = Array.from(container.getElementsByTagName("*"));
-      for (let i = 0; i < elements.length; i++) {
-        // gets outerHTML and value for inputs, gets only outerHTML for other element types
-        if (elements[i].tagName == "INPUT") {
-          elements[i] = [elements[i].tagName, elements[i].outerHTML, elements[i].value];
-        } else {
-          elements[i] = [elements[i].tagName, elements[i].outerHTML];
+      const rawElements = container.getElementsByTagName("*");
+      const elements = [];
+
+      for (let elem of rawElements) {
+        // get the tagname and format the desired attributes as JSON object
+        // goal: avoid direct HTML injection
+        const tag = elem.tagName;
+        const data = { tag };
+
+        data.attributes = {};
+        for (let attr of elem.attributes) {
+          data.attributes[attr.name] = attr.value;
         }
+        
+        if (tag === 'INPUT') {
+          data.value = elem.value;
+        }
+
+        elements.push(data);
+
       }
       return elements;
     }
