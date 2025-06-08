@@ -2,12 +2,17 @@ engines:
   eslint:
     exclude_paths:
       - docs/
+      - docs/**/*.js
+      - docs/**/*.html
   csslint:
     exclude_paths:
       - docs/
+      - docs/**/*.css
   eslint-jsx:
     exclude_paths:
       - docs/
+      - docs/**/*.js
   stylelint:
     exclude_paths:
       - docs/
+      - docs/**/*.css
