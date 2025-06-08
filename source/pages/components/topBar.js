@@ -1,12 +1,29 @@
+/**
+ * Custom Web Component representing the horizontal top bar.
+ * Comes with five iconic buttons: Home, Save, Download, Share, and Profile.
+ * Basically, everything you need to look productive without doing much.
+ * @customElement
+ * @extends HTMLElement
+ */
 class TopBar extends HTMLElement {
+  /**
+   * Constructs the top bar, loads external CSS,
+   * creates five beautifully generic buttons, and shoves it all into Shadow DOM.
+   */
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
+   
+    // External stylesheet for layout and button styling
     const style = document.createElement("link");
     style.setAttribute("rel", "stylesheet");
     style.setAttribute("href", "navBars.css");
+    
+    // Main container for the top navigation bar
     const container = document.createElement("nav");
     container.classList.add("navcontainer");
+    
+    // Generate and customize 5 buttons
     this.buttons = [];
     for (let i = 0; i < 5; i++) {
       let button = document.createElement("button");
@@ -14,9 +31,15 @@ class TopBar extends HTMLElement {
       this.buttons.push(button);
       container.appendChild(button);
     }
+    // Inject styles and content into Shadow DOM
     this.shadowRoot.append(style, container);
   }
-
+  /**
+   * Customizes a top bar button depending on its index.
+   * Assigns icon, functionality, and styling class.
+   * @param {HTMLButtonElement} button - The button to customize.
+   * @param {number} buttonNum - Button index (0: Home, 1: Save, 2: Download, 3: Share, 4: Profile)
+   */
   customizeButton(button, buttonNum) {
     switch (buttonNum) {
       case 0:
@@ -57,4 +80,8 @@ class TopBar extends HTMLElement {
     }
   }
 }
+/**
+ * Registers the <top-bar> custom element so it can actually be used in HTML.
+ * Otherwise, it’s just a sad row of broken buttons.
+ */
 customElements.define("top-bar", TopBar);

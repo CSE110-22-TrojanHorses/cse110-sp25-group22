@@ -1,16 +1,27 @@
+/**
+ * A handcrafted greeting card Web Component.
+ * Editable front, back, and inside pages — think arts & crafts, minus the glue.
+ * @customElement
+ * @extends HTMLElement
+ */
 class GreetingCard extends HTMLElement {
+  /**
+   * Builds the greeting card UI, wires up DOM structure,
+   * loads external styles, and hides the inside until flipped.
+   */
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
+    // Link the stylesheet because plain HTML just won’t cut it
     const style = document.createElement("link");
     style.setAttribute("rel", "stylesheet");
     style.setAttribute("href", "cardFormat.css");
 
-    // This is the container to encapsulate inside and outside
+    // Root container that holds both outside and inside of the card
     const container = document.createElement("div");
     container.classList.add("card-container");
 
-    // Outside covers
+    // Outside covers of the card
     const outside = document.createElement("div");
     outside.classList.add("card", "outside");
 
@@ -24,7 +35,7 @@ class GreetingCard extends HTMLElement {
     const title = document.createElement("h2");
     title.textContent = "Front Cover Title";
 
-    // feel free to fix this part, it's just a prototype
+    // Placeholder image for now, replace as needed
     const img = document.createElement("img");
     img.src = "../../assets/icons/example.png"; // custom image link
     img.alt = "Cover Image";
@@ -63,38 +74,50 @@ class GreetingCard extends HTMLElement {
 
     inside.append(leftWrapper, rightWrapper);
     container.append(outside, inside);
-
+    // Attach everything to the shadow of DOM :), kidding just the shadow DOM
     this.shadowRoot.append(style, container);
+    // Cache for later use
     this._img = img;
     this._rightPage = rightPage;
 
-    // Save image change
+    // Save image src to local storage when it loads. you know what they say, "presistance is the ... i forogot the rest"
     img.addEventListener("load", () => {
       localStorage.setItem(this._storageKeys.imageURL, img.src);
     });
   }
 
-  // when we show inside contents, we should hide outside cover
+
+  /**
+   * Shows the inside pages of the card.
+   * Useful for when you’re feeling introspective.
+   */
   showInside() {
     this.shadowRoot.querySelector(".inside").classList.remove("hidden");
     this.shadowRoot.querySelector(".outside").classList.add("hidden");
   }
-
-  // when we show outside covers, we should hide inside contents
+  /**
+   * Shows the front and back covers of the card.
+   * Because sometimes the message can wait.
+   */
   showOutside() {
     this.shadowRoot.querySelector(".inside").classList.add("hidden");
     this.shadowRoot.querySelector(".outside").classList.remove("hidden");
   }
-
+  /**
+   * Changes the cover image.
+   * @param {string} url - Direct link to a new image.
+   */
   setCoverImage(url) {
-    //set image by url. might be useful
     if (this._img) {
       this._img.src = url;
     }
   }
 }
 
-//handles toggle functionality
+/**
+ * Hook up flip buttons after the DOM has settled.
+ * Enables toggling between card front and inside views.
+ */
 window.addEventListener("DOMContentLoaded", () => {
   const card = document.querySelector("greeting-card");
   const flipInside = document.getElementById("flip-inside");
@@ -112,5 +135,8 @@ window.addEventListener("DOMContentLoaded", () => {
     flipInside.classList.remove("hidden");
   });
 });
-
+/**
+ * Registers the <greeting-card> custom element.
+ * This is necessary for the browser to recognize it as a custom element.
+ */
 customElements.define("greeting-card", GreetingCard);
