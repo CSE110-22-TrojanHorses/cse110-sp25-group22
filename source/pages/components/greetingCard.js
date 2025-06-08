@@ -1,6 +1,7 @@
 class GreetingCard extends HTMLElement {
   constructor() {
     super();
+    this.facingInside = false;
     this.attachShadow({ mode: "open" });
     const style = document.createElement("link");
     style.setAttribute("rel", "stylesheet");
@@ -46,7 +47,7 @@ class GreetingCard extends HTMLElement {
     leftPage.setAttribute("type", "text");
     leftPage.setAttribute("placeholder", "Left Page");
     leftPage.classList.add("page", "left");
-    leftWrapper.append(leftLabel, leftPage);
+    // leftWrapper.append(leftLabel, leftPage);
 
     // Right page
     const rightWrapper = document.createElement("div");
@@ -59,7 +60,7 @@ class GreetingCard extends HTMLElement {
       "Feel free to write your custom contents..."
     );
     rightPage.classList.add("page", "right");
-    rightWrapper.append(rightLabel, rightPage);
+    // rightWrapper.append(rightLabel, rightPage);
 
     inside.append(leftWrapper, rightWrapper);
     container.append(outside, inside);
@@ -67,7 +68,7 @@ class GreetingCard extends HTMLElement {
     this.shadowRoot.append(style, container);
     this._img = img;
     this._rightPage = rightPage;
-
+    
     // Save image change
     img.addEventListener("load", () => {
       localStorage.setItem(this._storageKeys.imageURL, img.src);
@@ -92,25 +93,72 @@ class GreetingCard extends HTMLElement {
       this._img.src = url;
     }
   }
+
+  addCardElement(type, x, y) {
+    let cardFace;
+    if (this.facingInside)
+      cardFace = this.shadowRoot.querySelector(".inside");
+    else
+      cardFace = this.shadowRoot.querySelector(".outside");
+
+    if (type === "textBox") {
+      const cardElem = document.createElement("card-element");
+      cardElem.setAttribute("type", "textBox");
+      cardElem.setAttribute("pos", `${x},${y}`);
+      console.log("Appending card element:", cardElem);
+      cardFace.append(cardElem);
+    }
+  }
 }
+
+
 
 //handles toggle functionality
 window.addEventListener("DOMContentLoaded", () => {
   const card = document.querySelector("greeting-card");
   const flipInside = document.getElementById("flip-inside");
   const flipOutside = document.getElementById("flip-outside");
-
+  let toolBar = document.getElementById("tBar");
+  console.log(toolBar);
   flipInside.addEventListener("click", () => {
     card.showInside();
     flipInside.classList.add("hidden");
     flipOutside.classList.remove("hidden");
+    card.facingInside = true;
   });
 
   flipOutside.addEventListener("click", () => {
     card.showOutside();
     flipOutside.classList.add("hidden");
     flipInside.classList.remove("hidden");
+    card.facingInside = false;
   });
+
+  card.addEventListener("mouseover", () => {
+    
+    if(toolBar.getMode() === "textBox"){
+      card.style.cursor = "text";//when in text mode cursor changes!
+      // console.log("Bruh");
+    }
+    else{
+      card.style.cursor = "pointer";
+    }
+  });
+
+card.addEventListener("click", (e) => {
+  // console.log(e.target.tagName);
+  console.log(toolBar.mode)
+  if (toolBar.getMode() === "textBox") {
+    card.addCardElement("textBox", e.clientX, e.clientY);
+    console.log("Added text box element!");
+  }
+ else {
+    console.log("Not saved", e.target.value);
+
+  }
+});
+
+
 });
 
 customElements.define("greeting-card", GreetingCard);
