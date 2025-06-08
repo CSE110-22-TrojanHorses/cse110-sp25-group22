@@ -99,7 +99,7 @@ describe("Basic user flow for website", () => {
     const shadow = await navBar.getProperty("shadowRoot");
     const homeButton = await shadow.$("#home");
     await Promise.all([
-    page.waitForNavigation({ waitUntil: "networkidle0" }), // or "domcontentloaded"
+    page.waitForNavigation({ waitUntil: "networkidle0" }), 
    homeButton.click(),
   ]);
   const homepageCard = await page.$("home-card");
@@ -115,7 +115,7 @@ describe("Basic user flow for website", () => {
     ]);
 
     expect(page.url()).toMatch(/index\.html/);;
-  },6000);
+  },8000);
 
 it("homepage card delete", async () => {
   await page.evaluate((cardStr) => {

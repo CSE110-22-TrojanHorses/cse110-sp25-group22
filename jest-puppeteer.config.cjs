@@ -3,8 +3,7 @@ const ci = Boolean(process.env.CI || false);
 
 const baseOptions = {
   launch: {
-    headless: false,
-    slowMo: 10,
+    headless: false
   }
 };
 

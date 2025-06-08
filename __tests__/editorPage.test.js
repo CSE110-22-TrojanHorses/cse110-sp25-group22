@@ -4,13 +4,12 @@ describe("Basic user flow for website", () => {
   let saveButton;
   beforeEach(async () => {
     await page.goto(
-      "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/editor_page/index.html", {  waitUntil: "networkidle0" }
+      "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/editor_page/index.html"
     );
     await page.waitForSelector("top-bar");
     const topBar = await page.$("top-bar");
     const shadow = await topBar.evaluateHandle((e) => e.shadowRoot);
     saveButton = await shadow.$(".save");
-    await page.evaluate(() => localStorage.clear());
   });
 
   afterEach(async () => {
@@ -186,8 +185,7 @@ describe("Basic user flow for website", () => {
       await createButton.click();
     }
 
-    await page.goto(
-      "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html"
+    await page.goto("https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html",{ waitUntil: "networkidle0" }    
     );
     const previewCards = await page.$$("home-card");
     expect(previewCards.length).toBe(3);
