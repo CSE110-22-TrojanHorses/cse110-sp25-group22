@@ -62,6 +62,7 @@ class GreetingCard extends HTMLElement {
     const title = document.createElement("input");
     title.setAttribute("type", "text");
     title.setAttribute("value", "Front Cover Title");
+    title.classList.add("title");
     const img = document.createElement("img");
     img.src = "../../assets/icons/example.png";
     img.alt = "Cover Image";

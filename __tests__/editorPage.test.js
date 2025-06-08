@@ -1,41 +1,182 @@
-/*
-describe('Basic user flow for website', () => {
-    // First visit website
-    beforeEach(async () => {
-        await page.goto('http://localhost:5501/source/pages/editor_page/index.html');
+/* global page */
+describe("Basic user flow for website", () => {
+  // First visit website
+  let saveButton;
+  beforeEach(async () => {
+    await page.goto(
+      "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/editor_page/index.html"
+    );
+    const topBar = await page.$("nav-bar");
+    const shadow = await topBar.evaluateHandle((e) => e.shadowRoot);
+    saveButton = await shadow.$("#save");
+  });
+
+  afterEach(async () => {
+    await page.evaluate(() => localStorage.clear());
+  });
+
+  // Save button functionality
+  it("Clicking save button should show save message", async () => {
+    console.log("Checking that save message flashes");
+    await saveButton.click();
+    // account for fade in
+    await page.waitForFunction(() => {
+      const checkAppear = document.querySelector("save-message");
+      return (
+        checkAppear && window.getComputedStyle(checkAppear).opacity === "1"
+      );
     });
 
-    // Save button functionality
-    it.skip('save button no edits', async () => {
-          
-    });
+    const saveMessage = await page.$("#save-message");
+    const opacity = await page.evaluate((e) => {
+      return window.getComputedStyle(e).opacity;
+    }, saveMessage);
 
-    it.skip('save button with edits', async() => {
+    expect(opacity).toBe(1);
+  });
 
-    });
+  it("Make sure no duplicates when same card is saved", async () => {
+    console.log(
+      "Testing that multiple saves doesn't change card count in storage"
+    );
+    await page.evaluate(() => localStorage.clear());
+    // first save
+    await saveButton.click();
+    await page.waitForTimeout(100);
+    const save1Storage = await page.evaluate(() => Object.keys(localStorage));
+    const savedCardName = await page.evaluate(() =>
+      localStorage.getItem("current card")
+    );
+    // save 3x
+    for (let i = 0; i < 3; i++) {
+      await saveButton.click();
+      await page.waitForTimeout(100);
+    }
 
-    it.skip('home button with edits no save', async() => {
+    const allKeys = await page.evaluate(() => Object.keys(localStorage));
+    const cardNamePostSaves = await page.evaluate(() =>
+      localStorage.getItem("current card")
+    );
 
-    });
+    // there should be 2 keys: 1 for current card and one that saves content to overwrite
+    expect(allKeys.length).toBe(save1Storage.length);
+    expect(allKeys).toContain("current card");
+    expect(cardNamePostSaves).toBe(savedCardName); //should be same card
+  });
 
-    it.skip('home button with no edits no save', async() => {
+  it("Verify that exact content of page is saved when no edits are made", async () => {
+    await saveButton.click();
+    await page.waitForTimeout(100);
 
-    });
+    const card = await page.evaluate(() =>
+      localStorage.getItem("current card")
+    );
+    const cardData = await page.evaluate(
+      (key) => JSON.parse(localStorage.getItem(key)),
+      card
+    );
 
-    it.skip('home button with edits and save', async() => {
+    expect(cardData).toHaveProperty("frontElements");
+    expect(cardData).toHaveProperty("backElements");
+    expect(cardData).toHaveProperty("leftElements");
+    expect(cardData).toHaveProperty("rightElements");
 
-    });
+    //front page
+    const front = cardData.frontElements;
+    const [title, img, message] = front;
+    expect(title.value).toBe("Front Cover Title");
+    expect(img.tag).toBe("IMG");
+    expect(message.value).toBe("Front Message");
 
-    it.skip('home button with no edits and save', async() => {
+    //back page
+    const back = cardData.backElements;
+    expect(back.length).toBe(1);
+    expect(back[0].attributes.placeholder).toBe("Back Cover");
 
-    });
+    //left page
+    const left = cardData.leftElements;
+    expect(left.length).toBe(1);
+    expect(left[0].attributes.placeholder).toBe("Left Page");
 
-    it.skip('load card data when add button is clicked', async() => {
+    //right page
+    const right = cardData.rightElements;
+    expect(right.length).toBe(1);
+    expect(right[0].attributes.placeholder).toBe("Feel free to write");
+  });
 
-    });
+  it("Verify that exact edits are kept when edits are made and card saved", async () => {
+    await page.evaluate(() => localStorage.clear());
 
-    it.skip('load card data when edit button is clicked', async() => {
+    const cardHandle = await page.$("greeting-card");
+    const shadowRootHandle = await cardHandle.evaluateHandle(
+      (e) => e.shadowRoot
+    );
 
-    });
-})
-*/
+    const titleInput = await shadowRootHandle.$(
+      'input[value="Front Cover Title"]'
+    );
+    //select all text and replace with new title
+    await titleInput.click({ clickCount: 3 });
+    await titleInput.type("CONGRATS, GRAD!");
+
+    await saveButton.click();
+
+    //check that edits saved
+    const card = await page.evaluate(() =>
+      localStorage.getItem("current card")
+    );
+    const savedTitle = await page.evaluate((key) => {
+      const data = JSON.parse(localStorage.getItem(key));
+      const title = data.frontElements.find((e) =>
+        e.attributes.class.includes("title")
+      );
+      return title ? title.value : null;
+    }, card);
+    expect(savedTitle).toBe("CONGRATS, GRAD!");
+  });
+
+  it("Returning home after saving edits should produce a preview", async () => {
+    await page.evaluate(() => localStorage.clear());
+    await saveButton.click();
+    await page.waitForTimeout(100);
+
+    await page.goto(
+      "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html"
+    );
+
+    await page.waitForSelector("home-card");
+    const previewCard = await page.$("home-card");
+    expect(previewCard).not.toBeNull();
+  });
+
+  it("Returning home without saving edits should produce no preview cards", async () => {
+    await page.evaluate(() => localStorage.clear());
+    await page.goto(
+      "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html"
+    );
+
+    const previewCards = await page.$$("home-card");
+    expect(previewCards.length).toBe(0);
+  });
+
+  it("Repeatedly creating new cards and saving them should give us the expected number of cards ", async () => {
+    await page.evaluate(() => localStorage.clear());
+
+    for (let i = 0; i < 3; i++) {
+      await saveButton.click();
+      await page.waitForTimeout(100);
+
+      await page.goto(
+        "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html"
+      );
+
+      const navBar = await page.$("nav-bar");
+      const shadow = await navBar.getProperty("shadowRoot");
+      const createButton = await shadow.$("#create");
+      await createButton.click();
+    }
+
+    const previewCards = await page.$$("home-card");
+    expect(previewCards.length).toBe(3);
+  });
+});
