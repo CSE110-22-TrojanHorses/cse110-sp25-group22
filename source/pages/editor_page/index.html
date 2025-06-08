@@ -4,6 +4,7 @@
     <title>Editor Page</title>
     <link rel="stylesheet" href="navBars.css" />
     <link rel="stylesheet" href="cardFormat.css" />
+    <link rel="stylesheet" href="style.css" />
     <script
       src="../components/toolBar.js"
       type="application/javascript"
@@ -16,6 +17,10 @@
       src="../components/topBar.js"
       type="application/javascript"
     ></script>
+    <script>
+      src="../components/toolBar.js"
+      type="application/javascript"
+    </script>
     <script
       src="../components/greetingCard.js"
       type="application/javascript"
@@ -30,6 +35,10 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, user-scalable=yes"
     />
+    <!--  Cropper.js is from external link -->
+    <link  rel="stylesheet"
+        href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css"/>
+    <script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js"></script>
   </head>
   <body>
     <main>
@@ -43,5 +52,18 @@
         <greeting-card></greeting-card>
       </div>
     </main>
+      <!--  Cropping modal -->
+      <div id="cropper-modal" class="hidden">
+        <div class="cropper-wrapper">
+          <img id="cropper-image">
+          <div class="cropper-actions">
+          <button id="crop-ok">Crop & Insert</button>
+            <button id="crop-cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      
+
   </body>
 </html>
