@@ -2,7 +2,7 @@
 describe('Basic user flow for website', () => {
     // First visit website
     beforeEach(async () => {
-        await page.goto('http://localhost:5501/source/pages/editor_page/index.html');
+        await page.goto('https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html');
     });
 
     // Save button functionality
