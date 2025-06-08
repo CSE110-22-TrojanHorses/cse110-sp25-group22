@@ -48,8 +48,12 @@ class ToolBar extends HTMLElement {
   }
 
   getMode(){
-    console.log(this.mode);
+    // console.log(this.mode);
     return this.mode;
+  }
+
+  resetMode(){
+    this.mode = "edit";
   }
 
   customizeButton(button, buttonNum) {
@@ -108,7 +112,7 @@ class ToolBar extends HTMLElement {
     window.addEventListener("shape-selected", (e) => {
       this.selectedShape = e.detail;
 
-      console.log("BUDDY" + e.detail);
+      // console.log("BUDDY" + e.detail);
       // document.body.style.cursor = "pointer";
     });
   }

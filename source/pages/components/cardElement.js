@@ -1,5 +1,5 @@
 class CardElement extends HTMLElement{
-  static cardElemID = 0;
+  static idCounter = 0;
   constructor(){
     super();
     this.shadow = this.attachShadow({mode:"open"});
@@ -7,7 +7,7 @@ class CardElement extends HTMLElement{
     this.y = 0;
     this.type = null;
     this.elem = null;
-    this.ID = CardElement.cardElemID++;
+    this.elemID = CardElement.idCounter++;
   }
 
   static get observedAttributes() {
@@ -26,11 +26,23 @@ class CardElement extends HTMLElement{
 
   createElement(elemType){
     let [parentType, subType] = elemType.split("-");
+    // console.log(parentType);
+    // console.log(subType);
     if(parentType === "textBox")
       this.makeTextBox();
     else if(parentType === "shape")
       this.makeShape(subType);
+    else if(parentType === "image")
+      console.log("ASKDAKJSHDKJAHDKAJ");
     this.type = parentType;
+    this.elem.addEventListener("click", () =>{
+      console.log("Event read");
+      const event = new CustomEvent("elemClicked", { 
+        bubbles: true,
+        composed: true,
+        detail: [this.elemID, this.elem]});
+      window.dispatchEvent(event);
+    })
   }
 
   makeTextBox(){
@@ -92,7 +104,7 @@ class CardElement extends HTMLElement{
 //     const image
 //   }
   moveElem(pos){
-    console.log("move elem called for: " + this.type);
+    // console.log("move elem called for: " + this.type);
     let [x, y] = pos.split(","); //gets str values of x and y
     this.x = Number(x);
     this.y = Number(y);

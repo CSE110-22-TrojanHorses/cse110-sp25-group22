@@ -8,7 +8,6 @@ class GreetingCard extends HTMLElement {
     const style = document.createElement("link");
     style.setAttribute("rel", "stylesheet");
     style.setAttribute("href", "cardFormat.css");
-
     // This is the container to encapsulate inside and outside
     const container = document.createElement("div");
     container.classList.add("card-container");
@@ -71,6 +70,12 @@ class GreetingCard extends HTMLElement {
     this._img = img;
     this._rightPage = rightPage;
     
+    //color picker
+    const colorPicker = document.createElement("input");
+    colorPicker.id = "colorPicker";
+    colorPicker.type = "color";
+    colorPicker.style.display = "none";
+    this.shadowRoot.append(colorPicker);
     // Save image change
     img.addEventListener("load", () => {
       localStorage.setItem(this._storageKeys.imageURL, img.src);
@@ -94,6 +99,10 @@ class GreetingCard extends HTMLElement {
     if (this._img) {
       this._img.src = url;
     }
+  }
+
+  getColorPicker(){
+    return this.shadowRoot.getElementById("colorPicker");
   }
 
   addCardElement(type, x, y) {
@@ -142,7 +151,9 @@ window.addEventListener("DOMContentLoaded", () => {
   const flipInside = document.getElementById("flip-inside");
   const flipOutside = document.getElementById("flip-outside");
   let toolBar = document.getElementById("tBar");
-  console.log(toolBar);
+  const colorPicker = card.getColorPicker();
+  let selectedElem;
+  // console.log(toolBar);
   flipInside.addEventListener("click", () => {
     card.showInside();
     flipInside.classList.add("hidden");
@@ -169,30 +180,66 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-//for clicking on card
-card.addEventListener("click", (e) => {
-  // console.log(e.target.tagName);
-  console.log(toolBar.mode)
-  if (toolBar.getMode() === "textBox") {
-    card.addCardElement("textBox", e.clientX, e.clientY);
-    console.log("Added text box element!");
-  }
-  if(toolBar.getMode() === "shape"){
-    let shapeType = toolBar.selectedShape;
-    if(shapeType){
-      card.addCardElement(`shape-${shapeType}`, e.clientX, e.clientY);
-      console.log("Added shape");
+  //for clicking on card
+  card.addEventListener("click", (e) => {
+    // console.log(e.target.tagName);
+    // console.log(toolBar.mode)
+    if (toolBar.getMode() === "textBox") {
+      card.addCardElement("textBox", e.clientX, e.clientY);
+      // console.log("Added text box element!");
+    } else if(toolBar.getMode() === "shape"){
+      let shapeType = toolBar.selectedShape;
+      if(shapeType){
+        card.addCardElement(`shape-${shapeType}`, e.clientX, e.clientY);
+        // console.log("Added shape");
+      }
+      else
+        console.error("Shape type not picked yet!");
     }
-    else
-      console.error("Shape type not picked yet!");
-  }
- else {
-    console.log("Not saved", e.target.value);
+    else if (toolBar.getMode() === "edit"){
+      // searchCardElem()
+    } else{
+      // console.log("Not saved", e.target.value);
+    }
+    toolBar.resetMode();
+  });
 
-  }
-});
+  window.addEventListener("elemClicked", (e)=> {
+    // console.log("HEARD HELLO TEO", e.detail);
+    let [elemID, elem] = e.detail;
+    
+    //get xy of elem (to decide where to put colorpicker)
+   
+    let rect = elem.getBoundingClientRect();
+    let x = rect.left;
+    let y = rect.top;
+    let width = rect.width;
+    let height = rect.height;
+    //set color picker
+    console.log(colorPicker);
+    console.log("CP:" + colorPicker);
+    colorPicker.style.display = "block";
+    colorPicker.style.position = "absolute";
+    colorPicker.style.left = x + "px";
+    colorPicker.style.top = y + height + "px";
+    selectedElem = elem;
+    //if click outside an element, want to hide colorPicker
+    
+  })
 
+  colorPicker.addEventListener("input", (event) => {
+      // if (!activeShape) return;
+      if(selectedElem){
 
+        const color = event.target.value;
+        selectedElem.style.backgroundColor = color;
+        // if (selectedElem.classList.contains("triangle-shape")) {
+        //   selectedElem.style.borderBottomColor = color;
+        // } else {
+        //   selectedElem.style.backgroundColor = color;
+        // }
+      }
+  });
 });
 
 customElements.define("greeting-card", GreetingCard);
