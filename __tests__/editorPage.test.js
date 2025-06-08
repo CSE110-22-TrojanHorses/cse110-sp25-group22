@@ -170,6 +170,7 @@ describe("Basic user flow for website", () => {
         "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/editor_page/index.html",{ waitUntil: "networkidle0" }
       );
       
+
       const editorNav = await page.$("top-bar");
       const editorShadow = await editorNav.evaluateHandle((e) => e.shadowRoot);
       const save = await editorShadow.$(".save");
@@ -184,7 +185,6 @@ describe("Basic user flow for website", () => {
       const createButton = await homeShadow.$("#create");
       await createButton.click();
     }
-
     await page.goto("https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html",{ waitUntil: "networkidle0" }    
     );
     const previewCards = await page.$$("home-card");
