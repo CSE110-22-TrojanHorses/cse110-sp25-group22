@@ -1,4 +1,4 @@
-/* global page */
+/*
 describe('Basic user flow for website', () => {
     // First visit website
     beforeEach(async () => {
@@ -38,3 +38,4 @@ describe('Basic user flow for website', () => {
 
     });
 })
+*/

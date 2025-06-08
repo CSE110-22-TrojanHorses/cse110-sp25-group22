@@ -1,14 +1,15 @@
-name: Auto-generate JSDoc
+name: Generate JSDoc
 
 on:
   push:
     branches: [main]
     paths:
-      - '**.js'
-      - 'jsdocs.js'
+      - 'source/**'
+      - 'jsdoc.json'
+      - '.github/workflows/jsdoc.yml'
 
 jobs:
-  build:
+  generate-docs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -22,16 +23,19 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install Dependencies (if any)
-        run: npm install || true  # will skip silently if no package.json
+      - name: Install dependencies
+        run: npm install
 
-      - name: Run Custom JSDoc Generator
-        run: node jsdocs.js
+      - name: Generate JSDoc
+        run: npm run docs # See docs command in package.json
 
-      - name: Commit & Push Docs
+      - name: Disable Jekyll
+        run: touch docs/.nojekyll
+
+      - name: Commit and push generated docs
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "JSDocs Bot"
+          git config user.email "TrojanHorsesBot@no-reply.com"
           git add docs/
-          git diff --quiet && git diff --staged --quiet || git commit -m "📝 Auto-generated custom docs"
+          git diff --quiet && git diff --staged --quiet || git commit -m "JSDocs Auto Generated Documentation"
           git push
