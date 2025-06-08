@@ -30,9 +30,9 @@ describe("Basic user flow for website", () => {
     const shadow = await navBar.getProperty("shadowRoot");
     const homeButton = await shadow.$("#home");
     await homeButton.click();
-    expect();
+    //expect();
   });
-
+  /*
   it.skip("homepage card load with no card", async () => {
     localStorage.clear();
   });
@@ -46,4 +46,5 @@ describe("Basic user flow for website", () => {
   it.skip("homepage card delete all", async () => {});
 
   it.skip("add button click", async () => {});
+  */
 });

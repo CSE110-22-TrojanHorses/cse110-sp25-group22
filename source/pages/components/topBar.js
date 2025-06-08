@@ -86,22 +86,25 @@ class TopBar extends HTMLElement {
 
       let date = new Date();
       storage.time = `Last Sync: ${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDay() + 1).padStart(2, "0")}/${date.getFullYear()} @ 
-                      ${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}:${String(date.getSeconds()).padStart(2, "0")}`
+                      ${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}:${String(date.getSeconds()).padStart(2, "0")}`;
 
       // adds data to local storage
       const curCard = localStorage.getItem("current card");
-      if (!curCard || curCard == "NEW") {  // adds new data to local storage
-        const cardName = `card ${localStorage.length}`
+      if (!curCard || curCard == "NEW") {
+        // adds new data to local storage
+        const cardName = `card ${localStorage.length}`;
         localStorage.setItem(cardName, JSON.stringify(storage));
-        localStorage.setItem("current card", cardName)
+        localStorage.setItem("current card", cardName);
       } else {
         localStorage.setItem(curCard, JSON.stringify(storage)); // updates data that is stored
       }
+
+      showSaveMessage();
     }
 
     /**
      * Gets elements within the container
-     * 
+     *
      * @param {Element} container - The container that the elements are contained in
      * @returns {Object[]} List of structured element data
      */
@@ -120,15 +123,22 @@ class TopBar extends HTMLElement {
         for (let attr of elem.attributes) {
           data.attributes[attr.name] = attr.value;
         }
-        
-        if (tag === 'INPUT') {
+
+        if (tag === "INPUT") {
           data.value = elem.value;
         }
 
         elements.push(data);
-
       }
       return elements;
+    }
+
+    function showSaveMessage() {
+      const message = document.getElementById("save-message");
+      message.classList.add("show");
+      setTimeout(() => {
+        message.classList.remove("show");
+      }, 2500);
     }
   }
 }
