@@ -3,35 +3,55 @@ describe("Basic user flow for website", () => {
   // First visit website
   beforeEach(async () => {
     await page.goto(
-      "http://localhost:5501/source/pages/home_page/homepage.html"
-    );
+      "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html");
+      await page.evaluate(() => localStorage.clear());
   });
 
-  let testCard = `{"leftElements":[["INPUT","<input type="text" placeholder="Left Page" class="page left">",""]],
-    "rightElements":[["INPUT","<input type="text" placeholder="Feel free to write your custom contents..." class="page right">",""]],
-    "backElements":[["INPUT","<input type="text" placeholder="Back Cover" class="page back">",""]],
-    "frontElements":[["INPUT","<input type="text" value="Front Cover Title">","Front Cover Title"],
-    ["IMG","<img src="../../assets/icons/example.png" alt="Cover Image" class="cover-image">"],
-    ["INPUT","<input type="text" value="Front Message">","Front Message"]],"time":"Last Sync: 6/6/2025 @ 23:9:47"}`;
+let testCard = `{
+  "leftElements": [["INPUT", "<input type=\\"text\\" placeholder=\\"Left Page\\" class=\\"page left\\">", ""]],
+  "rightElements": [["INPUT", "<input type=\\"text\\" placeholder=\\"Feel free to write your custom contents...\\" class=\\"page right\\">", ""]],
+  "backElements": [["INPUT", "<input type=\\"text\\" placeholder=\\"Back Cover\\" class=\\"page back\\">", ""]],
+  "frontElements": [
+    ["INPUT", "<input type=\\"text\\" value=\\"Front Cover Title\\">", "Front Cover Title"],
+    ["IMG", "<img src=\\"../../assets/icons/example.png\\" alt=\\"Cover Image\\" class=\\"cover-image\\">"],
+    ["INPUT", "<input type=\\"text\\" value=\\"Front Message\\">", "Front Message"]
+  ],
+  "time": "Last Sync: 6/6/2025 @ 23:9:47"
+}`;
 
-  it.skip("home button click", async () => {
+
+    it("NavBar ‘home’ button stays on homepage", async () => {
+    const navBar = await page.$("nav-bar");
+    const shadow = await (await navBar.getProperty("shadowRoot")).asElement();
+    const homeBtn = await shadow.$("#home");
+
+    await Promise.all([
+      homeBtn.click(),
+      page.waitForNavigation({ waitUntil: "networkidle0" }),
+    ]);
+
+    expect(page.url()).toMatch(/homepage\.html$/);
+  });
+
+  it("homepage card load with card", async () => {
+   await page.evaluate((cardStr) => {
+  localStorage.clear();
+  localStorage.setItem("test card", cardStr);
+  localStorage.setItem("current card", "test card");
+}, testCard);
+
     const navBar = await page.$("nav-bar");
     const shadow = await navBar.getProperty("shadowRoot");
     const homeButton = await shadow.$("#home");
-    await homeButton.click();
-    expect(window.location.pathname, "/source/pages/home_page/homepage.html");
+    await Promise.all([
+    page.waitForNavigation({ waitUntil: "networkidle0" }), // or "domcontentloaded"
+   homeButton.click(),
+  ]);
+    const storedValue = await page.evaluate(() => {
+    return localStorage.getItem('current card');
   });
-
-  it.skip("homepage card load with card", async () => {
-    localStorage.clear();
-    localStorage.setItem("current card", "test card");
-    localStorage.setItem("test card", testCard);
-    const navBar = await page.$("nav-bar");
-    const shadow = await navBar.getProperty("shadowRoot");
-    const homeButton = await shadow.$("#home");
-    await homeButton.click();
-    //expect();
-  });
+  expect(storedValue).toBe("test card");
+  }, 6000);
   /*
   it.skip("homepage card load with no card", async () => {
     localStorage.clear();
