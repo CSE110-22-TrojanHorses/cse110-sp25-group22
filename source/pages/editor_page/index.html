@@ -1,17 +1,47 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <title>Editor Page</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="cardFormat.css">
-    <script src="index.js" type="application/javascript"></script>
-    <script src="tool-bar-func.js" type="application/javascript"></script>
-    <script src="top-bar-func.js" type="application/javascript"></script>
-    <script src="GreetingCard.js" type="application/javascript"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <link rel="stylesheet" href="navBars.css" />
+    <link rel="stylesheet" href="cardFormat.css" />
+    <script
+      src="../components/toolBar.js"
+      type="application/javascript"
+    ></script>
+    <script
+      src="../components/topBar.js"
+      type="application/javascript"
+    ></script>
+    <script
+      src="../components/greetingCard.js"
+      type="application/javascript"
+    ></script>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    />
+    <!-- ✨ Cropper.js -->
+    <link  rel="stylesheet"
+        href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css"/>
+    <script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js"></script>
   </head>
   <body>
+<<<<<<< HEAD
+<<<<<<< HEAD
+    <main>
+      <top-bar></top-bar>
+      <div class="view-toggle">
+        <button id="flip-inside">Flip to Inside</button>
+        <button id="flip-outside" class="hidden">Flip to Outside</button>
+      </div>
+      <div class="content">
+        <tool-bar></tool-bar>
+        <greeting-card></greeting-card>
+      </div>
+=======
+=======
+>>>>>>> 0075e7199dd703f71a13b427e86f41d6674a2f2d
     <main> <!--test-->>
         <div class="pagetop">
             <!-- <button class="topleftimg" onclick="alert('Home clicked!')"><img src="assets/top-bar-imgs/apps.png" alt="Diagram"></button>
@@ -50,6 +80,70 @@
             <button class="shapes" onclick="alert('Shapes clicked!')"><img  src="resources.png" alt="Diagram"></button>
             <button class="addText" onclick="alert('Add Text clicked!')"><img  src="text.png" alt="Diagram"></button>
         </div> -->
+<<<<<<< HEAD
+>>>>>>> 0075e7199dd703f71a13b427e86f41d6674a2f2d
+=======
+>>>>>>> 0075e7199dd703f71a13b427e86f41d6674a2f2d
     </main>
+      +<!-- ✨ Cropping modal -->
+      <div id="cropper-modal" class="hidden">
+        <div class="cropper-wrapper">
+          <img id="cropper-image">
+          <div class="cropper-actions">
+          <button id="crop-ok">Crop & Insert</button>
+            <button id="crop-cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <style>
+        #cropper-modal          {position:fixed;inset:0;background:rgba(0,0,0,.6);
+                                display:flex;align-items:center;justify-content:center;z-index:9999}
+        #cropper-modal.hidden   {display:none}
+                                max-width:80vw;max-height:80vh;display:flex;flex-direction:column;gap:1rem}
+        .cropper-actions {
+          display: flex;
+          justify-content: flex-end;
+          gap: 1rem;
+          margin-top: 1rem;
+        }
+
+        .cropper-actions button {
+          padding: 0.5rem 1.2rem;
+          font-size: 1rem;
+          border: none;
+          border-radius: 6px;
+          background: #007bff;
+          color: white;
+          cursor: pointer;
+        }
+
+        .cropper-actions button:hover {
+          background: #0056b3;
+        }
+
+        .cropper-actions button:last-child {
+          background: #ccc;
+          color: #333;
+        }
+
+        .cropper-actions button:last-child:hover {
+          background: #999;
+        }     
+        .cropper-wrapper        {
+          width: 80vw;                /* take most of the viewport width   */
+          height: 80vh;               /* and most of the height            */
+          max-width: 1000px;          /* but don’t exceed 1000 px          */
+          max-height: 800px;          /* or 800 px high                    */
+        }
+
+        #cropper-image {
+          width: 100%;                /* fill wrapper horizontally         */
+          height: 100%;               /* fill wrapper vertically           */
+          object-fit: contain;        /* keep aspect ratio                 */
+        }
+    </style>
+
   </body>
+  
 </html>
