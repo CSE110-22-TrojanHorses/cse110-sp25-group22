@@ -57,6 +57,7 @@ class GreetingCard extends HTMLElement {
     this.addEventListener("click", this.handleClick.bind(this));
     this.addEventListener("mouseover", this.handleMouseOver.bind(this));
     window.addEventListener("elemClicked", this.handleElemClicked.bind(this));
+    document.addEventListener("keydown", this.handlerDeleteSelectedElem.bind(this));
     const colorPicker = this.shadowRoot.getElementById("colorPicker");
     colorPicker.addEventListener("input", this.handlePickColor.bind(this));
   }
@@ -110,8 +111,6 @@ class GreetingCard extends HTMLElement {
     let width = rect.width;
     let height = rect.height;
     //set color picker
-    console.log(colorPicker);
-    console.log("CP:" + colorPicker);
     colorPicker.style.display = "block";
     colorPicker.style.position = "absolute";
     colorPicker.style.left = x + "px";
@@ -122,11 +121,30 @@ class GreetingCard extends HTMLElement {
   }
 
   handlePickColor(e){
-      if(this.selectedElem){
-
-        const color = e.target.value;
-        this.selectedElem.style.backgroundColor = color;
+    const toolBar = document.getElementById("tBar");
+    // toolBar.shapeType;
+    if(this.selectedElem){
+      const color = e.target.value;
+      if(toolBar.selectedShape == "triangle") {
+        this.selectedElem.style["border-bottom-color"] = color;
       }
+      this.selectedElem.style.backgroundColor = color;
+    }
+  }
+
+  handlerDeleteSelectedElem(e){
+    const host = this.selectedElem.getRootNode().host;
+    // console.log(this.selectedElem);
+    console.log(host.writingToTextBox);
+    console.log(host.type);
+    if(host.type === "textBox" && host.writingToTextBox){
+        // console.lo
+        return;
+    }
+    if ((e.key === "Backspace" || e.key === "Delete") && this.selectedElem) {
+        this.selectedElem.remove();
+        this.selectedElem = null;
+    }
   }
   
   // when we show inside contents, we should hide outside cover
@@ -172,7 +190,6 @@ class GreetingCard extends HTMLElement {
     cardFace.append(cardElem);
   }
 }
-
 
 
 //handles toggle functionality

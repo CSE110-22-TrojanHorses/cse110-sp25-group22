@@ -219,6 +219,7 @@ class CropperManager{
       this.okBtn = null;
       this.cancelBtn = null;
       this.dataURL = null;
+      this.dataID = null;
       this.imageReady = true;
     }
 
@@ -270,6 +271,12 @@ class CropperManager{
       this.dataURL = this.activeCropper.getCroppedCanvas().toDataURL("image/png");
       this.closeCropper();
       this.imageReady = true;
+      const imageToSend = document.createElement("img");
+      imageToSend.src = this.dataURL;
+      const cardElem = document.createElement("card-element");
+      this.dataID = cardElem.getElemID(); //in greetingCard click in greeting card handler
+      //put `image-${cardElem.dataID}`
+
     });
     }
 

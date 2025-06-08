@@ -7,7 +7,12 @@ class CardElement extends HTMLElement{
     this.y = 0;
     this.type = null;
     this.elem = null;
+    this.writingToTextBox = false;
     this.elemID = CardElement.idCounter++;
+  }
+
+  getElemID(){
+    return this.elemID;
   }
 
   static get observedAttributes() {
@@ -34,14 +39,33 @@ class CardElement extends HTMLElement{
       this.makeShape(subType);//subType is shapeType
     else if(parentType === "image")
       this.makeImage(subType);//subType is dataURL
-    this.elem.addEventListener("click", () =>{
-      console.log("Event read");
+    this.elem.addEventListener("click", (e) =>{
+      // console.log("Event read");
+
+      if(this.type === "textBox"){
+        const textArea = this.elem.querySelector("textarea");
+        const rect = textArea.getBoundingClientRect();
+        let x = e.clientX - rect.left;
+        let y = e.clientY - rect.top;
+        const padding = 8; // match your CSS
+
+        const isInsideTextArea = (
+          x > padding &&
+          x < rect.width - padding &&
+          y > padding &&
+          y < rect.height - padding
+        );
+        if(isInsideTextArea)
+          this.writingToTextBox = true;
+        else
+          this.writingToTextBox = false;
+      }
       const event = new CustomEvent("elemClicked", { 
         bubbles: true,
         composed: true,
         detail: [this.elemID, this.elem]});
       window.dispatchEvent(event);
-    })
+    });
   }
 
   makeTextBox(){
@@ -53,6 +77,11 @@ class CardElement extends HTMLElement{
     form.appendChild(textArea);
     // form.style.border = "1px solid red";
     this.shadow.appendChild(form);
+    textArea.addEventListener("focus", () =>{
+      this.writingToTextBox = true;
+      console.log("Writing to text box!");
+    });
+
   }
 
   makeShape(shapeType){
@@ -89,8 +118,44 @@ class CardElement extends HTMLElement{
         shape.style.background = "none";
         break;
     }
+    const resizer = document.createElement("div");
+    resizer.className = "resizer";
+    Object.assign(resizer.style, {
+      width: "10px",
+      height: "10px",
+      background: "black",
+      position: "absolute",
+      right: "0",
+      bottom: "0",
+      cursor: "se-resize",
+      zIndex: "10"
+    });
+    shape.appendChild(resizer);
+    let isResizing = false;
+    resizer.addEventListener("mousedown", (e) => {
+      e.stopPropagation();
+      isResizing = true;
+      document.addEventListener("mousemove", (b) => {
+        if (!isResizing) return;
+        const rect = shape.getBoundingClientRect();
+        const newWidth = b.clientX - rect.left;
+        const newHeight = b.clientY - rect.top;
+        if (shapeType === "triangle") {
+          shape.style.borderLeftWidth = `${newWidth / 2}px`;
+          shape.style.borderRightWidth = `${newWidth / 2}px`;
+          shape.style.borderBottomWidth = `${newHeight}px`;
+        } else {
+          shape.style.width = `${newWidth}px`;
+          shape.style.height = `${newHeight}px`;
+        }
+      });
+      document.addEventListener("mouseup", () => {
+        isResizing = false;
+      });
+    });
     this.shadow.appendChild(shape);
   }
+
    
 
   makeImage(dataURL){
@@ -115,6 +180,7 @@ class CardElement extends HTMLElement{
       form.style.top = `${this.y}px`; //set
       textArea.style.width = `300px`;
       textArea.style.height = `50px`;
+      textArea.padding = `8px`;
     } else if (this.type === "shape"){
       const shape = this.elem;
       shape.style.position = "absolute";
