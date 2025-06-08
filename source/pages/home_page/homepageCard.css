@@ -40,10 +40,12 @@
     border-color: cornflowerblue;
     border-radius: 5%;
     transform: scale(1.1);
+    filter: cornflowerblue(50%);
 }
 
 .menu label {
     display: block;
+    padding: 10px;
 }
 
 .delete {
@@ -53,6 +55,8 @@
 }
 
 .menu {
+    display: flex;
+    flex-direction: column;
     background-color: aliceblue;
     border-width: 2px;
     border-style: solid;
