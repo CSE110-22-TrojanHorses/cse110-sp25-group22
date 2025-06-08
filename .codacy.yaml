@@ -1,0 +1,13 @@
+engines:
+  eslint:
+    exclude_paths:
+      - docs/
+  csslint:
+    exclude_paths:
+      - docs/
+  eslint-jsx:
+    exclude_paths:
+      - docs/
+  stylelint:
+    exclude_paths:
+      - docs/
