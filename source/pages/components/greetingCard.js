@@ -9,15 +9,15 @@ class GreetingCard extends HTMLElement {
     // This is the container to encapsulate inside and outside
     const container = document.createElement("div");
     container.classList.add("card-container");
-    
+
     // Outside covers
     const outside = document.createElement("div");
     outside.classList.add("card", "outside");
-    
+
     // Inside Contents
     const inside = document.createElement("div");
     inside.classList.add("card", "inside", "hidden");
-    
+
     // Back page
     const backCover = document.createElement("div");
     backCover.classList.add("page-wrapper", "back");
@@ -29,7 +29,7 @@ class GreetingCard extends HTMLElement {
     // Left page
     const leftWrapper = document.createElement("div");
     leftWrapper.classList.add("page-wrapper", "left");
-    
+
     // Right page
     const rightWrapper = document.createElement("div");
     rightWrapper.classList.add("page-wrapper", "right");
@@ -109,7 +109,6 @@ class GreetingCard extends HTMLElement {
     this.populateContainer(frontCover, cardData.frontElements);
     this.populateContainer(leftWrapper, cardData.leftElements);
     this.populateContainer(rightWrapper, cardData.rightElements);
-
   }
 
   /**
@@ -118,27 +117,23 @@ class GreetingCard extends HTMLElement {
    * @param {Array} elementList - list of elements to add
    */
   populateContainer(container, elementList) {
-    for (let i = 0; i < elementList.length; i++) {
-      let element;
+    for (const elementInfo of elementList) {
+      const { tag, attributes = {}, value = "" } = elementInfo;
+      const cardContent = document.createElement(tag);
 
-      // temporary container to put outerHTML into
-      const tmp = document.createElement("div");
-      tmp.innerHTML = elementList[i][1];
-
-      // gets element from temporary container
-      if (elementList[i][0] == "IMG") {
-        element = tmp.querySelector("img");
-      } else {
-        element = tmp.querySelector("input");
-        element.setAttribute("value", elementList[i][2]);
+      if (attributes) {
+        Object.entries(attributes).forEach(([key, val]) =>
+          cardContent.setAttribute(key, val)
+        );
       }
 
-      // adds element to container and remove temporary container
-      container.append(element);
-      tmp.remove();
+      if (tag === "INPUT") {
+        cardContent.value = value;
+      }
+
+      container.appendChild(cardContent);
     }
   }
-
 
   /**
    * Hide outside contents and show inside contents
@@ -158,7 +153,7 @@ class GreetingCard extends HTMLElement {
 
   /**
    * Sets the image source to the given URL
-   * @param {URL} url 
+   * @param {URL} url
    */
   setCoverImage(url) {
     //set image by url. might be useful
