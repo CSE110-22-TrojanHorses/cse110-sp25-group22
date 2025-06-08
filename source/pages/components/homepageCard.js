@@ -27,8 +27,8 @@ class HomepageCard extends HTMLElement {
     // gets stored data to fill the card
     const cardData = JSON.parse(localStorage.getItem(name));
     const frontElements = cardData.frontElements;
-    for (let i = 0; i < frontElements.length; i++) {
-      const { tag, attributes = {}, value = "" } = frontElements[i];
+    for (let element of frontElements) {
+      const { tag, attributes = {}, value = "" } = element;
       const preview = document.createElement(tag);
       if (attributes) {
         Object.entries(attributes).forEach(([key, val]) =>
