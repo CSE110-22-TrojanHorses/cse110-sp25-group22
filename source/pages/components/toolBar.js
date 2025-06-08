@@ -30,21 +30,23 @@ class ToolBar extends HTMLElement {
         button.innerHTML = `<img src="../../assets/icons/tool-bar-icons/add-image.png" alt="Diagram">`;
 
         if (!window.__fileInput) {
+          // Create an invisible <input type="file"> to let user select an image
           window.__fileInput = document.createElement("input");
-          window.__fileInput.type = "file";
-          window.__fileInput.accept = "image/*";
-          window.__fileInput.style.display = "none";
+          window.__fileInput.type = "file"; // only allow files
+          window.__fileInput.accept = "image/*"; // only allow image types
+          window.__fileInput.style.display = "none"; // it's not visible in UI
           document.body.appendChild(window.__fileInput);
+          // When user picks a file...
           window.__fileInput.addEventListener("change", () => {
             const f = window.__fileInput.files[0];   // user may cancel
             if (!f) return;
             const reader = new FileReader();
-            reader.onload = e => openCropper(e.target.result);
+            reader.onload = e => openCropper(e.target.result); // send image to cropper
             reader.readAsDataURL(f);
             window.__fileInput.value = "";           // reset for next time
           });
         }
-
+        // When button is clicked, open the file picker
         button.addEventListener("click", () => window.__fileInput.click());
 
         button.className = "addImage";

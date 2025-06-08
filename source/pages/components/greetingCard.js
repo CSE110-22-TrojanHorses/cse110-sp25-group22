@@ -1,3 +1,4 @@
+let lastFocusedEditable = null;
 class GreetingCard extends HTMLElement {
   constructor() {
     super();
@@ -14,13 +15,15 @@ class GreetingCard extends HTMLElement {
     const outside = document.createElement("div");
     outside.classList.add("card", "outside");
 
-    const backCover = document.createElement("input");
-    backCover.setAttribute("type", "text");
-    backCover.setAttribute("value", "Back Cover");
+    const backCover = document.createElement("div");
+    backCover.contentEditable = true;
     backCover.classList.add("page", "back-cover");
+    backCover.textContent = "Back Cover";
+    backCover.addEventListener("focus", () => lastFocusedEditable = backCover);
     const frontCover = document.createElement("div");
     frontCover.classList.add("page", "front-cover");
     frontCover.contentEditable = true;
+    frontCover.addEventListener("focus", () => lastFocusedEditable = frontCover);
     const title = document.createElement("h2");
     title.textContent = "Front Cover Title";
 
@@ -28,10 +31,32 @@ class GreetingCard extends HTMLElement {
     const img = document.createElement("img");
     img.src = "../../assets/icons/example.png"; // custom image link
     img.alt = "Cover Image";
-    img.classList.add("cover-image");
+    img.style.width = "100%";
+    img.style.height = "auto";
+    img.style.display = "block";
+    img.ondblclick = () => openCropper(img.src, img);
+
+    const wrapper = document.createElement("div");
+    wrapper.style.resize = "both";
+    wrapper.style.overflow = "auto";
+    wrapper.style.display = "inline-block";
+    wrapper.style.border = "2px dashed #aaa";
+    wrapper.contentEditable = "false";
+    wrapper.appendChild(img);
+
+    wrapper.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const root = this.shadowRoot;
+      root.querySelectorAll(".selected").forEach(el => el.classList.remove("selected"));
+      wrapper.classList.add("selected");
+    });
+
+    const spacer = document.createElement("div");
+    spacer.innerHTML = "<br>";
+
     const message = document.createElement("p");
     message.textContent = "Front Message";
-    frontCover.append(title, img, message);
+    frontCover.append(title, wrapper, spacer, message);
     outside.append(backCover, frontCover);
 
     // Inside Contents
@@ -42,23 +67,20 @@ class GreetingCard extends HTMLElement {
     const leftWrapper = document.createElement("div");
     leftWrapper.classList.add("page-wrapper");
     const leftLabel = document.createElement("div");
-    const leftPage = document.createElement("input");
-    leftPage.setAttribute("type", "text");
-    leftPage.setAttribute("placeholder", "Left Page");
+    const leftPage = document.createElement("div");
+    leftPage.contentEditable = true;
     leftPage.classList.add("page", "left");
+    leftPage.textContent = "Left Page";
     leftWrapper.append(leftLabel, leftPage);
 
     // Right page
     const rightWrapper = document.createElement("div");
     rightWrapper.classList.add("page-wrapper");
     const rightLabel = document.createElement("div");
-    const rightPage = document.createElement("input");
-    rightPage.setAttribute("type", "text");
-    rightPage.setAttribute(
-      "placeholder",
-      "Feel free to write your custom contents..."
-    );
+    const rightPage = document.createElement("div");
+    rightPage.contentEditable = true;
     rightPage.classList.add("page", "right");
+    rightPage.textContent = "Feel free to write your custom contents...";
     rightWrapper.append(rightLabel, rightPage);
 
     inside.append(leftWrapper, rightWrapper);
@@ -68,14 +90,56 @@ class GreetingCard extends HTMLElement {
     this._img = img;
     this._rightPage = rightPage;
 
+    leftPage.addEventListener("focus", () => lastFocusedEditable = leftPage);
+    rightPage.addEventListener("focus", () => lastFocusedEditable = rightPage);
+
     // Save image change
     img.addEventListener("load", () => {
       localStorage.setItem(this._storageKeys.imageURL, img.src);
     });
 
-    /* ✨ double-click any picture to re-crop */
+    // double-click any picture to re-crop 
     this.shadowRoot.addEventListener("dblclick", e => {
       if (e.target.tagName === "IMG") openCropper(e.target.src, e.target);
+    });
+
+    // Allow selecting/deselecting images for resizing + auto-wrap dragged images
+    this.shadowRoot.addEventListener("click", e => {
+      const root = this.shadowRoot;
+      if (e.target.tagName === "IMG") {
+        root.querySelectorAll(".selected").forEach(el => el.classList.remove("selected"));
+        const wrapper = e.target.closest("div");
+
+        if (wrapper && wrapper.style.resize) {
+          // already wrapped
+          wrapper.classList.add("selected");
+        } else {
+          // re-wrap orphaned img
+          const img = e.target;
+          const parent = img.parentNode;
+          const newWrapper = document.createElement("div");
+          newWrapper.style.resize = "both";
+          newWrapper.style.overflow = "auto";
+          newWrapper.style.display = "inline-block";
+          newWrapper.style.border = "2px dashed #aaa";
+          newWrapper.contentEditable = "false";
+          newWrapper.classList.add("selected");
+          img.replaceWith(newWrapper);
+          newWrapper.appendChild(img);
+
+          newWrapper.addEventListener("click", ev => {
+            ev.stopPropagation();
+            root.querySelectorAll(".selected").forEach(el => el.classList.remove("selected"));
+            newWrapper.classList.add("selected");
+          });
+
+          const spacer = document.createElement("div");
+          spacer.innerHTML = "<br>";
+          parent.insertBefore(spacer, newWrapper.nextSibling);
+        }
+      } else {
+        root.querySelectorAll(".selected").forEach(el => el.classList.remove("selected"));
+      }
     });
   }
 
@@ -122,13 +186,15 @@ customElements.define("greeting-card", GreetingCard);
 let activeCropper, targetImg;
 
 /**
- * @param {string} dataURL         image to show in Cropper
- * @param {HTMLImageElement|null}  existingImg  null = user picked NEW file
+ * @param dataURL         image to show in Cropper
+ * @param existingImg  null = user picked new file
  */
 function openCropper(dataURL, existingImg = null) {
+  //set the image to be cropped
   targetImg = existingImg;
+  // show cropper modal and load image
   const modal = document.getElementById("cropper-modal");
-  const img   = document.getElementById("cropper-image");
+  const img = document.getElementById("cropper-image");
   img.src = dataURL;
   modal.classList.remove("hidden");
 
@@ -137,8 +203,12 @@ function openCropper(dataURL, existingImg = null) {
 }
 
 function closeCropper() {
+  // hide crop and destroy crop instance
   document.getElementById("cropper-modal").classList.add("hidden");
-  if (activeCropper) { activeCropper.destroy(); activeCropper = null; }
+  if (activeCropper) { 
+    activeCropper.destroy(); 
+    activeCropper = null; 
+  }
   targetImg = null;
 }
 
@@ -152,21 +222,104 @@ window.addEventListener("DOMContentLoaded", () => {
     if (!activeCropper) return;
     const dataURL = activeCropper.getCroppedCanvas().toDataURL("image/png");
 
-    // — Insert or replace —
     if (targetImg) {
-      targetImg.src = dataURL; // re-crop existing
+      // user starts recroppoing an existing image
+      targetImg.src = dataURL;  // replaced the existing one with the one after cropped
     } else {
       const card = document.querySelector("greeting-card");
       const root = card.shadowRoot;
+
       if (root.querySelector(".outside:not(.hidden)")) {
-        root.querySelector(".cover-image").src = dataURL;
-      } else {
-        const left = root.querySelector(".left.page-wrapper, .left") || root.querySelector(".left");
+        // we are cropping in the outside cover
+        if (lastFocusedEditable && lastFocusedEditable.classList.contains("back-cover")) {
+          // user is editing the back cover
+          const img = document.createElement("img"); // Create new image element
+          img.src = dataURL;
+          img.style.width = "100%";
+          img.style.height = "auto";
+          img.style.display = "block";
+          img.ondblclick = () => openCropper(img.src, img);  // enable recropping
+
+          const wrapper = document.createElement("div");
+          wrapper.style.resize = "both";  // allow manually resize
+          wrapper.style.overflow = "hidden";
+          wrapper.style.display = "inline-block";
+          wrapper.style.border = "2px dashed #aaa";
+          wrapper.contentEditable = "false";
+          wrapper.classList.add("selected");
+          wrapper.appendChild(img);
+
+          wrapper.addEventListener("click", (e) => {
+            // enable reselecting the image on click
+            e.stopPropagation();
+            root.querySelectorAll(".selected").forEach(el => el.classList.remove("selected"));
+            wrapper.classList.add("selected");
+          });
+
+          const spacer = document.createElement("div"); // add space after adding image for typing
+          spacer.innerHTML = "<br>";
+          lastFocusedEditable.appendChild(wrapper); // Insert the resizable image
+          lastFocusedEditable.appendChild(spacer); // add the spacer we created
+        }
+        else if (lastFocusedEditable && lastFocusedEditable.classList.contains("front-cover")) {
+          //cropping in the front cover
+          // the logic is similar to the back cover
+          const img = document.createElement("img");
+          img.src = dataURL;
+          img.style.width = "100%";
+          img.style.height = "auto";
+          img.style.display = "block";
+          img.ondblclick = () => openCropper(img.src, img);
+
+          const wrapper = document.createElement("div");
+          wrapper.style.resize = "both";
+          wrapper.style.overflow = "hidden";
+          wrapper.style.display = "inline-block";
+          wrapper.style.border = "2px dashed #aaa";
+          wrapper.contentEditable = "false";
+          wrapper.classList.add("selected");
+          wrapper.appendChild(img);
+
+          wrapper.addEventListener("click", (e) => {
+            e.stopPropagation();
+            root.querySelectorAll(".selected").forEach(el => el.classList.remove("selected"));
+            wrapper.classList.add("selected");
+          });
+
+          const spacer = document.createElement("div");
+          spacer.innerHTML = "<br>";
+          lastFocusedEditable.appendChild(wrapper);
+          lastFocusedEditable.appendChild(spacer);
+        }
+
+      } else if (lastFocusedEditable) {
+        // for inside pages
         const img = document.createElement("img");
         img.src = dataURL;
         img.style.width = "100%";
-        left.appendChild(img);
+        img.style.height = "auto";
+        img.style.display = "block";
         img.ondblclick = () => openCropper(img.src, img);
+
+        const wrapper = document.createElement("div");
+        wrapper.style.resize = "both";
+        wrapper.style.overflow = "hidden";
+        wrapper.style.display = "inline-block";
+        wrapper.style.border = "2px dashed #aaa";
+        wrapper.contentEditable = "false";
+        wrapper.classList.add("selected");
+        wrapper.appendChild(img);
+
+        wrapper.addEventListener("click", (e) => {
+          e.stopPropagation();
+          root.querySelectorAll(".selected").forEach(el => el.classList.remove("selected"));
+          wrapper.classList.add("selected");
+        });
+
+        const spacer = document.createElement("div");
+        spacer.innerHTML = "<br>";
+        lastFocusedEditable.appendChild(wrapper);
+        lastFocusedEditable.appendChild(spacer);
       }
     }
 
