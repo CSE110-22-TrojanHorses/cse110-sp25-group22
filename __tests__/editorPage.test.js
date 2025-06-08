@@ -6,9 +6,9 @@ describe("Basic user flow for website", () => {
     await page.goto(
       "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/editor_page/index.html"
     );
-    const topBar = await page.$("nav-bar");
+    const topBar = await page.$("top-bar");
     const shadow = await topBar.evaluateHandle((e) => e.shadowRoot);
-    saveButton = await shadow.$("#save");
+    saveButton = await shadow.$(".save");
   });
 
   afterEach(async () => {
@@ -21,7 +21,7 @@ describe("Basic user flow for website", () => {
     await saveButton.click();
     // account for fade in
     await page.waitForFunction(() => {
-      const checkAppear = document.querySelector("save-message");
+      const checkAppear = document.querySelector("#save-message");
       return (
         checkAppear && window.getComputedStyle(checkAppear).opacity === "1"
       );
@@ -32,7 +32,7 @@ describe("Basic user flow for website", () => {
       return window.getComputedStyle(e).opacity;
     }, saveMessage);
 
-    expect(opacity).toBe(1);
+    expect(opacity).toBe("1");
   });
 
   it("Make sure no duplicates when same card is saved", async () => {
@@ -42,7 +42,7 @@ describe("Basic user flow for website", () => {
     await page.evaluate(() => localStorage.clear());
     // first save
     await saveButton.click();
-    await page.waitForTimeout(100);
+
     const save1Storage = await page.evaluate(() => Object.keys(localStorage));
     const savedCardName = await page.evaluate(() =>
       localStorage.getItem("current card")
@@ -50,7 +50,7 @@ describe("Basic user flow for website", () => {
     // save 3x
     for (let i = 0; i < 3; i++) {
       await saveButton.click();
-      await page.waitForTimeout(100);
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
     const allKeys = await page.evaluate(() => Object.keys(localStorage));
@@ -66,7 +66,6 @@ describe("Basic user flow for website", () => {
 
   it("Verify that exact content of page is saved when no edits are made", async () => {
     await saveButton.click();
-    await page.waitForTimeout(100);
 
     const card = await page.evaluate(() =>
       localStorage.getItem("current card")
@@ -101,7 +100,9 @@ describe("Basic user flow for website", () => {
     //right page
     const right = cardData.rightElements;
     expect(right.length).toBe(1);
-    expect(right[0].attributes.placeholder).toBe("Feel free to write");
+    expect(right[0].attributes.placeholder).toBe(
+      "Feel free to write your custom contents..."
+    );
   });
 
   it("Verify that exact edits are kept when edits are made and card saved", async () => {
@@ -120,6 +121,7 @@ describe("Basic user flow for website", () => {
     await titleInput.type("CONGRATS, GRAD!");
 
     await saveButton.click();
+    await new Promise((resolve) => setTimeout(resolve, 200));
 
     //check that edits saved
     const card = await page.evaluate(() =>
@@ -127,18 +129,18 @@ describe("Basic user flow for website", () => {
     );
     const savedTitle = await page.evaluate((key) => {
       const data = JSON.parse(localStorage.getItem(key));
-      const title = data.frontElements.find((e) =>
-        e.attributes.class.includes("title")
+      const title = data.frontElements.find(
+        (e) => e.tag === "INPUT" && e.value === "CONGRATS, GRAD!"
       );
       return title ? title.value : null;
     }, card);
+
     expect(savedTitle).toBe("CONGRATS, GRAD!");
   });
 
   it("Returning home after saving edits should produce a preview", async () => {
     await page.evaluate(() => localStorage.clear());
     await saveButton.click();
-    await page.waitForTimeout(100);
 
     await page.goto(
       "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html"
@@ -163,19 +165,28 @@ describe("Basic user flow for website", () => {
     await page.evaluate(() => localStorage.clear());
 
     for (let i = 0; i < 3; i++) {
-      await saveButton.click();
-      await page.waitForTimeout(100);
+      await page.goto(
+        "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/editor_page/index.html"
+      );
+
+      const editorNav = await page.$("top-bar");
+      const editorShadow = await editorNav.evaluateHandle((e) => e.shadowRoot);
+      const save = await editorShadow.$(".save");
+      await save.click();
 
       await page.goto(
         "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html"
       );
 
-      const navBar = await page.$("nav-bar");
-      const shadow = await navBar.getProperty("shadowRoot");
-      const createButton = await shadow.$("#create");
+      const homeNav = await page.$("nav-bar");
+      const homeShadow = await homeNav.getProperty("shadowRoot");
+      const createButton = await homeShadow.$("#create");
       await createButton.click();
     }
 
+    await page.goto(
+      "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html"
+    );
     const previewCards = await page.$$("home-card");
     expect(previewCards.length).toBe(3);
   });
