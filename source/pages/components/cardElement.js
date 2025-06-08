@@ -14,27 +14,26 @@ class CardElement extends HTMLElement{
     return ["type", "pos"];
   }
 
+  //calls upon cardElem setAttributes
   attributeChangedCallback(name, oldVal, newVal){
     // console.log("callbac called");
     if(name === "type"){
-        this.createElement(newVal)
+        this.createCardElement(newVal)
     } else if(name === "pos"){
         if(oldVal !== newVal)
             this.moveElem(newVal);
     }
   }
 
-  createElement(elemType){
+  createCardElement(elemType){
     let [parentType, subType] = elemType.split("-");
-    // console.log(parentType);
-    // console.log(subType);
+    this.type = parentType;
     if(parentType === "textBox")
       this.makeTextBox();
     else if(parentType === "shape")
-      this.makeShape(subType);
+      this.makeShape(subType);//subType is shapeType
     else if(parentType === "image")
-      console.log("ASKDAKJSHDKJAHDKAJ");
-    this.type = parentType;
+      this.makeImage(subType);//subType is dataURL
     this.elem.addEventListener("click", () =>{
       console.log("Event read");
       const event = new CustomEvent("elemClicked", { 
@@ -50,19 +49,13 @@ class CardElement extends HTMLElement{
     form.id = `${this.ID}`;
     this.elem = form;
     const textArea = document.createElement("textarea");
-    textArea.rows = "text";
     textArea.placeholder = "Start text here...";
     form.appendChild(textArea);
-    form.style.border = "1px solid red";
+    // form.style.border = "1px solid red";
     this.shadow.appendChild(form);
   }
 
   makeShape(shapeType){
-    // const shapesContainer = document.createElement("div");
-    // shapesContainer.id = "shapes-container";
-    // shapesContainer.style.position = "relative";
-    // shapesContainer.style.width = "100%";
-    // shapesContainer.style.height = "100%";
     const shape = document.createElement("div");
     shape.id = `${this.ID}`;
     this.elem = shape;
@@ -100,9 +93,15 @@ class CardElement extends HTMLElement{
   }
    
 
-//   makeImage(shadow){
-//     const image
-//   }
+  makeImage(dataURL){
+    const img = document.createElement("img");
+    img.id = `${this.elemID}`;
+    this.elem = img;
+    img.src = dataURL;
+    img.alt = "Cropped Image";
+    // console.log(dataURL);
+    this.shadow.appendChild(img);
+  }
   moveElem(pos){
     // console.log("move elem called for: " + this.type);
     let [x, y] = pos.split(","); //gets str values of x and y
@@ -121,6 +120,13 @@ class CardElement extends HTMLElement{
       shape.style.position = "absolute";
       shape.style.left = `${this.x}px`;
       shape.style.top = `${this.y}px`; //set
+    } else if (this.type === "image"){
+      const img = this.elem;
+      //set position
+      img.style.position = "absolute";
+      img.style.left = `${this.x}px`;
+      img.style.top = `${this.y}px`; //set
+      //
     }
 
   }
