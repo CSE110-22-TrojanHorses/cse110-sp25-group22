@@ -1,7 +1,7 @@
 /* global page */
 describe('my first test with jest-puppeteer', () => {
   beforeAll(async () => {
-    await page.goto('http://localhost:9999/');
+    await page.goto('https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html');
   });
 
   test('Create card and store content in localStorage', async () => {
