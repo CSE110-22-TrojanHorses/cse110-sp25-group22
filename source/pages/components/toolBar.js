@@ -4,6 +4,7 @@ class ToolBar extends HTMLElement {
     super();
     this.addingCardElem = false;
     this.mode = "edit";
+    this.selectedShape = null;
     this.attachShadow({ mode: "open" });
     const style = document.createElement("link");
     style.setAttribute("rel", "stylesheet");
@@ -18,6 +19,7 @@ class ToolBar extends HTMLElement {
       this.buttons.push(button);
       toolbar.appendChild(button);
     }
+    this.addShapeEventListeners();
     this.shadowRoot.append(style, toolbar);
   }
 
@@ -57,7 +59,7 @@ class ToolBar extends HTMLElement {
         button.innerHTML = `<img src="../../assets/icons/tool-bar-icons/location-arrow.png" alt="Diagram">`;
         button.addEventListener("click", () => {
           closeMenu();
-          alert("Select clicked!");
+          // alert("Select clicked!");
           this.addingCardElem = false;
           this.mode = "select";
         });
@@ -67,7 +69,7 @@ class ToolBar extends HTMLElement {
         button.innerHTML = `<img src="../../assets/icons/tool-bar-icons/add-image.png" alt="Diagram">`;
         button.addEventListener("click", () => {
           closeMenu();
-          alert("Add Image clicked!");
+          // alert("Add Image clicked!");
           this.addingCardElem = true;
           this.mode = "image";
         });
@@ -78,7 +80,7 @@ class ToolBar extends HTMLElement {
         button.innerHTML = `<img  src="../../assets/icons/tool-bar-icons/resources.png" alt="Diagram">`;
         button.addEventListener("click", () => {
           this.toggleShapeMenu();
-          alert("Shapes clicked!");
+          // alert("Shapes clicked!");
           this.addingCardElem = true;
           this.mode = "shape";
         });
@@ -90,12 +92,25 @@ class ToolBar extends HTMLElement {
         closeMenu();
         this.addingCardElem = true;
         this.mode = "textBox";
-        console.log("Mode set to:", this.mode);
+        // console.log("Mode set to:", this.mode);
         // alert("Add Text clicked!");
       });
       button.className = "addText";
       break;
     }
+  }
+
+  //
+  //SHAPES RELATED FUNCTIONS
+  //
+
+  addShapeEventListeners(){
+    window.addEventListener("shape-selected", (e) => {
+      this.selectedShape = e.detail;
+
+      console.log("BUDDY" + e.detail);
+      // document.body.style.cursor = "pointer";
+    });
   }
   // Opens or closes the dropdown to choose shape type
   toggleShapeMenu() {

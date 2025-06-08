@@ -1,3 +1,5 @@
+const PADDING = 16;
+
 class GreetingCard extends HTMLElement {
   constructor() {
     super();
@@ -98,16 +100,37 @@ class GreetingCard extends HTMLElement {
     let cardFace;
     if (this.facingInside)
       cardFace = this.shadowRoot.querySelector(".inside");
-    else
+    else{
       cardFace = this.shadowRoot.querySelector(".outside");
-
-    if (type === "textBox") {
-      const cardElem = document.createElement("card-element");
-      cardElem.setAttribute("type", "textBox");
-      cardElem.setAttribute("pos", `${x},${y}`);
-      console.log("Appending card element:", cardElem);
-      cardFace.append(cardElem);
     }
+    let rect = cardFace.getBoundingClientRect(); //this used to get position properties of the cardFace
+    let newX = x - rect.left - PADDING;
+    let newY = y - rect.top - PADDING;
+    console.log(`${newX}, ${newY}`);
+    //handles all
+    const cardElem = document.createElement("card-element");
+
+    cardElem.setAttribute("type", type);
+    cardElem.setAttribute("pos", `${newX},${newY}`);
+    // console.log("Appending card element:", cardElem);
+    cardFace.append(cardElem);
+    // if (type === "textBox") {
+    //   const cardElem = document.createElement("card-element");
+    //   cardElem.setAttribute("type", "textBox");
+    //   cardElem.setAttribute("pos", `${newX},${newY}`);
+    //   // console.log("Appending card element:", cardElem);
+    //   cardFace.append(cardElem);
+    // }
+    // else if(type === "shape") {
+    //   const cardElem = document.createElement("card-element");
+    //   cardElem.setAttribute("type", "shape");
+    //   cardElem.setAttribute("pos", `${newX},${newY}`);
+    //   // console.log("Appending card element:", cardElem);
+    //   cardFace.append(cardElem);
+    // }
+    // else if(type === "image"){
+    //   //something
+    // }
   }
 }
 
@@ -134,6 +157,7 @@ window.addEventListener("DOMContentLoaded", () => {
     card.facingInside = false;
   });
 
+  //to change cursor if in different mode on card
   card.addEventListener("mouseover", () => {
     
     if(toolBar.getMode() === "textBox"){
@@ -145,12 +169,22 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+//for clicking on card
 card.addEventListener("click", (e) => {
   // console.log(e.target.tagName);
   console.log(toolBar.mode)
   if (toolBar.getMode() === "textBox") {
     card.addCardElement("textBox", e.clientX, e.clientY);
     console.log("Added text box element!");
+  }
+  if(toolBar.getMode() === "shape"){
+    let shapeType = toolBar.selectedShape;
+    if(shapeType){
+      card.addCardElement(`shape-${shapeType}`, e.clientX, e.clientY);
+      console.log("Added shape");
+    }
+    else
+      console.error("Shape type not picked yet!");
   }
  else {
     console.log("Not saved", e.target.value);
