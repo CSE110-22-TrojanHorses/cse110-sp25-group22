@@ -1,3 +1,4 @@
+/* global html2canvas, jsPDF */
 class TopBar extends HTMLElement {
   constructor() {
     super();
@@ -35,19 +36,67 @@ class TopBar extends HTMLElement {
         button.innerHTML = `<img src="../../assets/icons/top-bar-icons/download.png" alt="Diagram">`;
         button.addEventListener("click", async function () {
           try{
+            // for shadow dom
             const greetingCard = document.querySelector('greeting-card');
             const shadow = greetingCard?.shadowRoot;
 
-            const visibleCard = shadow.querySelector('.card:not(.hidden)');
-            if (!visibleCard){
-              alert("Could not find a visible card to export.");
+            // gets entire component that includes outside and inside parts of the card
+            const container = shadow.querySelector('.card-container');
+
+            // make both sides of the card visible
+            const inside = shadow.querySelector(".inside");
+            const outside = shadow.querySelector(".outside");
+            const insideHidden = inside.classList.contains("hidden");
+            const outsideHidden = outside.classList.contains("hidden");
+
+            container.classList.add("expert-mode");
+            inside.classList.remove("hidden");
+            outside.classList.remove("hidden");
+
+            // wait for layout to render
+            await new Promise((r) => setTimeout(r,300));
+
+            if (!container){
+              alert("Could not find card container to export.");
               return;
             }
 
-            const canvas = await html2canvas(visibleCard, {
+            const inputs = container.querySelectorAll("input");
+            const tempReplacements = [];
+
+            inputs.forEach((input) => {
+              const span = document.createElement("span");
+              span.textContent = input.value;
+              span.style.cssText = window.getComputedStyle(input).cssText;
+
+              span.style.display = "inline-block";
+              span.style.width = input.offsetWidth + "px";
+              span.style.height = input.offsetHeight + "px";
+              span.style.border = "1px dashed #aaa";
+              span.style.padding = "5px";
+
+              input.style.display = "none";
+              input.parentNode.insertBefore(span, input);
+              tempReplacements.push({ input, span });
+            });
+
+
+            const canvas = await html2canvas(container, {
               scale: 2,
               useCORS: true
             });
+
+            tempReplacements.forEach(({ input, span }) => {
+              span.remove();
+              input.style.display = "";
+            });
+      
+      
+
+            // restore to previous state
+            container.classList.remove("expert-mode");
+            if (insideHidden) inside.classList.add("hidden");
+            if (outsideHidden) outside.classList.add("hidden");
 
             const imgData = canvas.toDataURL('image/png');
             const {jsPDF} = window.jspdf;
