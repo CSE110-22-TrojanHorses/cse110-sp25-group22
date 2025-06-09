@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>Trojan Horses: JSDocs</title>
+<style>
+  body { font-family: sans-serif; background: #f4f4f4; padding: 2rem; }
+  h1 { font-size: 2rem; }
+  h2 { margin-top: 2rem; font-size: 1.25rem; color: #333; border-bottom: 1px solid #ccc; }
+  .block { margin: 1rem 0; border-left: 4px solid #0a84ff; background: #fff; padding: 1rem; border-radius: 6px; }
+  .fname a { font-weight: bold; color: #005cc5; text-decoration: none; }
+  .fname a:hover { text-decoration: underline; }
+  pre { margin: 0; font-family: monospace; white-space: pre-wrap; }
+</style></head><body>
+<h1>Trojan Horses: Project Documentation</h1>
+<h2><a href="source/pages/components/greetingCard.js" target="_blank">source/pages/components/greetingCard.js</a></h2>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/greetingCard.js" target="_blank">GreetingCard</a></span>
+      <pre>/**
+ * A handcrafted greeting card Web Component.
+ * Editable front, back, and inside pages — think arts & crafts, minus the glue.
+ * @customElement
+ * @extends HTMLElement
+ */</pre>
+    </div>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/greetingCard.js" target="_blank">constructor</a></span>
+      <pre>/**
+   * Builds the greeting card UI, wires up DOM structure,
+   * loads external styles, and hides the inside until flipped.
+   */</pre>
+    </div>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/greetingCard.js" target="_blank">init</a></span>
+      <pre>/**
+   * Initializes greeting card content
+   */</pre>
+    </div>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/greetingCard.js" target="_blank">loadData</a></span>
+      <pre>/**
+   * Fills greeting card content based on stored data with specified key
+   * @param {string} key - key to use to get the stored data
+   */</pre>
+    </div>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/greetingCard.js" target="_blank">populateContainer</a></span>
+      <pre>/**
+   * Adds elements to container based on stored card data
+   * @param {HTMLElement} container - container where the elements are added to
+   * @param {Array} elementList - list of elements to add
+   */</pre>
+    </div>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/greetingCard.js" target="_blank">showInside</a></span>
+      <pre>/**
+   * Hide outside contents and show inside contents
+   */</pre>
+    </div>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/greetingCard.js" target="_blank">showOutside</a></span>
+      <pre>/**
+   * Hide inside contents and show outside contents
+   */</pre>
+    </div>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/greetingCard.js" target="_blank">setCoverImage</a></span>
+      <pre>/**
+   * Sets the image source to the given URL
+   * @param {URL} url
+   */</pre>
+    </div>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/greetingCard.js" target="_blank">greetingCard</a></span>
+      <pre>/**
+ * Hook up flip buttons after the DOM has settled.
+ * Enables toggling between card front and inside views.
+ */</pre>
+    </div>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/greetingCard.js" target="_blank">greeting-card</a></span>
+      <pre>/**
+ * Registers the &lt;greeting-card&gt; custom element.
+ * This is necessary for the browser to recognize it as a custom element.
+ */</pre>
+    </div><h2><a href="source/pages/components/homepageCard.js" target="_blank">source/pages/components/homepageCard.js</a></h2>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/homepageCard.js" target="_blank">homepageCard</a></span>
+      <pre>/**
+   * Sets the data-name of the card to name
+   * Gets card data from any stored data with the name as the key
+   * @param {string} name - name of the card
+   */</pre>
+    </div><h2><a href="source/pages/components/navBar.js" target="_blank">source/pages/components/navBar.js</a></h2>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/navBar.js" target="_blank">NavBar</a></span>
+      <pre>/**
+ * Masterfully handcrafted Custom Web Component representing the navigation bar.
+ *Gives you two buttons: one to go home and one to start “creating” things.
+ * @customElement
+ * @extends HTMLElement
+*/</pre>
+    </div>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/navBar.js" target="_blank">constructor</a></span>
+      <pre>/**
+   * Constructs the navigation bar, creates two buttons (Home and Create),
+   * links a stylesheet (which better have your styles), and
+   * injects it all into the Shadow DOM for a clean styling sandbox.
+   */</pre>
+    </div>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/navBar.js" target="_blank">nav-bar</a></span>
+      <pre>/**
+ * Registers the &lt;nav-bar&gt; custom element, because otherwise it’s just a meaningless tag.
+ * This is necessary for the browser to recognize it as a custom element.
+ */</pre>
+    </div><h2><a href="source/pages/components/toolBar.js" target="_blank">source/pages/components/toolBar.js</a></h2>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/toolBar.js" target="_blank">ToolBar</a></span>
+      <pre>/**
+ * A handcrafted vertical toolbar Web Component.
+ * Offers four essential buttons to simulate productivity:
+ * Select, Add Image, Add Shapes, and Add Text.
+ * @customElement
+ * @extends HTMLElement
+ */</pre>
+    </div>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/toolBar.js" target="_blank">constructor</a></span>
+      <pre>/**
+   * Constructs the toolbar:
+   * - Creates the Shadow DOM
+   * - Links external CSS for styling
+   * - Generates four buttons and customizes each one
+   */</pre>
+    </div>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/toolBar.js" target="_blank">customizeButton</a></span>
+      <pre>/**
+   * Customizes a button based on its index:
+   * 0 = Select, 1 = Add Image, 2 = Shapes, 3 = Add Text.
+   * Sets inner HTML with icons, click behavior, and class names.
+   *
+   * @param {HTMLButtonElement} button - The button to customize.
+   * @param {number} buttonNum - Index of the tool type.
+   */</pre>
+    </div>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/toolBar.js" target="_blank">tool-bar</a></span>
+      <pre>/**
+ * Registers the &lt;tool-bar&gt; custom element.
+ * Without this, it's just a bunch of meaningless hyphens.
+ */</pre>
+    </div><h2><a href="source/pages/components/topBar.js" target="_blank">source/pages/components/topBar.js</a></h2>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/topBar.js" target="_blank">TopBar</a></span>
+      <pre>/**
+ * Custom Web Component representing the horizontal top bar.
+ * Comes with five iconic buttons: Home, Save, Download, Share, and Profile.
+ * Basically, everything you need to look productive without doing much.
+ * @customElement
+ * @extends HTMLElement
+ */</pre>
+    </div>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/topBar.js" target="_blank">constructor</a></span>
+      <pre>/**
+   * Constructs the top bar, loads external CSS,
+   * creates five beautifully generic buttons, and shoves it all into Shadow DOM.
+   */</pre>
+    </div>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/topBar.js" target="_blank">customizeButton</a></span>
+      <pre>/**
+   * Sets functionality for button based on button number
+   * @param {HTMLButtonElement} button - button element to add the functionality to
+   * @param {number} buttonNum - number of the button
+
+   */</pre>
+    </div>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/topBar.js" target="_blank">saveButton</a></span>
+      <pre>/**
+   * Saves elements in greeting card to local storage
+   */</pre>
+    </div>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/topBar.js" target="_blank">getElements</a></span>
+      <pre>/**
+     * Gets elements within the container
+     *
+     * @param {Element} container - The container that the elements are contained in
+     * @returns {Object[]} List of structured element data
+     */</pre>
+    </div>
+    <div class="block">
+      <span class="fname"><a href="source/pages/components/topBar.js" target="_blank">top-bar</a></span>
+      <pre>/**
+ * Registers the &lt;top-bar&gt; custom element so it can actually be used in HTML.
+ * Otherwise, it’s just a sad row of broken buttons.
+ */</pre>
+    </div>
+</body></html>
