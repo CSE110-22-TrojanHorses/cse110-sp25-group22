@@ -1,5 +1,5 @@
 const PADDING = 16;
-    
+
 class GreetingCard extends HTMLElement {
   constructor() {
     super();
@@ -12,15 +12,15 @@ class GreetingCard extends HTMLElement {
     this.selectedElem;
   }
 
-  setupStyles(){
+  setupStyles() {
     const style = document.createElement("link");
     style.setAttribute("rel", "stylesheet");
     style.setAttribute("href", "cardFormat.css");
     this.shadowRoot.append(style);
   }
 
-  setupStructure(){
-// This is the container to encapsulate inside and outside
+  setupStructure() {
+    // This is the container to encapsulate inside and outside
     const container = document.createElement("div");
     container.classList.add("card-container");
 
@@ -32,11 +32,17 @@ class GreetingCard extends HTMLElement {
     backCover.contentEditable = true;
     backCover.classList.add("page", "back-cover");
     backCover.textContent = "Back Cover";
-    backCover.addEventListener("focus", () => this.lastFocusedEditable = backCover);
+    backCover.addEventListener(
+      "focus",
+      () => (this.lastFocusedEditable = backCover)
+    );
     const frontCover = document.createElement("div");
     frontCover.classList.add("page", "front-cover");
     frontCover.contentEditable = true;
-    frontCover.addEventListener("focus", () => this.lastFocusedEditable = frontCover);
+    frontCover.addEventListener(
+      "focus",
+      () => (this.lastFocusedEditable = frontCover)
+    );
 
     // Inside Contents of card
     const inside = document.createElement("div");
@@ -44,7 +50,7 @@ class GreetingCard extends HTMLElement {
 
     container.append(outside, inside);
     this.shadowRoot.append(container);
-    
+
     //colr picker
     const colorPicker = document.createElement("input");
     colorPicker.id = "colorPicker";
@@ -53,111 +59,131 @@ class GreetingCard extends HTMLElement {
     this.shadowRoot.append(colorPicker);
   }
 
-  setupEventListeners(){
+  setupEventListeners() {
     this.addEventListener("click", this.handleClick.bind(this));
     this.addEventListener("mouseover", this.handleMouseOver.bind(this));
     window.addEventListener("elemClicked", this.handleElemClicked.bind(this));
-    document.addEventListener("keydown", this.handlerDeleteSelectedElem.bind(this));
+    document.addEventListener(
+      "keydown",
+      this.handlerDeleteSelectedElem.bind(this)
+    );
     const colorPicker = this.shadowRoot.getElementById("colorPicker");
     colorPicker.addEventListener("input", this.handlePickColor.bind(this));
   }
 
-  handleClick(e){
+  handleClick(e) {
     const toolBar = document.getElementById("tBar");
     if (toolBar.getMode() === "textBox") {
       this.addCardElement("textBox", e.clientX, e.clientY);
-    } else if(toolBar.getMode() === "shape"){
+    } else if (toolBar.getMode() === "shape") {
       let shapeType = toolBar.selectedShape;
-      if(shapeType){
+      if (shapeType) {
         this.addCardElement(`shape-${shapeType}`, e.clientX, e.clientY);
+      } else console.error("Shape type not picked yet!");
+    } else if (toolBar.getMode() === "image") {
+      if (toolBar.getImageReady()) {
+        let dataURL = toolBar.getDataURL();
+        console.log(dataURL);
+        this.addCardElement(`image-${dataURL}`, e.clientX, e.clientY);
       }
-      else
-        console.error("Shape type not picked yet!");
-    } else if (toolBar.getMode() === "image"){
-        if(toolBar.getImageReady()){
-            let dataURL = toolBar.getDataURL();
-            console.log(dataURL);
-            this.addCardElement(`image-${dataURL}`, e.clientX, e.clientY);
-        }
-    } else if (toolBar.getMode() === "edit"){
+    } else if (toolBar.getMode() === "edit") {
       // searchCardElem()
-    } else{
+    } else {
       // console.log("Not saved", e.target.value);
     }
     toolBar.resetMode();
   }
 
-  handleMouseOver(){
+  handleMouseOver() {
     const toolBar = document.getElementById("tBar");
-      //to change cursor if in different mode on card
-    
-    if(toolBar.getMode() === "textBox"){
-        this.style.cursor = "text";//when in text mode cursor changes!
-    // console.log("Bruh");
-    }
-    else{
-        this.style.cursor = "pointer";
+    //to change cursor if in different mode on card
+
+    if (toolBar.getMode() === "textBox") {
+      this.style.cursor = "text"; //when in text mode cursor changes!
+      // console.log("Bruh");
+    } else {
+      this.style.cursor = "pointer";
     }
   }
-  
-  handleElemClicked(e){
+
+  handleElemClicked(e) {
     const colorPicker = this.shadowRoot.getElementById("colorPicker");
     let [elemID, elem] = e.detail;
 
     //border on click
-    window.addEventListener("elemClicked", () => {
-      if(elem != null){
-        elem.style.border = "2px solid red";
-      }
-    });
+    if (this.selectedElem) {
+      this.selectedElem.style.border = "none";
+    }
+    if (elem != null) {
+      elem.style.border = "2px solid cornflowerblue";
+    }
 
-    
     //get xy of elem (to decide where to put colorpicker)
-   
+
     let rect = elem.getBoundingClientRect();
     let x = rect.left;
     let y = rect.top;
-    let width = rect.width;
     let height = rect.height;
     //set color picker
     colorPicker.style.display = "block";
     colorPicker.style.position = "absolute";
-    colorPicker.style.left = x + "px";
-    colorPicker.style.top = y + height + "px";
+    colorPicker.style.left = `${x}px`;
+    colorPicker.style.top = `${y + height}px`;
     this.selectedElem = elem;
+
     //if click outside an element, want to hide colorPicker
-    //coming soon...
+    //check for existing global listeners: remove them
+    if (this._outsideClickListener) {
+      document.removeEventListener("click", this._outsideClickListener);
+    }
+    //set up an listener to see if any clicks happen
+    this._outsideClickListener = (event) => {
+      const elementClicked = this.selectedElem.contains(event.target);
+      const pickerClicked = colorPicker.contains(event.target);
+      if (!elementClicked && !pickerClicked) {
+        this.selectedElem.style.border = "none";
+        colorPicker.style.display = "none";
+        this.selectedElem = null;
+        //now remove global listener
+        document.removeEventListener("click", this._outsideClickListener);
+        this._outsideClickListener = null;
+      }
+    };
+
+    setTimeout(() => {
+      document.addEventListener("click", this._outsideClickListener);
+    }, 100);
   }
 
-  handlePickColor(e){
+  handlePickColor(e) {
     const toolBar = document.getElementById("tBar");
     // toolBar.shapeType;
-    if(this.selectedElem){
+    if (this.selectedElem) {
       const color = e.target.value;
-      if(toolBar.selectedShape == "triangle") {
+      if (toolBar.selectedShape == "triangle") {
         this.selectedElem.style["border-bottom-color"] = color;
       }
       this.selectedElem.style.backgroundColor = color;
     }
   }
 
-  handlerDeleteSelectedElem(e){
-    if(this.selectedElem){
-        const host = this.selectedElem.getRootNode().host;
-        // console.log(this.selectedElem);
-        console.log(host.writingToTextBox);
-        console.log(host.type);
-        if(host.type === "textBox" && host.writingToTextBox){
-            // console.lo
-            return;
-        }
-        if ((e.key === "Backspace" || e.key === "Delete") && this.selectedElem) {
-            this.selectedElem.remove();
-            this.selectedElem = null;
-        }
+  handlerDeleteSelectedElem(e) {
+    if (this.selectedElem) {
+      const host = this.selectedElem.getRootNode().host;
+      // console.log(this.selectedElem);
+      console.log(host.writingToTextBox);
+      console.log(host.type);
+      if (host.type === "textBox" && host.writingToTextBox) {
+        // console.lo
+        return;
+      }
+      if ((e.key === "Backspace" || e.key === "Delete") && this.selectedElem) {
+        this.selectedElem.remove();
+        this.selectedElem = null;
+      }
     }
   }
-  
+
   // when we show inside contents, we should hide outside cover
   showInside() {
     this.shadowRoot.querySelector(".inside").classList.remove("hidden");
@@ -177,15 +203,14 @@ class GreetingCard extends HTMLElement {
     }
   }
 
-  getColorPicker(){
+  getColorPicker() {
     return this.shadowRoot.getElementById("colorPicker");
   }
 
   addCardElement(type, x, y) {
     let cardFace;
-    if (this.facingInside)
-      cardFace = this.shadowRoot.querySelector(".inside");
-    else{
+    if (this.facingInside) cardFace = this.shadowRoot.querySelector(".inside");
+    else {
       cardFace = this.shadowRoot.querySelector(".outside");
     }
     let rect = cardFace.getBoundingClientRect(); //this used to get position properties of the cardFace
@@ -199,7 +224,6 @@ class GreetingCard extends HTMLElement {
     cardFace.append(cardElem);
   }
 }
-
 
 //handles toggle functionality
 window.addEventListener("DOMContentLoaded", () => {
@@ -223,5 +247,3 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 customElements.define("greeting-card", GreetingCard);
-
-
