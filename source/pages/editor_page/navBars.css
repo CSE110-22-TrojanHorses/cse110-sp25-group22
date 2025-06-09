@@ -54,3 +54,16 @@ button:hover {
   justify-content: space-around;
   margin-right: 5rem;
 }
+
+@media (max-width: 750px) {
+  .features {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-right: 0;
+    margin-top: 2rem;
+    width: 100%;
+    column-gap: 2rem;
+    row-gap: 1rem;
+  }
+}
