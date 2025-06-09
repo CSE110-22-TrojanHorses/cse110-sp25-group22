@@ -67,7 +67,7 @@ class TopBar extends HTMLElement {
       storage.insideElements = getElements(inside);
 
       let date = new Date();
-      storage.time = `Last Sync: ${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDay() + 1).padStart(2, "0")}/${date.getFullYear()} @ 
+      storage.time = `Last Sync: ${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${date.getFullYear()} @ 
                       ${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}:${String(date.getSeconds()).padStart(2, "0")}`;
 
       // adds data to local storage
@@ -95,30 +95,29 @@ class TopBar extends HTMLElement {
       const elementContainers = container.getElementsByTagName("card-element");
       const elements = [];
 
-      for (let container of elementContainers) {
+      for (let cardElem of elementContainers) {
         // get the tagname and format the desired attributes as JSON object
         // goal: avoid direct HTML injection
-        const root = container.shadowRoot;
+        const root = cardElem.shadowRoot;
         const rawElement = root.querySelectorAll("*");
 
-        let type;
+        if (!rawElement.length) continue;
         let outerElement = rawElement[0];
-        let innerElements = [];
-        
+        const data = {};
+        let type = "";
+
         if (outerElement.tagName == "TEXTAREA") {
           type = "TEXT";
+          data.value = outerElement.value ?? "";
         } else if (outerElement.className.includes("shape")) {
-          innerElements.push(outerElement.querySelector("div"));
           type = "SHAPE";
         } else {
-          innerElements.push(outerElement.querySelector("div"));
-          innerElements.push(outerElement.querySelector("img"));
           type = "IMAGE";
         }
 
-        const data = { type };
+        data.type = type;
         data.cardElementData = {};
-        for (let attr of container.attributes) {
+        for (let attr of cardElem.attributes) {
           data.cardElementData[attr.name] = attr.value;
         }
         data.outerElemData = {};
@@ -127,30 +126,22 @@ class TopBar extends HTMLElement {
         }
 
         if (type != "TEXT") {
-          data.innerElemData = [];
-          for (let i = 0; i < innerElements.length; i++) {
-            const elemData = [innerElements[i].tagName];
+          const innerElements = [];
+          const contents = outerElement.children;
+          for (const child of contents) {
+            const tag = child.tagName;
             const attributes = {};
-            for (let attr of innerElements[i].attributes) {
-              console.log(attr.value);
+            for (let attr of child.attributes) {
               attributes[attr.name] = attr.value;
             }
-            elemData.push(attributes);
-            data.innerElemData.push(elemData);
-            if (type == "TEXT" && innerElements[i].tagName == "TEXTAREA") {
-              data.value = innerElements[i].value;
-            } 
+            innerElements.push([tag, attributes]);
+
+            if (tag == "TEXTAREA") {
+              data.value = child.value ?? "";
+            }
           }
+          data.innerElemData = innerElements;
         }
-
-        // const tag = rawElement.tagName;
-        // const data = { tag };
-
-        // data.attributes = {};
-        // for (let attr of rawElement.attributes) {
-        //   data.attributes[attr.name] = attr.value;
-        // }
-
 
         elements.push(data);
       }

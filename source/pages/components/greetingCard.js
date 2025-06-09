@@ -275,49 +275,40 @@ class GreetingCard extends HTMLElement {
    * @param {Array} elementList - list of elements to add
    */
   populateContainer(container, elementList) {
-    for (let j = 0; j < elementList.length; j++) {
-      let outerTag;
-      if (elementList[j].type == "TEXT") {
-        outerTag = "TEXTAREA"
-      } else {
-        outerTag = "DIV";
-      }
+    const allowedTags = ["DIV", "IMG", "TEXTAREA", "SPAN"];
+    for (const element of elementList) {
+      let outerTag = element.type === "TEXT" ? "TEXTAREA" : "DIV";
       const cardElement = document.createElement("card-element");
-      if (elementList[j].cardElementData) {
-        Object.entries(elementList[j].cardElementData).forEach(([key, val]) => 
+      if (element.cardElementData) {
+        Object.entries(element.cardElementData).forEach(([key, val]) =>
           cardElement.setAttribute(key, val)
         );
       }
       const outerElement = document.createElement(outerTag);
-      if (elementList[j].outerElemData) {
-        Object.entries(elementList[j].outerElemData).forEach(([key, val]) => 
+      if (element.outerElemData) {
+        Object.entries(element.outerElemData).forEach(([key, val]) =>
           outerElement.setAttribute(key, val)
         );
       }
-  
-      if (outerTag != "TEXT") {
-        const innerElements = elementList[j].innerElemData;
-        if (!Array.isArray(innerElements)) {
-          break;
-        }
-        for (let i = 0; i < innerElements.length; i++) {
-          const element = innerElements[i];
-          const tag = element[0];
-          const attributes = element[1];
+
+      if (outerTag != "TEXTAREA" && Array.isArray(element.innerElemData)) {
+        for (let inner of element.innerElemData) {
+          const [tag, attributes] = inner;
+          if (!allowedTags.includes(tag.toUpperCase())) continue;
+
           const elem = document.createElement(tag);
           if (attributes) {
             Object.entries(attributes).forEach(([key, val]) =>
               elem.setAttribute(key, val)
             );
           }
-          if (tag == "TEXTAREA") {
-            elem.defaultValue = elementList[j].value;
+          if (tag.toUpperCase() === "TEXTAREA") {
+            elem.defaultValue = element.value;
           }
           outerElement.append(elem);
         }
       }
       cardElement.append(outerElement);
-      console.log(cardElement);
       container.append(cardElement);
     }
   }
@@ -397,7 +388,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const key = localStorage.getItem("current card");
     if (localStorage.getItem(key)) {
       card.loadData(key);
-    } 
+    }
   }
   const flipInside = document.getElementById("flip-inside");
   const flipOutside = document.getElementById("flip-outside");
