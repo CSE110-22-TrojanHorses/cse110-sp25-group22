@@ -10,19 +10,20 @@ main {
 }
 
 .navcontainer {
-  padding-left: 2rem;
   display: flex;
   flex-direction: row;
+  justify-content: flex-end;
   gap: 2rem;
+  margin-right: 4rem;
   height: 80px;
   width: 100%;
   background-color: black;
   z-index: 1;
 }
 
-.toprightimg {
-  margin-left: auto;
-  margin-right: 4rem;
+.topleftimg {
+  margin-right: auto;
+  padding-left: 4rem;
 }
 
 img {
@@ -60,6 +61,19 @@ button:hover {
   margin-right: 5rem;
 }
 
+@media (max-width: 750px) {
+  .features {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-right: 0;
+    margin-top: 2rem;
+    width: 100%;
+    column-gap: 2rem;
+    row-gap: 1rem;
+  }
+}
+
 /* Front side of the greeting card */
 .cardFront {
   position: absolute;
@@ -90,11 +104,6 @@ body {
 /* Circle shape */
 .shape.circle {
   border-radius: 50%;
-}
-
-/* Square shape – already covered by default .shape */
-.shape.square {
-  /* nothing extra needed */
 }
 
 /* Rectangle shape – manually overriding size */

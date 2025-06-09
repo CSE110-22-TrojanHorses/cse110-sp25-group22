@@ -127,18 +127,19 @@ class ToolBar extends HTMLElement {
           document.body.appendChild(window.__fileInput);
           // When user picks a file...
           window.__fileInput.addEventListener("change", () => {
-            const f = window.__fileInput.files[0];   // user may cancel
+            const f = window.__fileInput.files[0]; // user may cancel
             if (!f) return;
             const reader = new FileReader();
-            reader.onload = e => this.cropperManager.openCropper(e.target.result); // send image to cropper
+            reader.onload = (e) =>
+              this.cropperManager.openCropper(e.target.result); // send image to cropper
             reader.readAsDataURL(f);
-            window.__fileInput.value = "";           // reset for next time
+            window.__fileInput.value = ""; // reset for next time
           });
         }
         // When button is clicked, open the file picker
         button.addEventListener("click", () => {
           //set ok and cancel buttons if img button clicked
-          if(!this.cropperInit){
+          if (!this.cropperInit) {
             this.cropperManager.initControls();
             this.cropperInit = true;
           }
@@ -161,9 +162,9 @@ class ToolBar extends HTMLElement {
       case 3:
         button.innerHTML = `<img  src="../../assets/icons/tool-bar-icons/text.png" alt="Diagram">`;
         button.addEventListener("click", () => {
-        closeMenu();
-        this.addingCardElem = true;
-        this.mode = "textBox";
+          closeMenu();
+          this.addingCardElem = true;
+          this.mode = "textBox";
         });
         button.className = "addText";
         break;
@@ -178,8 +179,6 @@ class ToolBar extends HTMLElement {
   addShapeEventListeners(){
     window.addEventListener("shape-selected", (e) => {
       this.selectedShape = e.detail;
-
-      // document.body.style.cursor = "pointer";
     });
   }
 
@@ -225,7 +224,9 @@ class ToolBar extends HTMLElement {
 
       // When clicked, send an event to let the app know which shape was picked
       shapeBtn.addEventListener("click", () => {
-        window.dispatchEvent(new CustomEvent("shape-selected", { detail: shape }));
+        window.dispatchEvent(
+          new CustomEvent("shape-selected", { detail: shape })
+        );
 
         // Highlight the selected button and unhighlight others
         const allBtns = this.shapeMenu.querySelectorAll(".shape-button");
@@ -283,92 +284,95 @@ customElements.define("tool-bar", ToolBar);
  * @class
  */
 class CropperManager{
-   /**
-   * Creates a new instance of CropperManager and initializes internal state.
+  /**
+ * Creates a new instance of CropperManager and initializes internal state.
+ */
+  constructor(){
+    this.activeCropper = null;
+    this.targetImg = null;
+    this.okBtn = null;
+    this.cancelBtn = null;
+    this.dataURL = null;
+    this.dataID = null;
+    this.imageReady = false;
+  }
+
+  /**
+  * Function that creates the buttons and eventlisteners for cropping screen
+  * @returns {void}
+  */
+  initControls(){
+    this.okBtn = document.getElementById("crop-ok");
+    this.cancelBtn = document.getElementById("crop-cancel");
+    this.addOkBtnEventListener();
+    this.addCancelBtnEventListener();
+  }
+
+  toggleImgSelection() {
+    window.__fileInput.click();
+  }
+
+  /**
+   * @param dataURL         image to show in Cropper
+   * @param existingImg  null = user picked new file
    */
-    constructor(){
-      this.activeCropper = null;
-      this.targetImg = null;
-      this.okBtn = null;
-      this.cancelBtn = null;
-      this.dataURL = null;
-      this.dataID = null;
-      this.imageReady = false;
-    }
+  openCropper(dataURL, existingImg = null) {
+    //set the image to be cropped
+    this.targetImg = existingImg;
+    // show cropper modal and load image
+    const modal = document.getElementById("cropper-modal");
+    const img = document.getElementById("cropper-image");
+    img.src = dataURL;
+    modal.classList.remove("hidden");
 
-    /**
-    * Function that creates the buttons and eventlisteners for cropping screen
-    * @returns {void}
-    */
-    initControls(){
-      this.okBtn = document.getElementById("crop-ok");
-      this.cancelBtn = document.getElementById("crop-cancel");
-      this.addOkBtnEventListener();
-      this.addCancelBtnEventListener();
-    }
+    if (this.activeCropper) this.activeCropper.destroy();
+    // eslint-disable-next-line no-undef
+    this.activeCropper = new Cropper(img, { viewMode: 1 });
+  }
 
-    toggleImgSelection(){
-      window.__fileInput.click();
-    }
-
-    /**
-    * @param dataURL         image to show in Cropper
-    * @param existingImg  null = user picked new file
-    */
-    openCropper(dataURL, existingImg = null) {
-      //set the image to be cropped
-      this.targetImg = existingImg;
-      // show cropper modal and load image
-      const modal = document.getElementById("cropper-modal");
-      const img = document.getElementById("cropper-image");
-      img.src = dataURL;
-      modal.classList.remove("hidden");
-
-      if (this.activeCropper) 
-      this.activeCropper.destroy();
-      this.activeCropper = new Cropper(img, { viewMode: 1 });
-    }
-
-    /**
+  /**
    * Closes destroys active cropper instace
    * @returns {void}
    */
-    closeCropper() {
-      // hide crop and destroy crop instance
-      document.getElementById("cropper-modal").classList.add("hidden");
-      if (this.activeCropper) { 
-      this.activeCropper.destroy(); 
-      this.activeCropper = null; 
-      }
-      this.targetImg = null;
+  closeCropper() {
+    // hide crop and destroy crop instance
+    document.getElementById("cropper-modal").classList.add("hidden");
+    if (this.activeCropper) { 
+    this.activeCropper.destroy(); 
+    this.activeCropper = null; 
     }
+    this.targetImg = null;
+  }
 
-    /**
-   * Adds eventhandler for "ok" button that accepts cropped image
-   * Once ok button clicked, the image gets encoded to a dataURL string.
-   * Moves this to CropperManager intance variable this.dataURL which will be 
-   * used to set the CardElement image in greetingCard.js
-   * @returns {void}
-   */
-    addOkBtnEventListener(){
-      this.okBtn.addEventListener("click", () => {
-      if (!this.activeCropper) return;
-      //get image url save to instance var (so greeting card can use)
-      this.dataURL = this.activeCropper.getCroppedCanvas().toDataURL("image/png");
+  /**
+ * Adds eventhandler for "ok" button that accepts cropped image
+ * Once ok button clicked, the image gets encoded to a dataURL string.
+ * Moves this to CropperManager intance variable this.dataURL which will be 
+ * used to set the CardElement image in greetingCard.js
+ * @returns {void}
+ */
+  addOkBtnEventListener(){
+    this.okBtn.addEventListener("click", () => {
+    if (!this.activeCropper) return;
+    //get image url save to instance var (so greeting card can use)
+    this.dataURL = this.activeCropper
+      .getCroppedCanvas()
+      .toDataURL("image/png");
+    this.closeCropper();
+    this.imageReady = true;
+  });
+  }
+
+/**     
+ * Adds event handler for "cancel" button
+ * 
+ * @returns {void}
+ */
+  addCancelBtnEventListener(){
+    this.cancelBtn.addEventListener("click", () => {
       this.closeCropper();
-      this.imageReady = true;
+      this.dataURL = null; //if cancel don't want to store dataurl
+      this.imageReady = false;
     });
-    }
-  /**     
-   * Adds event handler for "cancel" button
-   * 
-   * @returns {void}
-   */
-    addCancelBtnEventListener(){
-      this.cancelBtn.addEventListener("click", () => {
-        this.closeCropper();
-        this.dataURL = null; //if cancel don't want to store dataurl
-        this.imageReady = false;
-      });
-    }
+  }
 }

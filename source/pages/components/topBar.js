@@ -8,7 +8,7 @@ class TopBar extends HTMLElement {
     const container = document.createElement("nav");
     container.classList.add("navcontainer");
     this.buttons = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 3; i++) {
       let button = document.createElement("button");
       this.customizeButton(button, i);
       this.buttons.push(button);
@@ -16,21 +16,12 @@ class TopBar extends HTMLElement {
     }
     this.shadowRoot.append(style, container);
   }
-<<<<<<< HEAD
 /**
  * Create and define functionality for features in the top bar
  * @param button
  * @param buttonNum
  * @returns {void}
  */
-=======
-
-  /**
-   * Sets functionality for button based on button number
-   * @param {HTMLButtonElement} button - button element to add the functionality to
-   * @param {number} buttonNum - number of the button
-   */
->>>>>>> 69aa2e5f05a0a647df0f661860335f02c85bb35d
   customizeButton(button, buttonNum) {
     switch (buttonNum) {
       case 0:
@@ -51,20 +42,6 @@ class TopBar extends HTMLElement {
           alert("Download clicked!");
         });
         button.className = "download";
-        break;
-      case 3:
-        button.innerHTML = `<img src="../../assets/icons/top-bar-icons/share.png" alt="Diagram">`;
-        button.addEventListener("click", function () {
-          alert("Share clicked!");
-        });
-        button.className = "share";
-        break;
-      case 4:
-        button.innerHTML = `<img src="../../assets/icons/top-bar-icons/circle-user.png" alt="Diagram">`;
-        button.addEventListener("click", function () {
-          alert("Profile clicked!");
-        });
-        button.className = "toprightimg";
         break;
     }
   }
