@@ -60,10 +60,30 @@ class GreetingCard extends HTMLElement {
     frontCover.contentEditable = true;
     const title = document.createElement("textarea");
     title.setAttribute("value", "Front Cover Title");
+    // Hidden file input
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    fileInput.style.display = "none";
+    // Default placeholder image
     const img = document.createElement("img");
-    img.src = "../../assets/icons/example.png";
-    img.alt = "Cover Image";
+    img.src = "../../assets/icons/example.png"; // fallback image
+    img.alt = "Click to change image";
     img.classList.add("cover-image");
+    img.style.cursor = "pointer";
+    // Clicking the image opens the file picker
+    img.addEventListener("click", () => fileInput.click());
+    // When user selects a file, replace the image
+    fileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+        if (file) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+});
     const message = document.createElement("input");
     message.setAttribute("type", "text");
     message.setAttribute("value", "Front Message");
@@ -123,6 +143,34 @@ class GreetingCard extends HTMLElement {
       if (tag === "TEXTAREA") {
         cardContent.value = value;
       }
+      if (tag === "IMG") {
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.accept = "image/*";
+      fileInput.style.display = "none";
+
+      cardContent.style.cursor = "pointer";
+      cardContent.addEventListener("click", () => fileInput.click());
+
+      fileInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const validTypes = ["image/png", "image/jpeg"];
+          if (!validTypes.includes(file.type)) {
+            alert("Please select a PNG or JPG image.");
+            fileInput.value = ""; 
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            cardContent.src = event.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      container.appendChild(fileInput); // ⬅️ add the hidden input to the DOM
+    }
 
       container.appendChild(cardContent);
     }
