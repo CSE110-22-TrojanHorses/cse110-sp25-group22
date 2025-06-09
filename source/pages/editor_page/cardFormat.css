@@ -104,3 +104,12 @@
   gap: 5vw;
   justify-content: center;
 }
+
+/* only used during export to show inside and outside of card */
+.expert-mode .inside,
+.expert-mode .outside {
+  display: flex !important;
+  position: relative !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
