@@ -22,7 +22,6 @@ class CardElement extends HTMLElement{
 
   //calls upon cardElem setAttributes
   attributeChangedCallback(name, oldVal, newVal){
-    // console.log("callbac called");
     if(name === "type"){
         if(oldVal == null)
           this.createCardElement(newVal)
@@ -35,7 +34,6 @@ class CardElement extends HTMLElement{
   createCardElement(elemType){
     let [parentType, subType] = elemType.split("-");
     this.type = parentType;
-    console.log(parentType, subType);
     if(parentType === "textBox")
       this.makeTextBox();
     else if(parentType === "shape")
@@ -43,7 +41,6 @@ class CardElement extends HTMLElement{
     else if(parentType === "image")
       this.makeImage(subType);//subType is dataURL
     this.elem.addEventListener("click", (e) =>{
-      // console.log("Event read");
 
       if(this.type === "textBox"){
         const rect = this.elem.getBoundingClientRect();
@@ -68,6 +65,7 @@ class CardElement extends HTMLElement{
         detail: [this.type, this.elem]});
         window.dispatchEvent(event);
       });
+      this.makeDraggable(th);
   }
 
   makeTextBox(){
@@ -79,7 +77,6 @@ class CardElement extends HTMLElement{
     this.shadow.appendChild(textArea);
     textArea.addEventListener("focus", () =>{
       this.writingToTextBox = true;
-      console.log("Writing to text box!");
     });
 
   }
@@ -128,7 +125,6 @@ class CardElement extends HTMLElement{
       this.isResizing = true;
       document.addEventListener("mousemove", (b) => {
         if (!this.isResizing) return;
-        console.log("Bruh");
         const rect = shape.getBoundingClientRect();
         const newWidth = b.clientX - rect.left;
         const newHeight = b.clientY - rect.top;
@@ -183,7 +179,6 @@ class CardElement extends HTMLElement{
   }
 
   moveElem(pos){
-    // console.log("move elem called for: " + this.type);
     let [x, y] = pos.split(","); //gets str values of x and y
     this.x = Number(x);
     this.y = Number(y);
@@ -216,6 +211,40 @@ class CardElement extends HTMLElement{
     }
 
   }
+
+  //inspo: https://www.w3schools.com/howto/howto_js_draggable.asp 
+  makeDraggable(elem) {
+    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    
+    elem.onmousedown = dragMouseDown;
+
+    const self = this;
+
+    function dragMouseDown(e) {
+      if (self.isResizing || self.writingToTextBox) return;
+      e.preventDefault();
+      pos3 = e.clientX;
+      pos4 = e.clientY;
+      document.onmouseup = closeDragElement;
+      document.onmousemove = elementDrag;
+    }
+
+    function elementDrag(e) {
+      e.preventDefault();
+      pos1 = pos3 - e.clientX;
+      pos2 = pos4 - e.clientY;
+      pos3 = e.clientX;
+      pos4 = e.clientY;
+      elem.style.top = (elem.offsetTop - pos2) + "px";
+      elem.style.left = (elem.offsetLeft - pos1) + "px";
+    }
+
+    function closeDragElement() {
+      document.onmouseup = null;
+      document.onmousemove = null;
+    }
+  }
+
 }
 
 customElements.define("card-element", CardElement);

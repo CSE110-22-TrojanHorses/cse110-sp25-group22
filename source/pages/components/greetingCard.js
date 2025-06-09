@@ -130,9 +130,11 @@ class GreetingCard extends HTMLElement {
         const resizer = elem.querySelector(".resizer");
         resizer.style.backgroundColor = "black";
       } 
-      else{
-//
+      else if(type === "textBox"){
+        elem.style.resize = "both";
       }
+      else
+        console.error("Selected elem should not be null!");
     }
 
     //get xy of elem (to decide where to put colorpicker)
@@ -166,12 +168,14 @@ class GreetingCard extends HTMLElement {
       const pickerClicked = path.includes(colorPicker);
       
       if (!elementClicked && !pickerClicked) {
-        // console.log("Bruh");
         if(this.selectedElem){
             this.selectedElem.style.border = "none";
             if(this.selectedElemType !== "textBox"){
               const resizer = this.selectedElem.querySelector(".resizer");
               resizer.style.backgroundColor = "transparent";
+            }
+            else if(this.selectedElemType === "textBox"){
+              this.selectedElem.style.resize = "none"; //gets rid of resizer
             }
         }
         colorPicker.style.display = "none";
@@ -189,8 +193,7 @@ class GreetingCard extends HTMLElement {
   }
 
   handlePickColor(e) {
-    const toolBar = document.getElementById("tBar");
-    // toolBar.shapeType;
+  
     if (this.selectedElem) {
       const color = e.target.value;
       this.selectedElem.style.backgroundColor = color;
@@ -200,11 +203,7 @@ class GreetingCard extends HTMLElement {
   handlerDeleteSelectedElem(e) {
     if (this.selectedElem) {
       const host = this.selectedElem.getRootNode().host;
-      // console.log(this.selectedElem);
-      console.log(host.writingToTextBox);
-      console.log(host.type);
-      if (host.type === "textBox" && host.writingToTextBox) {
-        // console.lo
+      if (this.selectedElemType === "textBox" && host.writingToTextBox) {
         return;
       }
       if ((e.key === "Backspace" || e.key === "Delete") && this.selectedElem) {
@@ -252,7 +251,6 @@ class GreetingCard extends HTMLElement {
     const cardElem = document.createElement("card-element");
     cardElem.setAttribute("type", type);
     cardElem.setAttribute("pos", `${newX},${newY}`);
-    // console.log("Appending card element:", cardElem);
     cardFace.append(cardElem);
   }
 }
