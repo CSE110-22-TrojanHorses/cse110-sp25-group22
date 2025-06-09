@@ -103,6 +103,14 @@ class GreetingCard extends HTMLElement {
   handleElemClicked(e){
     const colorPicker = this.shadowRoot.getElementById("colorPicker");
     let [elemID, elem] = e.detail;
+
+    //border on click
+    window.addEventListener("elemClicked", () => {
+      if(elem != null){
+        elem.style.border = "2px solid red";
+      }
+    });
+
     
     //get xy of elem (to decide where to put colorpicker)
    
