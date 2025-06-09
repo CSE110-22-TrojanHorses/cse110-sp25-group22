@@ -29,7 +29,7 @@
     "build": "parcel build source/pages/home_page/homepage.html",
     "test:e2e": "jest __tests__/*.test.js --maxWorkers=1",
     "test:all": "npm run test:unit && npm run test:e2e",
-    "docs": "jsdoc -c jsdoc.json"
+    "docs": "node docs/jsdoc.js"
   },
   "type": "module"
 }
