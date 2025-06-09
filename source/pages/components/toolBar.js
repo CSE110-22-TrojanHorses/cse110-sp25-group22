@@ -1,5 +1,18 @@
+/**
+ * A custom web component representing the toolbar for interacting with the GreetingCard.
+ * 
+ * Provides buttons or controls for adding shapes, text, images, and possibly other editing tools.
+ * Intended to work in coordination with the `GreetingCard` component.
+ *
+ * @class
+ * @extends HTMLElement
+ */
+
 class ToolBar extends HTMLElement {
 
+  /**
+   * Constructor for the toolbar
+   */
   constructor() {
     super();
     this.addingCardElem = false;
@@ -25,7 +38,10 @@ class ToolBar extends HTMLElement {
     this.cropperManager = new CropperManager();
   }
 
-  // Closes the shape menu if it's already open
+  /**
+   * Closes the shape menu if it's already open
+   * @returns {void}
+   */
   closeShapeMenuIfOpen() {
     const existingMenu = this.shadowRoot.querySelector(".shape-menu");
     if (existingMenu) {
@@ -34,10 +50,24 @@ class ToolBar extends HTMLElement {
     }
   }
 
+  /**
+   * This is primarily used to set attributeChangedCallback. 
+   * Whenever setAttribute to addingCardElem or mode are called, 
+   * attributeChangedCallback is called.
+   * @returns {Array}
+   */
   static get observedAttributes() {
     return ["addingCardElem", "mode"];
   }
 
+  /**
+   * Upon calling setAttribute with "mode", sets the mode to newVal.
+   * addingCardElem gets updated based on mode toolbar is in
+   * @param name
+   * @param oldVal
+   * @param newVal
+   * @returns {void}
+   */
   attributeChangedCallback(name, oldVal, newVal){
     if(name === "mode"){
         this.mode = newVal;
@@ -48,15 +78,31 @@ class ToolBar extends HTMLElement {
     }
   }
 
+  /**
+   * Returns mode that tool bar is in
+   * @returns {String}
+   */
   getMode(){
     return this.mode;
   }
 
+  /**
+   * Resets mode to "edit" mode and closes the 
+   * shape menu (if it is open). This is used for when 
+   * user is in "shape" mode and places a shape into the card
+   * @returns {void}
+   */
   resetMode(){
     this.mode = "edit";
     this.closeShapeMenuIfOpen();
   }
 
+  /**
+   * Create and define functionality for features in the tool bar
+   * @param button
+   * @param buttonNum
+   * @returns {void}
+   */
   customizeButton(button, buttonNum) {
     const closeMenu = this.closeShapeMenuIfOpen.bind(this);
     switch (buttonNum) {
@@ -124,10 +170,11 @@ class ToolBar extends HTMLElement {
     }
   }
 
-  //
-  //SHAPES RELATED FUNCTIONS
-  //
-
+  /**
+   * Add event listener to determine if shape type was selected 
+   * from the shape menu
+   * @returns {void}
+   */
   addShapeEventListeners(){
     window.addEventListener("shape-selected", (e) => {
       this.selectedShape = e.detail;
@@ -135,7 +182,12 @@ class ToolBar extends HTMLElement {
       // document.body.style.cursor = "pointer";
     });
   }
-  // Opens or closes the dropdown to choose shape type
+
+  /**
+   * Opens the shape menu (will be called when user clicks on 
+   * shape button) in tool bar
+   * @returns {void}
+   */
   toggleShapeMenu() {
     // If it's already open, close it
     const existingMenu = this.shadowRoot.querySelector(".shape-menu");
@@ -192,14 +244,26 @@ class ToolBar extends HTMLElement {
   //IMG related function(s)
   //
 
+  /**
+   * Sets the image source to the given URL
+   * @returns {boolean} url
+   */
   getImageReady(){
     return this.cropperManager.imageReady;
   }
 
+  /**
+   * Sets the image source to the given URL
+   * @param {URL} url
+   */
   setImageReady(boolVal){
     this.cropperManager.imageReady = boolVal;
   }
 
+  /**
+   * Sets the image source to the given URL
+   * @param {URL} url
+   */
   getDataURL(){
     return this.cropperManager.dataURL;
   }
@@ -211,7 +275,17 @@ customElements.define("tool-bar", ToolBar);
 //Custom cropper manager class
 //
 
+
+/**
+ * Class responsible for managing the image cropping functionality.
+ * Handles the cropping state, associated DOM elements, and user actions (OK/Cancel).
+ *
+ * @class
+ */
 class CropperManager{
+   /**
+   * Creates a new instance of CropperManager and initializes internal state.
+   */
     constructor(){
       this.activeCropper = null;
       this.targetImg = null;
@@ -222,7 +296,10 @@ class CropperManager{
       this.imageReady = false;
     }
 
-    //ONLY CALLED WHEN BUTTONS LOADED
+    /**
+    * Function that creates the buttons and eventlisteners for cropping screen
+    * @returns {void}
+    */
     initControls(){
       this.okBtn = document.getElementById("crop-ok");
       this.cancelBtn = document.getElementById("crop-cancel");
@@ -252,6 +329,10 @@ class CropperManager{
       this.activeCropper = new Cropper(img, { viewMode: 1 });
     }
 
+    /**
+   * Closes destroys active cropper instace
+   * @returns {void}
+   */
     closeCropper() {
       // hide crop and destroy crop instance
       document.getElementById("cropper-modal").classList.add("hidden");
@@ -262,9 +343,15 @@ class CropperManager{
       this.targetImg = null;
     }
 
+    /**
+   * Adds eventhandler for "ok" button that accepts cropped image
+   * Once ok button clicked, the image gets encoded to a dataURL string.
+   * Moves this to CropperManager intance variable this.dataURL which will be 
+   * used to set the CardElement image in greetingCard.js
+   * @returns {void}
+   */
     addOkBtnEventListener(){
       this.okBtn.addEventListener("click", () => {
-      console.log("Image cropped!");
       if (!this.activeCropper) return;
       //get image url save to instance var (so greeting card can use)
       this.dataURL = this.activeCropper.getCroppedCanvas().toDataURL("image/png");
@@ -272,10 +359,13 @@ class CropperManager{
       this.imageReady = true;
     });
     }
-
+  /**     
+   * Adds event handler for "cancel" button
+   * 
+   * @returns {void}
+   */
     addCancelBtnEventListener(){
       this.cancelBtn.addEventListener("click", () => {
-        console.log("Cancelled Instead!");
         this.closeCropper();
         this.dataURL = null; //if cancel don't want to store dataurl
         this.imageReady = false;

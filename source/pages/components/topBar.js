@@ -16,7 +16,12 @@ class TopBar extends HTMLElement {
     }
     this.shadowRoot.append(style, container);
   }
-
+/**
+ * Create and define functionality for features in the top bar
+ * @param button
+ * @param buttonNum
+ * @returns {void}
+ */
   customizeButton(button, buttonNum) {
     switch (buttonNum) {
       case 0:

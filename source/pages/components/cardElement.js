@@ -1,5 +1,23 @@
+/**
+ * A custom web component representing an interactive card element, which can be
+ * a text box, shape, or image. Supports dragging, resizing, and editing.
+ *
+ * @class
+ * @extends HTMLElement
+ */
 class CardElement extends HTMLElement{
+  /**
+   * Static counter used to assign a unique ID to each card element instance.
+   * @type {number}
+   * @static
+   */
   static idCounter = 0;
+  
+  /**
+   * Creates a new CardElement instance and initializes its shadow DOM and internal state.
+   * 
+   * @constructor
+   */
   constructor(){
     super();
     this.shadow = this.attachShadow({mode:"open"});
@@ -12,15 +30,31 @@ class CardElement extends HTMLElement{
     this.elemID = CardElement.idCounter++;
   }
 
+  /**
+   * Get the ID of an element
+   * @returns {String}
+   */
   getElemID(){
     return this.elemID;
   }
 
+  /**
+   * This is primarily used to set attributeChangedCallback. 
+   * Whenever setAttribute to type or pos are called, 
+   * attributeChangedCallback is called.
+   * @returns {Array}
+   */
   static get observedAttributes() {
     return ["type", "pos"];
   }
 
-  //calls upon cardElem setAttributes
+  /**
+   * Only allows for type attribute (for determining which card element to make) to be set once.
+   * If setAttribute called for position (used for initial position of element), send value into moveElem
+   * @param {string} name
+   * @param {string} oldVal
+   * @param {string} newVal
+   */
   attributeChangedCallback(name, oldVal, newVal){
     if(name === "type"){
         if(oldVal == null)
@@ -31,6 +65,12 @@ class CardElement extends HTMLElement{
     }
   }
 
+  /**
+   * Creates a custom card element according to the designated type through the parameter by calling
+   * the respective function. Calls function that gives card elements dragability. Also creates custom event to globally know when 
+   * the card element was clicked (for purposes of selection and deletion).
+   * @param {String} elemType
+   */
   createCardElement(elemType){
     let [parentType, subType] = elemType.split("-");
     this.type = parentType;
@@ -68,6 +108,11 @@ class CardElement extends HTMLElement{
       this.makeDraggable(this.elem);
   }
 
+  /**
+   * Function that creates the textbox element. Which is just a textArea.
+   * Sets id to textArea element.
+   * @return {void}
+   */
   makeTextBox(){
     const textArea = document.createElement("textarea");
     textArea.id = `${this.elemID}`;
@@ -81,6 +126,11 @@ class CardElement extends HTMLElement{
 
   }
 
+  /**
+   * Function that creates the shape element. Adds a resizer so shapes can be resized. As well as the resizer's 
+   * event handler so that the shape element can be resized properly.
+   * @param {String} shapeType
+   */
   makeShape(shapeType){
     const shape = document.createElement("div");
     shape.id = `${this.ID}`;
@@ -138,6 +188,11 @@ class CardElement extends HTMLElement{
     this.shadow.appendChild(shape);
   }
 
+  /**
+   * Function that create an image element from a URL. Adds a resizer so images can be resized. Similar kind of resizer with 
+   * similar properties as in shape element
+   * @param {URL} dataURL
+   */
   makeImage(dataURL){
     const wrapper = document.createElement("div");
     const img = document.createElement("img");
@@ -178,6 +233,11 @@ class CardElement extends HTMLElement{
     this.setAttribute("type", "image");
   }
 
+  /**
+   * Takes in pos string which is in from x,y. That is split to get x and y,
+   * for a given element, their initial position and size is set.
+   * @param {string} url
+   */
   moveElem(pos){
     let [x, y] = pos.split(","); //gets str values of x and y
     this.x = Number(x);
@@ -186,9 +246,9 @@ class CardElement extends HTMLElement{
       const textArea = this.elem;
       textArea.style.position = "absolute";
       textArea.style.left = `${this.x}px`;
-      textArea.style.top = `${this.y}px`; //set
+      textArea.style.top = `${this.y}px`; //set position
       textArea.style.width = `300px`;
-      textArea.style.height = `50px`;
+      textArea.style.height = `50px`; //set initial size
       textArea.padding = `8px`;
     } else if (this.type === "shape"){
       const shape = this.elem;
@@ -212,7 +272,11 @@ class CardElement extends HTMLElement{
 
   }
 
-  //inspo: https://www.w3schools.com/howto/howto_js_draggable.asp 
+  /**
+   * Make the card element draggable by assigning the dragMouseDown function to the event-handler
+   * onmousedown attribute
+   * @param {CardElement} e
+   */
   makeDraggable(elem) {
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     
@@ -220,6 +284,10 @@ class CardElement extends HTMLElement{
 
     const self = this;
 
+    /**
+     * Define functionality for movement with respect to mouse.
+     * @param {MouseEvent} e
+     */
     function dragMouseDown(e) {
       if (self.isResizing || self.writingToTextBox) return;
       e.preventDefault();
@@ -229,6 +297,10 @@ class CardElement extends HTMLElement{
       document.onmousemove = elementDrag;
     }
 
+  /**
+   * Define functonality to drag an element by altering its positions
+   * @param {MouseEvent} e
+   */
     function elementDrag(e) {
       e.preventDefault();
       pos1 = pos3 - e.clientX;
@@ -239,6 +311,9 @@ class CardElement extends HTMLElement{
       elem.style.left = (elem.offsetLeft - pos1) + "px";
     }
 
+  /**
+   * Stop drag by deactivating event-handler attributes
+   */
     function closeDragElement() {
       document.onmouseup = null;
       document.onmousemove = null;

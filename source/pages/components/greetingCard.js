@@ -1,33 +1,54 @@
-const PADDING = 16;
+const PADDING = 8;
 
+/**
+ * A custom web component representing a greeting card editor.
+ * 
+ * Provides editable front/back covers and inside pages, along with tools for
+ * adding and customizing text, images, and shapes. Also handles card flipping,
+ * color picking, and user interactions with added elements.
+ *
+ * @class
+ * @extends HTMLElement
+ */
 class GreetingCard extends HTMLElement {
+  /**
+   * Constructor for the greeting card
+   * Sets up styles, divs to be the card background (basically the canvas that we draw)
+   * and also sets up event listeners relating to the greeting card
+   */
   constructor() {
     super();
+    // Setting all the vars that we will need
     this.facingInside = false;
+    // Keep track of where the user last edited
     this.lastFocusedEditable = null;
+    //Shadow Dom that we will be using
     this.attachShadow({ mode: "open" });
+    // Set up listener ,styles, and the structure
     this.setupStyles();
     this.setupStructure();
     this.setupEventListeners();
+    // Vars for the selected elems that are used later
     this.selectedElem;
     this.selectedElemType;
   }
 
+  /**
+   * Set style attributes
+   * @return {void}
+   */
   setupStyles() {
     const style = document.createElement("link");
     style.setAttribute("rel", "stylesheet");
     style.setAttribute("href", "cardFormat.css");
     this.shadowRoot.append(style);
   }
-  // Closes the shape menu if it's already open
-  closeShapeMenuIfOpen() {
-    const existingMenu = this.shadowRoot.querySelector(".shape-menu");
-    if (existingMenu) {
-      existingMenu.remove();
-      this.shapeMenu = null;
-    }
-    console.log("removes it in the close shape menu");
-  }
+
+  /**
+   * Initializes the DOM structure of the card element,
+   * including the front/back covers, inside content, and color picker.
+   * @return {void}
+   */
   setupStructure() {
     // This is the container to encapsulate inside and outside
     const container = document.createElement("div");
@@ -60,7 +81,7 @@ class GreetingCard extends HTMLElement {
     container.append(outside, inside);
     this.shadowRoot.append(container);
 
-    //colr picker
+    //color picker
     const colorPicker = document.createElement("input");
     colorPicker.id = "colorPicker";
     colorPicker.type = "color";
@@ -68,6 +89,11 @@ class GreetingCard extends HTMLElement {
     this.shadowRoot.append(colorPicker);
   }
 
+  /**
+ * Attaches all relevant event listeners to the card element,
+ * including click, mouseover, color picking, and delete key handling.
+ * @returns {void}
+ */
   setupEventListeners() {
     this.addEventListener("click", this.handleClick.bind(this));
     this.addEventListener("mouseover", this.handleMouseOver.bind(this));
@@ -80,42 +106,56 @@ class GreetingCard extends HTMLElement {
     colorPicker.addEventListener("input", this.handlePickColor.bind(this));
   }
 
+  /**
+   * Handles the clicks for the background
+   * 
+   * @param {MouseEvent} e
+   */
   handleClick(e) {
     const toolBar = document.getElementById("tBar");
-    
+    // add text box at the cursor position
     if (toolBar.getMode() === "textBox") {
       this.addCardElement("textBox", e.clientX, e.clientY);
+    // add the users shape
     } else if (toolBar.getMode() === "shape") {
       let shapeType = toolBar.selectedShape;
       if (shapeType) {
         this.addCardElement(`shape-${shapeType}`, e.clientX, e.clientY);
       } else console.error("Shape type not picked yet!");
+    // add it as an image
     } else if (toolBar.getMode() === "image") {
       if (toolBar.getImageReady()) {
         let dataURL = toolBar.getDataURL();
-        console.log(dataURL);
         this.addCardElement(`image-${dataURL}`, e.clientX, e.clientY);
       }
-    } else if (toolBar.getMode() === "edit") {
-      // searchCardElem()
-    } else {
-      // console.log("Not saved", e.target.value);
-    }
+    } 
+    // reset tool bar to prevent duplicate actions and bugs
     toolBar.resetMode();
   }
 
+  /**
+   * Change cursor according to mode that tool bar is in.
+   */
   handleMouseOver() {
     const toolBar = document.getElementById("tBar");
     //to change cursor if in different mode on card
 
     if (toolBar.getMode() === "textBox") {
       this.style.cursor = "text"; //when in text mode cursor changes!
-      // console.log("Bruh");
     } else {
       this.style.cursor = "pointer";
     }
   }
 
+  /**
+  * Handles event for clicking on a card element. If the element is a shape, show 
+  * the color picker. Display a resizer for all the elements. Make the become the newly 
+  * selected element. Adds border around selected element. Also handles selecting another 
+  * card element or just clicking away in an empty part of the card (resets values, 
+  * gets rid of color picker, and gets rid of borrder around old selected element)
+  * @param {elemClicked} e
+  * @returns {void}
+  */
   handleElemClicked(e) {
     const colorPicker = this.shadowRoot.getElementById("colorPicker");
     let [type, elem] = e.detail;
@@ -192,6 +232,11 @@ class GreetingCard extends HTMLElement {
     }, 100);
   }
 
+  /**
+  * Handles color picking by applying the selected color to the currently selected element.
+  * @param {Event} e - The input event triggered when the user picks a color.
+  * @returns {void}
+  */
   handlePickColor(e) {
   
     if (this.selectedElem) {
@@ -200,6 +245,11 @@ class GreetingCard extends HTMLElement {
     }
   }
 
+  /**
+   * Delete selected element when backspace is pressed
+   * and prevents deleting the text box by accident
+   * @param {Event} e
+   */
   handlerDeleteSelectedElem(e) {
     if (this.selectedElem) {
       const host = this.selectedElem.getRootNode().host;
@@ -215,18 +265,35 @@ class GreetingCard extends HTMLElement {
     }
   }
 
-  // when we show inside contents, we should hide outside cover
+  /**
+   * show the inside of the face card
+   * and hide the outside
+   *
+   * @returns {void}
+   */
   showInside() {
     this.shadowRoot.querySelector(".inside").classList.remove("hidden");
     this.shadowRoot.querySelector(".outside").classList.add("hidden");
   }
 
-  // when we show outside covers, we should hide inside contents
+  /**
+   * show the outside of the face card
+   * and hide the inside
+   * 
+   * @returns {void}
+   */
   showOutside() {
     this.shadowRoot.querySelector(".inside").classList.add("hidden");
     this.shadowRoot.querySelector(".outside").classList.remove("hidden");
   }
 
+  /**
+   * Update the source of the cover image 
+   * 
+   * @param {URL} url url for the image
+eht fo ecruos eht e
+   * 
+   */
   setCoverImage(url) {
     //set image by url. might be useful
     if (this._img) {
@@ -234,10 +301,23 @@ class GreetingCard extends HTMLElement {
     }
   }
 
+  /**
+   * Access the color picker element
+   * @returns {void}
+   */
   getColorPicker() {
     return this.shadowRoot.getElementById("colorPicker");
   }
 
+  /**
+  * Adds a new card-element of the specified type to the currently visible card face (inside or outside),
+  * positioning it based on the provided x and y coordinates.
+  *
+  * @param {string} type - The type of card element to create (e.g., "textBox", "shape-circle", "image-[dataURL]").
+  * @param {number} x - The x-coordinate relative to the click position on the page.
+  * @param {number} y - The y-coordinate relative to the click position on the page.
+  * @returns {void}
+  */
   addCardElement(type, x, y) {
     let cardFace;
     if (this.facingInside) cardFace = this.shadowRoot.querySelector(".inside");
@@ -255,7 +335,10 @@ class GreetingCard extends HTMLElement {
   }
 }
 
-//handles toggle functionality
+
+/** 
+ * Handles toggle functionality of flipping the card.
+ */
 window.addEventListener("DOMContentLoaded", () => {
   const card = document.querySelector("greeting-card");
   const flipInside = document.getElementById("flip-inside");
@@ -268,6 +351,7 @@ window.addEventListener("DOMContentLoaded", () => {
     card.facingInside = true;
   });
 
+  // flip back to the outside
   flipOutside.addEventListener("click", () => {
     card.showOutside();
     flipOutside.classList.add("hidden");
