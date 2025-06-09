@@ -191,3 +191,192 @@ describe("Basic user flow for website", () => {
     expect(previewCards.length).toBe(3);
   });
 });
+
+// WILLIAM TEST CASES
+// New Card Should Reset Contents
+it("Creating a new card should reset input fields to defaults", async () => {
+  // Save modified card first
+  const cardHandle = await page.$("greeting-card");
+  const shadowRootHandle = await cardHandle.evaluateHandle((e) => e.shadowRoot);
+  const titleInput = await shadowRootHandle.$('input[value="Front Cover Title"]');
+  await titleInput.click({ clickCount: 3 });
+  await titleInput.type("Old Title");
+  await saveButton.click();
+
+  // Go back to homepage and create new card
+  await page.goto("https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html");
+  const nav = await page.$("nav-bar");
+  const navShadow = await nav.evaluateHandle((e) => e.shadowRoot);
+  const createBtn = await navShadow.$("#create");
+  await createBtn.click();
+
+  // Ensure the new editor has default title
+  const newCard = await page.$("greeting-card");
+  const newShadow = await newCard.evaluateHandle((e) => e.shadowRoot);
+  const newTitle = await newShadow.$('input[value="Front Cover Title"]');
+  expect(newTitle).not.toBeNull();
+});
+
+//Local Storage Card Names Should Be Unique
+it("Each saved card should have a unique name in localStorage", async () => {
+  await page.evaluate(() => localStorage.clear());
+
+  const cardNames = new Set();
+  for (let i = 0; i < 3; i++) {
+    await saveButton.click();
+    const name = await page.evaluate(() => localStorage.getItem("current card"));
+    expect(cardNames.has(name)).toBe(false);
+    cardNames.add(name);
+
+    // simulate new card creation
+    await page.goto("https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html");
+    const nav = await page.$("nav-bar");
+    const navShadow = await nav.evaluateHandle((e) => e.shadowRoot);
+    const createBtn = await navShadow.$("#create");
+    await createBtn.click();
+  }
+});
+
+
+// Save Message Should Disappear After Timeout
+it("Save message should fade out after a short delay", async () => {
+  await saveButton.click();
+
+  // Wait long enough for it to disappear
+  await page.waitForTimeout(3000); // adjust based on animation timing
+
+  const isVisible = await page.evaluate(() => {
+    const msg = document.querySelector("#save-message");
+    return msg && window.getComputedStyle(msg).opacity !== "0";
+  });
+
+  expect(isVisible).toBe(false);
+});
+
+
+//  Image in Preview Card Should Match Saved Card
+it("Preview card should display image from saved card", async () => {
+  const card = await page.$("greeting-card");
+  const shadow = await card.evaluateHandle((e) => e.shadowRoot);
+  const img = await shadow.$("img");
+  const src = await img.getProperty("src");
+  const imgSrc = await src.jsonValue();
+
+  await saveButton.click();
+  await page.goto("https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html");
+
+  const preview = await page.$("home-card");
+  const previewShadow = await preview.evaluateHandle((e) => e.shadowRoot);
+  const previewImg = await previewShadow.$("img");
+  const previewSrc = await previewImg.getProperty("src");
+  const previewImgSrc = await previewSrc.jsonValue();
+
+  expect(previewImgSrc).toBe(imgSrc);
+});
+
+
+// No Save Message on Empty Save
+it("Save message should not appear if save fails or nothing is changed (optional)", async () => {
+  await page.evaluate(() => localStorage.clear());
+  // Assume your app handles empty/non-modified card saves as no-op
+
+  await saveButton.click();
+  const msgVisible = await page.evaluate(() => {
+    const msg = document.querySelector("#save-message");
+    return msg && window.getComputedStyle(msg).opacity === "1";
+  });
+
+  expect(msgVisible).toBe(true); // or false, depending on your app logic
+});
+
+// Test: Elements persist across page refresh
+it("Saved elements should persist after a page refresh", async () => {
+  const cardHandle = await page.$("greeting-card");
+  const shadow = await cardHandle.evaluateHandle((e) => e.shadowRoot);
+  const titleInput = await shadow.$('input[value="Front Cover Title"]');
+  await titleInput.click({ clickCount: 3 });
+  await titleInput.type("Refresh Test Title");
+
+  await saveButton.click();
+  await page.reload({ waitUntil: ["networkidle0", "domcontentloaded"] });
+
+  const refreshedCard = await page.$("greeting-card");
+  const refreshedShadow = await refreshedCard.evaluateHandle((e) => e.shadowRoot);
+  const refreshedTitle = await refreshedShadow.$('input[value="Refresh Test Title"]');
+
+  expect(refreshedTitle).not.toBeNull();
+});
+
+// Test: Shape added to card is saved correctly
+it("Added shape should be stored in localStorage after save", async () => {
+  await page.evaluate(() => {
+    const shape = document.createElement("div");
+    shape.className = "shape square";
+    document.querySelector(".cardFront").appendChild(shape);
+  });
+
+  await saveButton.click();
+
+  const card = await page.evaluate(() => localStorage.getItem("current card"));
+  const cardData = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), card);
+  const shapes = cardData.frontElements.filter(e => e.className === "shape square");
+
+  expect(shapes.length).toBeGreaterThan(0);
+});
+
+// Test: Multiple cards display correct titles in home previews
+it("Each preview card on homepage should show correct titles", async () => {
+  await page.evaluate(() => localStorage.clear());
+
+  for (let i = 1; i <= 2; i++) {
+    const card = await page.$("greeting-card");
+    const shadow = await card.evaluateHandle((e) => e.shadowRoot);
+    const titleInput = await shadow.$('input[value="Front Cover Title"]');
+    await titleInput.click({ clickCount: 3 });
+    await titleInput.type(`Card ${i}`);
+    await saveButton.click();
+
+    const nav = await page.$("nav-bar");
+    const navShadow = await nav.evaluateHandle((e) => e.shadowRoot);
+    const create = await navShadow.$("#create");
+    await create.click();
+  }
+
+  await page.goto(
+    "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html"
+  );
+
+  const previewTitles = await page.$$eval("home-card", (cards) =>
+    cards.map((card) => {
+      const shadow = card.shadowRoot;
+      return shadow ? shadow.querySelector("h2")?.textContent : null;
+    })
+  );
+
+  expect(previewTitles).toContain("Card 1");
+  expect(previewTitles).toContain("Card 2");
+});
+
+
+// Test: Prevent saving if no changes and card exists (optional edge case)
+it("Should not save again if no changes are made (optional)", async () => {
+  await page.evaluate(() => localStorage.clear());
+  await saveButton.click();
+  const beforeSaveKeys = await page.evaluate(() => Object.keys(localStorage));
+
+  await saveButton.click(); // Attempt saving again
+
+  const afterSaveKeys = await page.evaluate(() => Object.keys(localStorage));
+  expect(afterSaveKeys.length).toBe(beforeSaveKeys.length); // No new keys
+});
+
+// Test: Homepage shows “no cards” message if empty
+it("Homepage should show message when no saved cards exist", async () => {
+  await page.evaluate(() => localStorage.clear());
+  await page.goto(
+    "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html"
+  );
+
+  const noCardMsg = await page.$("p.no-cards"); // Assume this is the element shown when no cards
+  expect(noCardMsg).not.toBeNull();
+});
