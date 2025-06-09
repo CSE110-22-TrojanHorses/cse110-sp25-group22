@@ -6,7 +6,6 @@ describe("Basic user flow for website", () => {
     await page.goto(
       "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/editor_page/index.html"
     );
-    await page.waitForSelector("top-bar");
     const topBar = await page.$("top-bar");
     const shadow = await topBar.evaluateHandle((e) => e.shadowRoot);
     saveButton = await shadow.$(".save");
@@ -167,16 +166,18 @@ describe("Basic user flow for website", () => {
 
     for (let i = 0; i < 3; i++) {
       await page.goto(
-        "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/editor_page/index.html",{ waitUntil: "networkidle0" }
+        "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/editor_page/index.html",
+        { waitUntil: "networkidle0" }
       );
-      
+
       const editorNav = await page.$("top-bar");
       const editorShadow = await editorNav.evaluateHandle((e) => e.shadowRoot);
       const save = await editorShadow.$(".save");
       await save.click();
 
       await page.goto(
-        "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html"
+        "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html",
+        { waitUntil: "networkidle0" }
       );
 
       const homeNav = await page.$("nav-bar");
@@ -185,9 +186,11 @@ describe("Basic user flow for website", () => {
       await createButton.click();
     }
 
-    await page.goto("https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html",{ waitUntil: "networkidle0" }    
+    await page.goto(
+      "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html",
+      { waitUntil: "networkidle0" }
     );
     const previewCards = await page.$$("home-card");
     expect(previewCards.length).toBe(3);
-  },10000);
+  });
 });

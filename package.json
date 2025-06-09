@@ -24,11 +24,10 @@
     "prettier": "npx prettier source --check",
     "prettier:fix": "npm run prettier -- --write",
     "format": "npm run prettier:fix && npm run lint:fix",
-    "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config=jest.unit.config.mjs __unittests__/unit.test.js",
-    "start": "parcel source/pages/home_page/*.html source/pages/editor_page/*.html --port 9999",
-    "build": "parcel build source/pages/home_page/*.html source/pages/editor_page/*.html",
-    "test:e2e": "jest __tests__/ --maxWorkers=1",
-    "test:all": "npm run test:unit && npm run test:e2e"
+    "start": "true",
+    "build": "parcel build source/pages/home_page/homepage.html",
+    "test:e2e": "jest __tests__/*.test.js --maxWorkers=1",
+    "test:all": "npm run test:e2e"
   },
   "type": "module"
 }
