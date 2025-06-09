@@ -201,7 +201,11 @@ class ToolBar extends HTMLElement {
     return this.cropperManager.imageReady;
   }
 
-  getImageURL(){
+  setImageReady(boolVal){
+    this.cropperManager.imageReady = boolVal;
+  }
+
+  getDataURL(){
     return this.cropperManager.dataURL;
   }
 }
@@ -220,7 +224,7 @@ class CropperManager{
       this.cancelBtn = null;
       this.dataURL = null;
       this.dataID = null;
-      this.imageReady = true;
+      this.imageReady = false;
     }
 
     //ONLY CALLED WHEN BUTTONS LOADED
@@ -271,12 +275,6 @@ class CropperManager{
       this.dataURL = this.activeCropper.getCroppedCanvas().toDataURL("image/png");
       this.closeCropper();
       this.imageReady = true;
-      const imageToSend = document.createElement("img");
-      imageToSend.src = this.dataURL;
-      const cardElem = document.createElement("card-element");
-      this.dataID = cardElem.getElemID(); //in greetingCard click in greeting card handler
-      //put `image-${cardElem.dataID}`
-
     });
     }
 

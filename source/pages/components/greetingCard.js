@@ -75,7 +75,8 @@ class GreetingCard extends HTMLElement {
         console.error("Shape type not picked yet!");
     } else if (toolBar.getMode() === "image"){
         if(toolBar.getImageReady()){
-            let dataURL = toolBar.getImageURL();
+            let dataURL = toolBar.getDataURL();
+            console.log(dataURL);
             this.addCardElement(`image-${dataURL}`, e.clientX, e.clientY);
         }
     } else if (toolBar.getMode() === "edit"){
@@ -133,17 +134,19 @@ class GreetingCard extends HTMLElement {
   }
 
   handlerDeleteSelectedElem(e){
-    const host = this.selectedElem.getRootNode().host;
-    // console.log(this.selectedElem);
-    console.log(host.writingToTextBox);
-    console.log(host.type);
-    if(host.type === "textBox" && host.writingToTextBox){
-        // console.lo
-        return;
-    }
-    if ((e.key === "Backspace" || e.key === "Delete") && this.selectedElem) {
-        this.selectedElem.remove();
-        this.selectedElem = null;
+    if(this.selectedElem){
+        const host = this.selectedElem.getRootNode().host;
+        // console.log(this.selectedElem);
+        console.log(host.writingToTextBox);
+        console.log(host.type);
+        if(host.type === "textBox" && host.writingToTextBox){
+            // console.lo
+            return;
+        }
+        if ((e.key === "Backspace" || e.key === "Delete") && this.selectedElem) {
+            this.selectedElem.remove();
+            this.selectedElem = null;
+        }
     }
   }
   
@@ -180,10 +183,8 @@ class GreetingCard extends HTMLElement {
     let rect = cardFace.getBoundingClientRect(); //this used to get position properties of the cardFace
     let newX = x - rect.left - PADDING;
     let newY = y - rect.top - PADDING;
-    // console.log(`${newX}, ${newY}`);
-    //handles all
-    const cardElem = document.createElement("card-element");
 
+    const cardElem = document.createElement("card-element");
     cardElem.setAttribute("type", type);
     cardElem.setAttribute("pos", `${newX},${newY}`);
     // console.log("Appending card element:", cardElem);

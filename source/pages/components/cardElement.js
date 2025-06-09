@@ -8,6 +8,7 @@ class CardElement extends HTMLElement{
     this.type = null;
     this.elem = null;
     this.writingToTextBox = false;
+    this.isResizing = false;
     this.elemID = CardElement.idCounter++;
   }
 
@@ -23,7 +24,8 @@ class CardElement extends HTMLElement{
   attributeChangedCallback(name, oldVal, newVal){
     // console.log("callbac called");
     if(name === "type"){
-        this.createCardElement(newVal)
+        if(oldVal == null)
+          this.createCardElement(newVal)
     } else if(name === "pos"){
         if(oldVal !== newVal)
             this.moveElem(newVal);
@@ -33,6 +35,7 @@ class CardElement extends HTMLElement{
   createCardElement(elemType){
     let [parentType, subType] = elemType.split("-");
     this.type = parentType;
+    console.log(parentType, subType);
     if(parentType === "textBox")
       this.makeTextBox();
     else if(parentType === "shape")
@@ -70,7 +73,7 @@ class CardElement extends HTMLElement{
 
   makeTextBox(){
     const form = document.createElement("form");
-    form.id = `${this.ID}`;
+    form.id = `${this.elemID}`;
     this.elem = form;
     const textArea = document.createElement("textarea");
     textArea.placeholder = "Start text here...";
@@ -131,12 +134,13 @@ class CardElement extends HTMLElement{
       zIndex: "10"
     });
     shape.appendChild(resizer);
-    let isResizing = false;
+    
     resizer.addEventListener("mousedown", (e) => {
       e.stopPropagation();
-      isResizing = true;
+      this.isResizing = true;
       document.addEventListener("mousemove", (b) => {
-        if (!isResizing) return;
+        if (!this.isResizing) return;
+        console.log("Bruh");
         const rect = shape.getBoundingClientRect();
         const newWidth = b.clientX - rect.left;
         const newHeight = b.clientY - rect.top;
@@ -150,23 +154,52 @@ class CardElement extends HTMLElement{
         }
       });
       document.addEventListener("mouseup", () => {
-        isResizing = false;
+        this.isResizing = false;
       });
     });
     this.shadow.appendChild(shape);
   }
 
-   
-
   makeImage(dataURL){
+    const wrapper = document.createElement("div");
     const img = document.createElement("img");
-    img.id = `${this.elemID}`;
-    this.elem = img;
     img.src = dataURL;
-    img.alt = "Cropped Image";
-    // console.log(dataURL);
-    this.shadow.appendChild(img);
+    wrapper.id = `${this.elemID}`;
+    this.elem = wrapper;
+    const resizer = document.createElement("div");
+    resizer.className = "resizer";
+    Object.assign(resizer.style, {
+      width: "10px",
+      height: "10px",
+      background: "black",
+      position: "absolute",
+      right: "0",
+      bottom: "0",
+      cursor: "se-resize",
+      zIndex: "10"
+    });
+    wrapper.appendChild(resizer);
+
+    resizer.addEventListener("mousedown", (e) => {
+      e.stopPropagation();
+      this.isResizing = true;
+      document.addEventListener("mousemove", (b) => {
+        if (!this.isResizing) return;
+        const rect = img.getBoundingClientRect();
+        const newWidth = b.clientX - rect.left;
+        const newHeight = b.clientY - rect.top;
+        img.style.width = `${newWidth}px`;
+        img.style.height = `${newHeight}px`;
+      });
+      document.addEventListener("mouseup", () => {
+        this.isResizing = false;
+      });
+    });
+    wrapper.appendChild(img);
+    this.shadow.appendChild(wrapper);
+    this.setAttribute("type", "image");
   }
+
   moveElem(pos){
     // console.log("move elem called for: " + this.type);
     let [x, y] = pos.split(","); //gets str values of x and y
@@ -187,12 +220,16 @@ class CardElement extends HTMLElement{
       shape.style.left = `${this.x}px`;
       shape.style.top = `${this.y}px`; //set
     } else if (this.type === "image"){
-      const img = this.elem;
+      const wrapper = this.elem;
+      const img = wrapper.querySelector("img");
+
       //set position
       img.style.position = "absolute";
       img.style.left = `${this.x}px`;
       img.style.top = `${this.y}px`; //set
       //
+      img.style.width = `500px`;
+      img.style.height = `225px`;
     }
 
   }
