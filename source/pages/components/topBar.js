@@ -8,7 +8,7 @@ class TopBar extends HTMLElement {
     const container = document.createElement("nav");
     container.classList.add("navcontainer");
     this.buttons = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 4; i++) {
       let button = document.createElement("button");
       this.customizeButton(button, i);
       this.buttons.push(button);
@@ -42,20 +42,6 @@ class TopBar extends HTMLElement {
           alert("Download clicked!");
         });
         button.className = "download";
-        break;
-      case 3:
-        button.innerHTML = `<img src="../../assets/icons/top-bar-icons/share.png" alt="Diagram">`;
-        button.addEventListener("click", function () {
-          alert("Share clicked!");
-        });
-        button.className = "share";
-        break;
-      case 4:
-        button.innerHTML = `<img src="../../assets/icons/top-bar-icons/circle-user.png" alt="Diagram">`;
-        button.addEventListener("click", function () {
-          alert("Profile clicked!");
-        });
-        button.className = "toprightimg";
         break;
     }
   }
@@ -124,7 +110,7 @@ class TopBar extends HTMLElement {
           data.attributes[attr.name] = attr.value;
         }
 
-        if (tag === "INPUT") {
+        if (tag === "TEXTAREA") {
           data.value = elem.value;
         }
 
