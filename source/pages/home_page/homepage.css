@@ -4,6 +4,7 @@ body {
 
 p {
   text-align: center;
+  margin: 5%;
 }
 
 /** navbar css **/
@@ -20,11 +21,11 @@ button:hover {
 }
 
 #home {
-  background-image: url("../assets/icons/top-bar-icons/apps.png");
+  background-image: url("../../assets/icons/top-bar-icons/apps.png");
 }
 
 #create {
-  background-image: url("../assets/icons/top-bar-icons/plus.png");
+  background-image: url("../../assets/icons/top-bar-icons/plus.png");
 }
 
 nav {

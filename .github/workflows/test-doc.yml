@@ -17,33 +17,6 @@ jobs:
       - name: Prettier check
         run: npm run prettier:fix
 
-  test-and-document:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Dependenceis
-        run: npm install
-      - name: Unit Test
-        run: npm run test:unit
-      - name: Generate Documentation
-        run: npx jsdoc -c jsdoc.json
-
-      - name: Upload JSDoc documentation as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: jsdoc
-          path: specs/docs
-
-      # - name: Commit and push docs
-      #   run: |
-      #     git config --global user.name "github-actions[bot]"
-      #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
-      #     git add specs/docs
-      #     git diff --cached --quiet || git commit -m "Auto-update JSDoc documentation"
-      #     git push
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   e2e-tests:
     runs-on: ubuntu-latest
     steps:

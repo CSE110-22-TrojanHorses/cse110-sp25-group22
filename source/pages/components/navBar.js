@@ -17,10 +17,21 @@ class NavBar extends HTMLElement {
     // Create the <nav> container for the buttons
     const nav = document.createElement("nav");
 
-    // Insert HTML content with two slick buttons: Home and Create
-    nav.innerHTML = `
-        <button id="home" onclick="window.open('homepage.html', '_self')"></button>
-        <button id="create" onclick="window.open('./editor_page/index.html', '_self')"></button>`; // Add onclick when edit page is created
+    // Sets up buttons in navigation bar
+    const homeButton = document.createElement("button");
+    homeButton.addEventListener("click", () => {
+      window.open('../home_page/homepage.html', '_self');
+    })
+    homeButton.id = "home";
+
+    // if add is clicked, then set the current card to NEW so that a new card is initialized
+    const addButton = document.createElement("button");
+    addButton.addEventListener("click", () => {
+      localStorage.setItem("current card", "NEW");
+      window.open('../editor_page/index.html', '_self');
+    })
+    addButton.id = "create";
+    nav.append(homeButton, addButton);
 
     // Link external stylesheet to make it look not-1995 we are modern after all
     const style = document.createElement("link");
