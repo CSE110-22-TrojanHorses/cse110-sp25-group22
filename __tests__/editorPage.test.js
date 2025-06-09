@@ -166,8 +166,7 @@ describe("Basic user flow for website", () => {
 
     for (let i = 0; i < 3; i++) {
       await page.goto(
-        "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/editor_page/index.html",
-        { waitUntil: "networkidle0" }
+        "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/editor_page/index.html"
       );
 
       const editorNav = await page.$("top-bar");
@@ -176,8 +175,7 @@ describe("Basic user flow for website", () => {
       await save.click();
 
       await page.goto(
-        "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html",
-        { waitUntil: "networkidle0" }
+        "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html"
       );
 
       const homeNav = await page.$("nav-bar");
@@ -187,8 +185,7 @@ describe("Basic user flow for website", () => {
     }
 
     await page.goto(
-      "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html",
-      { waitUntil: "networkidle0" }
+      "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html"
     );
     const previewCards = await page.$$("home-card");
     expect(previewCards.length).toBe(3);
