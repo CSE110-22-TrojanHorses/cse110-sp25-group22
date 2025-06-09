@@ -120,6 +120,7 @@ class GreetingCard extends HTMLElement {
     const colorPicker = this.shadowRoot.getElementById("colorPicker");
     let [type, elem] = e.detail;
 
+
     //border on click
     if (this.selectedElem) {
       this.selectedElem.style.border = "none";
@@ -215,18 +216,50 @@ class GreetingCard extends HTMLElement {
     }
   }
 
-  // when we show inside contents, we should hide outside cover
+  /**
+   * Adds elements to container based on stored card data
+   * @param {HTMLElement} container - container where the elements are added to
+   * @param {Array} elementList - list of elements to add
+   */
+  populateContainer(container, elementList) {
+    for (const elementInfo of elementList) {
+      const { tag, attributes = {}, value = "" } = elementInfo;
+      const cardContent = document.createElement(tag);
+
+      if (attributes) {
+        Object.entries(attributes).forEach(([key, val]) =>
+          cardContent.setAttribute(key, val)
+        );
+      }
+
+      if (tag === "INPUT") {
+        cardContent.value = value;
+      }
+
+      container.appendChild(cardContent);
+    }
+  }
+
+  /**
+   * Hide outside contents and show inside contents
+   */
   showInside() {
     this.shadowRoot.querySelector(".inside").classList.remove("hidden");
     this.shadowRoot.querySelector(".outside").classList.add("hidden");
   }
 
-  // when we show outside covers, we should hide inside contents
+  /**
+   * Hide inside contents and show outside contents
+   */
   showOutside() {
     this.shadowRoot.querySelector(".inside").classList.add("hidden");
     this.shadowRoot.querySelector(".outside").classList.remove("hidden");
   }
 
+  /**
+   * Sets the image source to the given URL
+   * @param {URL} url
+   */
   setCoverImage(url) {
     //set image by url. might be useful
     if (this._img) {
@@ -255,9 +288,20 @@ class GreetingCard extends HTMLElement {
   }
 }
 
-//handles toggle functionality
 window.addEventListener("DOMContentLoaded", () => {
   const card = document.querySelector("greeting-card");
+
+  // loads data if the current card data exists in storage, otherwise initialize card with default
+  if (localStorage.getItem("current card")) {
+    const key = localStorage.getItem("current card");
+    if (localStorage.getItem(key)) {
+      card.loadData(key);
+    } else {
+      card.init();
+    }
+  } else {
+    card.init();
+  }
   const flipInside = document.getElementById("flip-inside");
   const flipOutside = document.getElementById("flip-outside");
   //separate event handlers
