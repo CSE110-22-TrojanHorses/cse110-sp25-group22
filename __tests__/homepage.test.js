@@ -63,121 +63,122 @@ describe("Basic user flow for website", () => {
   });
 
   it("homepage card double click", async () => {
-       await page.evaluate((cardStr) => {
-        localStorage.clear();
-        localStorage.setItem("test card", cardStr);
-        localStorage.setItem("current card", "test card");
-  }, testCard);
-   const navBar = await page.$("nav-bar");
+    await page.evaluate((cardStr) => {
+      localStorage.clear();
+      localStorage.setItem("test card", cardStr);
+      localStorage.setItem("current card", "test card");
+    }, testCard);
+    const navBar = await page.$("nav-bar");
     const shadow = await navBar.getProperty("shadowRoot");
     const homeButton = await shadow.$("#home");
     await Promise.all([
-    page.waitForNavigation({ waitUntil: "networkidle0" }), // or "domcontentloaded"
-   homeButton.click(),
-  ]);
-  const homepageCard = await page.$("home-card");
-    // double‑click it
-    await Promise.all([
-      homepageCard.click({ clickCount: 2 }),
+      page.waitForNavigation({ waitUntil: "networkidle0" }), // or "domcontentloaded"
+      homeButton.click(),
     ]);
-    
+    const homepageCard = await page.$("home-card");
+    // double‑click it
+    await Promise.all([homepageCard.click({ clickCount: 2 })]);
+
     await page.waitForSelector(".menu", { visible: true });
-    const editOption = await page.$eval(".menu .edit", el => el.textContent);
-    const deleteOption = await page.$eval(".menu .delete", el => el.textContent);
+    const editOption = await page.$eval(".menu .edit", (el) => el.textContent);
+    const deleteOption = await page.$eval(
+      ".menu .delete",
+      (el) => el.textContent
+    );
 
     expect(editOption).toMatch(/Edit/i);
     expect(deleteOption).toMatch(/Delete/i);
   }, 10000);
 
   it("homepage card edit", async () => {
-        await page.evaluate((cardStr) => {
-        localStorage.clear();
-        localStorage.setItem("test card", cardStr);
-        localStorage.setItem("current card", "test card");
-  }, testCard);
-   const navBar = await page.$("nav-bar");
+    await page.evaluate((cardStr) => {
+      localStorage.clear();
+      localStorage.setItem("test card", cardStr);
+      localStorage.setItem("current card", "test card");
+    }, testCard);
+    const navBar = await page.$("nav-bar");
     const shadow = await navBar.getProperty("shadowRoot");
     const homeButton = await shadow.$("#home");
     await Promise.all([
-    page.waitForNavigation({ waitUntil: "networkidle0" }), 
-   homeButton.click(),
-  ]);
-  const homepageCard = await page.$("home-card");
-    // double‑click it
-    await Promise.all([
-      homepageCard.click({ clickCount: 2 }),
+      page.waitForNavigation({ waitUntil: "networkidle0" }),
+      homeButton.click(),
     ]);
-    
+    const homepageCard = await page.$("home-card");
+    // double‑click it
+    await Promise.all([homepageCard.click({ clickCount: 2 })]);
+
     await page.waitForSelector(".menu", { visible: true });
     await Promise.all([
       page.click(".menu .edit"),
       page.waitForNavigation({ waitUntil: "networkidle0" }),
     ]);
 
-    expect(page.url()).toMatch(/index\.html/);;
-  },8000);
+    expect(page.url()).toMatch(/index\.html/);
+  }, 8000);
 
-it("homepage card delete", async () => {
-  await page.evaluate((cardStr) => {
-    localStorage.clear();
-    localStorage.setItem("test card", cardStr);
-    localStorage.setItem("current card", "test card");
-  }, testCard);
+  it("homepage card delete", async () => {
+    await page.evaluate((cardStr) => {
+      localStorage.clear();
+      localStorage.setItem("test card", cardStr);
+      localStorage.setItem("current card", "test card");
+    }, testCard);
 
-  const navBar = await page.$("nav-bar");
-  const shadow = await navBar.getProperty("shadowRoot");
-  const homeButton = await shadow.$("#home");
+    const navBar = await page.$("nav-bar");
+    const shadow = await navBar.getProperty("shadowRoot");
+    const homeButton = await shadow.$("#home");
 
-  await Promise.all([
-    homeButton.click(),
-    page.waitForNavigation({ waitUntil: "networkidle0" }),
-  ]);
+    await Promise.all([
+      homeButton.click(),
+      page.waitForNavigation({ waitUntil: "networkidle0" }),
+    ]);
 
-  const homepageCard = await page.$("home-card");
-  await homepageCard.click({ clickCount: 2 });
+    const homepageCard = await page.$("home-card");
+    await homepageCard.click({ clickCount: 2 });
 
-  await page.waitForSelector(".menu", { visible: true });
-  await page.click(".menu .delete");
-
-  // Wait a bit for UI update
-
-  const cardAfterDelete = await page.$("home-card");
-  expect(cardAfterDelete).toBeNull();
-
-  const cardInStorage = await page.evaluate(() => localStorage.getItem("test card"));
-  expect(cardInStorage).toBeNull();
-}, 8000);
-
- it("homepage card delete all", async () => {
-  await page.evaluate((cardStr) => {
-    localStorage.clear();
-    localStorage.setItem("test card", cardStr);
-    localStorage.setItem("test card 2", cardStr);
-    localStorage.setItem("current card", "test card");
-  }, testCard);
-
-  const navBar = await page.$("nav-bar");
-  const shadow = await navBar.getProperty("shadowRoot");
-  const homeButton = await shadow.$("#home");
-
-  await Promise.all([
-    homeButton.click(),
-    page.waitForNavigation({ waitUntil: "networkidle0" }),
-  ]);
-
-  const cards = await page.$$("home-card");
-  for (const card of cards) {
-    await card.click({ clickCount: 2 });
     await page.waitForSelector(".menu", { visible: true });
     await page.click(".menu .delete");
-  }
 
-  const remainingCards = await page.$$("home-card");
-  expect(remainingCards.length).toBe(0);
+    // Wait a bit for UI update
 
-  const keys = await page.evaluate(() => Object.keys(localStorage));
-  expect(keys.length).toBe(1);
-}, 10000);
+    const cardAfterDelete = await page.$("home-card");
+    expect(cardAfterDelete).toBeNull();
+
+    const cardInStorage = await page.evaluate(() =>
+      localStorage.getItem("test card")
+    );
+    expect(cardInStorage).toBeNull();
+  }, 8000);
+
+  it("homepage card delete all", async () => {
+    await page.evaluate((cardStr) => {
+      localStorage.clear();
+      localStorage.setItem("test card", cardStr);
+      localStorage.setItem("test card 2", cardStr);
+      localStorage.setItem("current card", "test card");
+    }, testCard);
+
+    const navBar = await page.$("nav-bar");
+    const shadow = await navBar.getProperty("shadowRoot");
+    const homeButton = await shadow.$("#home");
+
+    await Promise.all([
+      homeButton.click(),
+      page.waitForNavigation({ waitUntil: "networkidle0" }),
+    ]);
+
+    const cards = await page.$$("home-card");
+    for (const card of cards) {
+      await card.click({ clickCount: 2 });
+      await page.waitForSelector(".menu", { visible: true });
+      await page.click(".menu .delete");
+    }
+
+    const remainingCards = await page.$$("home-card");
+    expect(remainingCards.length).toBe(0);
+
+    const keys = await page.evaluate(() => Object.keys(localStorage));
+    expect(keys.length).toBe(1);
+  }, 10000);
   it("add button click", async () => {
     const navBar = await page.$("nav-bar");
     const shadow = await (await navBar.getProperty("shadowRoot")).asElement();
@@ -190,5 +191,4 @@ it("homepage card delete", async () => {
 
     expect(page.url()).toMatch(/index\.html$/);
   });
-  
 });
