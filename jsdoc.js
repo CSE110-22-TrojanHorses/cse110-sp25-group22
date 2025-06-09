@@ -3,34 +3,44 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+// Setup paths
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const sourceDir = path.join(__dirname, 'source');
 const outputDir = path.join(__dirname, 'docs');
 const outputFile = path.join(outputDir, 'index.html');
 
+// Safe directory reader
+function safeReadDir(dirPath) {
+  try {
+    return fs.readdirSync(String(dirPath), { withFileTypes: true });
+  } catch {
+    return [];
+  }
+}
+
+// Safe file reader
+function safeReadFile(filePath) {
+  try {
+    return fs.readFileSync(String(filePath), 'utf8');
+  } catch {
+    return '';
+  }
+}
+
 // Recursively collect all JS files
 function walk(dir, files = []) {
-  let entries;
-  try {
-    entries = fs.readdirSync(dir, { withFileTypes: true });
-  } catch (err) {
-    console.error(`Failed to read directory: ${dir}`, err);
-    return files;
-  }
-
-  for (const entry of entries) {
-    const fullPath = path.join(dir, entry.name);
+  for (const entry of safeReadDir(dir)) {
+    const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      walk(fullPath, files);
-    } else if (entry.isFile() && fullPath.endsWith('.js')) {
-      files.push(fullPath);
+      walk(full, files);
+    } else if (entry.isFile() && full.endsWith('.js')) {
+      files.push(full);
     }
   }
-
   return files;
 }
 
-// Extract all /** ... */ comments + the line after
+// Extract /** ... */ comments and next line
 function extractBlocks(content) {
   const pattern = /\/\*\*[\s\S]*?\*\/\s*([^\n]*)/g;
   const blocks = [];
@@ -40,7 +50,6 @@ function extractBlocks(content) {
     const comment = match[0].match(/\/\*\*[\s\S]*?\*\//)?.[0] || '';
     const nextLine = match[1].trim();
 
-    // Try to infer name
     let name = '(anonymous)';
     if (/class\s+(\w+)/.test(nextLine)) {
       name = nextLine.match(/class\s+(\w+)/)[1];
@@ -60,7 +69,7 @@ function extractBlocks(content) {
   return blocks;
 }
 
-// HTML escape for safe display
+// Escape HTML
 const escape = s => s.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 // Build HTML output
@@ -89,20 +98,15 @@ ${Object.entries(docs).map(([file, blocks]) => `
 </body></html>`;
 }
 
-// Main function
+// Main
 (function main() {
   if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
 
   const docs = Object.fromEntries(
     walk(sourceDir).map(file => {
-      try {
-        const content = fs.readFileSync(file, 'utf8');
-        const blocks = extractBlocks(content);
-        return blocks.length ? [file, blocks] : null;
-      } catch (err) {
-        console.error(`Failed to read file: ${file}`, err);
-        return null;
-      }
+      const content = safeReadFile(file);
+      const blocks = extractBlocks(content);
+      return blocks.length ? [file, blocks] : null;
     }).filter(Boolean)
   );
 
