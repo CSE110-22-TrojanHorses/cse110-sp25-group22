@@ -55,6 +55,7 @@ class ToolBar extends HTMLElement {
 
   resetMode(){
     this.mode = "edit";
+    this.closeShapeMenuIfOpen();
   }
 
   customizeButton(button, buttonNum) {
@@ -151,7 +152,7 @@ class ToolBar extends HTMLElement {
     }
 
     // We only support these shapes (no heart/star anymore)
-    const shapeList = ["square", "rectangle", "circle", "triangle"];
+    const shapeList = ["square", "rectangle", "circle"];
     this.shapeMenu = document.createElement("div");
     this.shapeMenu.classList.add("shape-menu");
 
