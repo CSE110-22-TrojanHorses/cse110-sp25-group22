@@ -55,20 +55,16 @@ class TopBar extends HTMLElement {
       const card = document.querySelector("greeting-card").shadowRoot;
 
       // get inside and outside of cards
-      const pages = card.querySelectorAll(".page-wrapper");
-      const back = pages[0];
-      const front = pages[1];
-      const leftPage = pages[2];
-      const rightPage = pages[3];
+      const pages = card.querySelectorAll(".card");
+      const outside = pages[0];
+      const inside = pages[1];
 
       // storage object to stringify
       const storage = {};
 
       // gets elements in order within each container
-      storage.leftElements = getElements(leftPage);
-      storage.rightElements = getElements(rightPage);
-      storage.backElements = getElements(back);
-      storage.frontElements = getElements(front);
+      storage.outsideElements = getElements(outside);
+      storage.insideElements = getElements(inside);
 
       let date = new Date();
       storage.time = `Last Sync: ${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDay() + 1).padStart(2, "0")}/${date.getFullYear()} @ 
@@ -96,23 +92,65 @@ class TopBar extends HTMLElement {
      */
     function getElements(container) {
       // creates array from elements
-      const rawElements = container.getElementsByTagName("*");
+      const elementContainers = container.getElementsByTagName("card-element");
       const elements = [];
 
-      for (let elem of rawElements) {
+      for (let container of elementContainers) {
         // get the tagname and format the desired attributes as JSON object
         // goal: avoid direct HTML injection
-        const tag = elem.tagName;
-        const data = { tag };
+        const root = container.shadowRoot;
+        const rawElement = root.querySelectorAll("*");
 
-        data.attributes = {};
-        for (let attr of elem.attributes) {
-          data.attributes[attr.name] = attr.value;
+        let type;
+        let outerElement = rawElement[0];
+        let innerElements = [];
+        
+        if (outerElement.tagName == "TEXTAREA") {
+          type = "TEXT";
+        } else if (outerElement.className.includes("shape")) {
+          innerElements.push(outerElement.querySelector("div"));
+          type = "SHAPE";
+        } else {
+          innerElements.push(outerElement.querySelector("div"));
+          innerElements.push(outerElement.querySelector("img"));
+          type = "IMAGE";
         }
 
-        if (tag === "TEXTAREA") {
-          data.value = elem.value;
+        const data = { type };
+        data.cardElementData = {};
+        for (let attr of container.attributes) {
+          data.cardElementData[attr.name] = attr.value;
         }
+        data.outerElemData = {};
+        for (let attr of outerElement.attributes) {
+          data.outerElemData[attr.name] = attr.value;
+        }
+
+        if (type != "TEXT") {
+          data.innerElemData = [];
+          for (let i = 0; i < innerElements.length; i++) {
+            const elemData = [innerElements[i].tagName];
+            const attributes = {};
+            for (let attr of innerElements[i].attributes) {
+              console.log(attr.value);
+              attributes[attr.name] = attr.value;
+            }
+            elemData.push(attributes);
+            data.innerElemData.push(elemData);
+            if (type == "TEXT" && innerElements[i].tagName == "TEXTAREA") {
+              data.value = innerElements[i].value;
+            } 
+          }
+        }
+
+        // const tag = rawElement.tagName;
+        // const data = { tag };
+
+        // data.attributes = {};
+        // for (let attr of rawElement.attributes) {
+        //   data.attributes[attr.name] = attr.value;
+        // }
+
 
         elements.push(data);
       }

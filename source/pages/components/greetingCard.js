@@ -259,55 +259,66 @@ class GreetingCard extends HTMLElement {
     }
   }
 
+  loadData(name) {
+    const pages = this.shadowRoot.querySelectorAll(".card");
+    const outside = pages[0];
+    const inside = pages[1];
+
+    const cardData = JSON.parse(localStorage.getItem(name));
+    this.populateContainer(outside, cardData.outsideElements);
+    this.populateContainer(inside, cardData.insideElements);
+  }
+
   /**
    * Adds elements to container based on stored card data
    * @param {HTMLElement} container - container where the elements are added to
    * @param {Array} elementList - list of elements to add
    */
   populateContainer(container, elementList) {
-    for (const elementInfo of elementList) {
-      const { tag, attributes = {}, value = "" } = elementInfo;
-      const cardContent = document.createElement(tag);
-
-      if (attributes) {
-        Object.entries(attributes).forEach(([key, val]) =>
-          cardContent.setAttribute(key, val)
+    for (let j = 0; j < elementList.length; j++) {
+      let outerTag;
+      if (elementList[j].type == "TEXT") {
+        outerTag = "TEXTAREA"
+      } else {
+        outerTag = "DIV";
+      }
+      const cardElement = document.createElement("card-element");
+      if (elementList[j].cardElementData) {
+        Object.entries(elementList[j].cardElementData).forEach(([key, val]) => 
+          cardElement.setAttribute(key, val)
         );
       }
-
-      if (tag === "TEXTAREA") {
-        cardContent.value = value;
+      const outerElement = document.createElement(outerTag);
+      if (elementList[j].outerElemData) {
+        Object.entries(elementList[j].outerElemData).forEach(([key, val]) => 
+          outerElement.setAttribute(key, val)
+        );
       }
-      if (tag === "IMG") {
-        const fileInput = document.createElement("input");
-        fileInput.type = "file";
-        fileInput.accept = "image/*";
-        fileInput.style.display = "none";
-
-        cardContent.style.cursor = "pointer";
-        cardContent.addEventListener("click", () => fileInput.click());
-
-        fileInput.addEventListener("change", (e) => {
-          const file = e.target.files[0];
-          if (file) {
-            const validTypes = ["image/png", "image/jpeg"];
-            if (!validTypes.includes(file.type)) {
-              alert("Please select a PNG or JPG image.");
-              fileInput.value = "";
-              return;
-            }
-            const reader = new FileReader();
-            reader.onload = (event) => {
-              cardContent.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
+  
+      if (outerTag != "TEXT") {
+        const innerElements = elementList[j].innerElemData;
+        if (!Array.isArray(innerElements)) {
+          break;
+        }
+        for (let i = 0; i < innerElements.length; i++) {
+          const element = innerElements[i];
+          const tag = element[0];
+          const attributes = element[1];
+          const elem = document.createElement(tag);
+          if (attributes) {
+            Object.entries(attributes).forEach(([key, val]) =>
+              elem.setAttribute(key, val)
+            );
           }
-        });
-
-        container.appendChild(fileInput); // ⬅️ add the hidden input to the DOM
+          if (tag == "TEXTAREA") {
+            elem.defaultValue = elementList[j].value;
+          }
+          outerElement.append(elem);
+        }
       }
-
-      container.appendChild(cardContent);
+      cardElement.append(outerElement);
+      console.log(cardElement);
+      container.append(cardElement);
     }
   }
 
@@ -386,11 +397,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const key = localStorage.getItem("current card");
     if (localStorage.getItem(key)) {
       card.loadData(key);
-    } else {
-      card.init();
-    }
-  } else {
-    card.init();
+    } 
   }
   const flipInside = document.getElementById("flip-inside");
   const flipOutside = document.getElementById("flip-outside");
