@@ -2,7 +2,7 @@ const PADDING = 8;
 
 /**
  * A custom web component representing a greeting card editor.
- * 
+ *
  * Provides editable front/back covers and inside pages, along with tools for
  * adding and customizing text, images, and shapes. Also handles card flipping,
  * color picking, and user interactions with added elements.
@@ -90,10 +90,10 @@ class GreetingCard extends HTMLElement {
   }
 
   /**
- * Attaches all relevant event listeners to the card element,
- * including click, mouseover, color picking, and delete key handling.
- * @returns {void}
- */
+   * Attaches all relevant event listeners to the card element,
+   * including click, mouseover, color picking, and delete key handling.
+   * @returns {void}
+   */
   setupEventListeners() {
     this.addEventListener("click", this.handleClick.bind(this));
     this.addEventListener("mouseover", this.handleMouseOver.bind(this));
@@ -108,7 +108,7 @@ class GreetingCard extends HTMLElement {
 
   /**
    * Handles the clicks for the background
-   * 
+   *
    * @param {MouseEvent} e
    */
   handleClick(e) {
@@ -116,19 +116,19 @@ class GreetingCard extends HTMLElement {
     // add text box at the cursor position
     if (toolBar.getMode() === "textBox") {
       this.addCardElement("textBox", e.clientX, e.clientY);
-    // add the users shape
+      // add the users shape
     } else if (toolBar.getMode() === "shape") {
       let shapeType = toolBar.selectedShape;
       if (shapeType) {
         this.addCardElement(`shape-${shapeType}`, e.clientX, e.clientY);
       } else console.error("Shape type not picked yet!");
-    // add it as an image
+      // add it as an image
     } else if (toolBar.getMode() === "image") {
       if (toolBar.getImageReady()) {
         let dataURL = toolBar.getDataURL();
         this.addCardElement(`image-${dataURL}`, e.clientX, e.clientY);
       }
-    } 
+    }
     // reset tool bar to prevent duplicate actions and bugs
     toolBar.resetMode();
   }
@@ -148,18 +148,17 @@ class GreetingCard extends HTMLElement {
   }
 
   /**
-  * Handles event for clicking on a card element. If the element is a shape, show 
-  * the color picker. Display a resizer for all the elements. Make the become the newly 
-  * selected element. Adds border around selected element. Also handles selecting another 
-  * card element or just clicking away in an empty part of the card (resets values, 
-  * gets rid of color picker, and gets rid of borrder around old selected element)
-  * @param {elemClicked} e
-  * @returns {void}
-  */
+   * Handles event for clicking on a card element. If the element is a shape, show
+   * the color picker. Display a resizer for all the elements. Make the become the newly
+   * selected element. Adds border around selected element. Also handles selecting another
+   * card element or just clicking away in an empty part of the card (resets values,
+   * gets rid of color picker, and gets rid of borrder around old selected element)
+   * @param {elemClicked} e
+   * @returns {void}
+   */
   handleElemClicked(e) {
     const colorPicker = this.shadowRoot.getElementById("colorPicker");
     let [type, elem] = e.detail;
-
 
     //border on click
     if (this.selectedElem) {
@@ -167,15 +166,12 @@ class GreetingCard extends HTMLElement {
     }
     if (elem != null) {
       elem.style.border = "2px solid cornflowerblue";
-      if(type !== "textBox"){
+      if (type !== "textBox") {
         const resizer = elem.querySelector(".resizer");
         resizer.style.backgroundColor = "black";
-      } 
-      else if(type === "textBox"){
+      } else if (type === "textBox") {
         elem.style.resize = "both";
-      }
-      else
-        console.error("Selected elem should not be null!");
+      } else console.error("Selected elem should not be null!");
     }
 
     //get xy of elem (to decide where to put colorpicker)
@@ -185,13 +181,12 @@ class GreetingCard extends HTMLElement {
     let y = rect.top;
     let height = rect.height;
     //set color picker
-    if(type === "shape"){
+    if (type === "shape") {
       colorPicker.style.display = "block";
       colorPicker.style.position = "absolute";
       colorPicker.style.left = `${x}px`;
       colorPicker.style.top = `${y + height}px`;
-    }
-    else{
+    } else {
       colorPicker.style.display = "none";
     }
     this.selectedElem = elem;
@@ -207,17 +202,16 @@ class GreetingCard extends HTMLElement {
       const path = event.composedPath();
       const elementClicked = path.includes(this.selectedElem);
       const pickerClicked = path.includes(colorPicker);
-      
+
       if (!elementClicked && !pickerClicked) {
-        if(this.selectedElem){
-            this.selectedElem.style.border = "none";
-            if(this.selectedElemType !== "textBox"){
-              const resizer = this.selectedElem.querySelector(".resizer");
-              resizer.style.backgroundColor = "transparent";
-            }
-            else if(this.selectedElemType === "textBox"){
-              this.selectedElem.style.resize = "none"; //gets rid of resizer
-            }
+        if (this.selectedElem) {
+          this.selectedElem.style.border = "none";
+          if (this.selectedElemType !== "textBox") {
+            const resizer = this.selectedElem.querySelector(".resizer");
+            resizer.style.backgroundColor = "transparent";
+          } else if (this.selectedElemType === "textBox") {
+            this.selectedElem.style.resize = "none"; //gets rid of resizer
+          }
         }
         colorPicker.style.display = "none";
         this.selectedElem = null;
@@ -234,12 +228,11 @@ class GreetingCard extends HTMLElement {
   }
 
   /**
-  * Handles color picking by applying the selected color to the currently selected element.
-  * @param {Event} e - The input event triggered when the user picks a color.
-  * @returns {void}
-  */
+   * Handles color picking by applying the selected color to the currently selected element.
+   * @param {Event} e - The input event triggered when the user picks a color.
+   * @returns {void}
+   */
   handlePickColor(e) {
-  
     if (this.selectedElem) {
       const color = e.target.value;
       this.selectedElem.style.backgroundColor = color;
@@ -282,8 +275,36 @@ class GreetingCard extends HTMLElement {
         );
       }
 
-      if (tag === "INPUT") {
+      if (tag === "TEXTAREA") {
         cardContent.value = value;
+      }
+      if (tag === "IMG") {
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = "image/*";
+        fileInput.style.display = "none";
+
+        cardContent.style.cursor = "pointer";
+        cardContent.addEventListener("click", () => fileInput.click());
+
+        fileInput.addEventListener("change", (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const validTypes = ["image/png", "image/jpeg"];
+            if (!validTypes.includes(file.type)) {
+              alert("Please select a PNG or JPG image.");
+              fileInput.value = "";
+              return;
+            }
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              cardContent.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+        container.appendChild(fileInput); // ⬅️ add the hidden input to the DOM
       }
 
       container.appendChild(cardContent);
@@ -301,7 +322,7 @@ class GreetingCard extends HTMLElement {
   /**
    * show the outside of the face card
    * and hide the inside
-   * 
+   *
    * @returns {void}
    */
   showOutside() {
@@ -329,14 +350,14 @@ class GreetingCard extends HTMLElement {
   }
 
   /**
-  * Adds a new card-element of the specified type to the currently visible card face (inside or outside),
-  * positioning it based on the provided x and y coordinates.
-  *
-  * @param {string} type - The type of card element to create (e.g., "textBox", "shape-circle", "image-[dataURL]").
-  * @param {number} x - The x-coordinate relative to the click position on the page.
-  * @param {number} y - The y-coordinate relative to the click position on the page.
-  * @returns {void}
-  */
+   * Adds a new card-element of the specified type to the currently visible card face (inside or outside),
+   * positioning it based on the provided x and y coordinates.
+   *
+   * @param {string} type - The type of card element to create (e.g., "textBox", "shape-circle", "image-[dataURL]").
+   * @param {number} x - The x-coordinate relative to the click position on the page.
+   * @param {number} y - The y-coordinate relative to the click position on the page.
+   * @returns {void}
+   */
   addCardElement(type, x, y) {
     let cardFace;
     if (this.facingInside) cardFace = this.shadowRoot.querySelector(".inside");
@@ -354,8 +375,7 @@ class GreetingCard extends HTMLElement {
   }
 }
 
-
-/** 
+/**
  * Handles toggle functionality of flipping the card.
  */
 window.addEventListener("DOMContentLoaded", () => {

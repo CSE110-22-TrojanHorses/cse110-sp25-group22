@@ -36,7 +36,7 @@ class HomepageCard extends HTMLElement {
         );
       }
 
-      if (tag === "INPUT") {
+      if (tag === "TEXTAREA") {
         preview.value = value;
         preview.readOnly = true;
       }

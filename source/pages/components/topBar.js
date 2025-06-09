@@ -16,12 +16,12 @@ class TopBar extends HTMLElement {
     }
     this.shadowRoot.append(style, container);
   }
-/**
- * Create and define functionality for features in the top bar
- * @param button
- * @param buttonNum
- * @returns {void}
- */
+  /**
+   * Create and define functionality for features in the top bar
+   * @param button
+   * @param buttonNum
+   * @returns {void}
+   */
   customizeButton(button, buttonNum) {
     switch (buttonNum) {
       case 0:
@@ -110,7 +110,7 @@ class TopBar extends HTMLElement {
           data.attributes[attr.name] = attr.value;
         }
 
-        if (tag === "INPUT") {
+        if (tag === "TEXTAREA") {
           data.value = elem.value;
         }
 
