@@ -51,16 +51,14 @@ class GreetingCard extends HTMLElement {
     const rightWrapper = this.shadowRoot.querySelector(".page-wrapper.right");
 
     // Back elements
-    const backText = document.createElement("input");
-    backText.setAttribute("type", "text");
+    const backText = document.createElement("textarea");
     backText.setAttribute("placeholder", "Back Cover");
     backText.classList.add("page", "back");
     backCover.append(backText);
 
     // Front elements
     frontCover.contentEditable = true;
-    const title = document.createElement("input");
-    title.setAttribute("type", "text");
+    const title = document.createElement("textarea");
     title.setAttribute("value", "Front Cover Title");
     const img = document.createElement("img");
     img.src = "../../assets/icons/example.png";
@@ -72,19 +70,14 @@ class GreetingCard extends HTMLElement {
     frontCover.append(title, img, message);
 
     // Left page elements
-    const leftPage = document.createElement("input");
-    leftPage.setAttribute("type", "text");
+    const leftPage = document.createElement("textarea");
     leftPage.setAttribute("placeholder", "Left Page");
     leftPage.classList.add("page", "left");
     leftWrapper.append(leftPage);
 
     // Right page elements
-    const rightPage = document.createElement("input");
-    rightPage.setAttribute("type", "text");
-    rightPage.setAttribute(
-      "placeholder",
-      "Feel free to write your custom contents..."
-    );
+    const rightPage = document.createElement("textarea");
+    rightPage.placeholder = "Feel free to write your custom contents...";
     rightPage.classList.add("page", "right");
     rightWrapper.append(rightPage);
 
@@ -127,7 +120,7 @@ class GreetingCard extends HTMLElement {
         );
       }
 
-      if (tag === "INPUT") {
+      if (tag === "TEXTAREA") {
         cardContent.value = value;
       }
 

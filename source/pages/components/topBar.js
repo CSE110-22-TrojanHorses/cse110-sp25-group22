@@ -110,7 +110,7 @@ class TopBar extends HTMLElement {
           data.attributes[attr.name] = attr.value;
         }
 
-        if (tag === "INPUT") {
+        if (tag === "TEXTAREA") {
           data.value = elem.value;
         }
 
