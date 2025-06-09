@@ -134,3 +134,9 @@ textarea {
   gap: 5vw;
   justify-content: center;
 }
+
+.page img.selected {
+  outline: 2px dashed #aaa;
+  resize: both;
+  overflow: auto;
+}

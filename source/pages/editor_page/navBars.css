@@ -10,14 +10,20 @@ main {
 }
 
 .navcontainer {
-  padding-left: 2rem;
   display: flex;
   flex-direction: row;
+  justify-content: flex-end;
   gap: 2rem;
+  margin-right: 4rem;
   height: 80px;
   width: 100%;
   background-color: black;
   z-index: 1;
+}
+
+.topleftimg {
+  margin-right: auto;
+  padding-left: 4rem;
 }
 
 img {
@@ -66,4 +72,59 @@ button:hover {
     column-gap: 2rem;
     row-gap: 1rem;
   }
+}
+
+/* Front side of the greeting card */
+.cardFront {
+  position: absolute;
+  height: 346px;
+  width: 596px;
+  background-color: #f9f9f9;
+  top: 193.5px;
+  left: 422px;
+  border: 2px solid black;
+}
+
+/* Prevent scrollbars */
+body {
+  overflow: hidden;
+}
+
+/*SHAPE STYLES*/
+
+/* Basic shape container */
+.shape {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background-color: rgb(151, 151, 151);
+  cursor: move;
+}
+
+/* Circle shape */
+.shape.circle {
+  border-radius: 50%;
+}
+
+/* Rectangle shape – manually overriding size */
+.shape.rectangle {
+  width: 300px !important;
+  height: 150px !important;
+}
+
+/* Triangle made with borders (no background) */
+.shape.triangle {
+  width: 0;
+  height: 0;
+  border-left: 100px solid transparent;
+  border-right: 100px solid transparent;
+  border-bottom: 200px solid red;
+  background: none;
+}
+
+/* We currently don't support heart or star shapes, so their styles are removed */
+
+/* Highlight when a shape is selected */
+.active-shape {
+  outline: 3px dashed yellow;
 }

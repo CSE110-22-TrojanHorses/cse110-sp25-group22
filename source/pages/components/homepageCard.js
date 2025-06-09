@@ -26,23 +26,44 @@ class HomepageCard extends HTMLElement {
 
     // gets stored data to fill the card
     const cardData = JSON.parse(localStorage.getItem(name));
-    const frontElements = cardData.frontElements;
-    for (let element of frontElements) {
-      const { tag, attributes = {}, value = "" } = element;
-      const preview = document.createElement(tag);
-      if (attributes) {
-        Object.entries(attributes).forEach(([key, val]) =>
-          preview.setAttribute(key, val)
-        );
-      }
+    // const outsideElements = cardData.outsideElements;
+    // for (let j = 0; j < outsideElements.length; j++) {
+    //   let outerTag;
+    //   if (outsideElements[j].type == "TEXT") {
+    //     outerTag = "FORM"
+    //   } else {
+    //     outerTag = "DIV";
+    //   }
 
-      if (tag === "TEXTAREA") {
-        preview.value = value;
-        preview.readOnly = true;
-      }
+    //   const outerElement = document.createElement(outerTag);
+    //   if (outsideElements[j].outerElemData) {
+    //     Object.entries(outsideElements[j].outerElemData).forEach(([key, val]) => 
+    //       outerElement.setAttribute(key, val)
+    //     );
+    //   }
+  
+    //   const innerElements = outsideElements[j].innerElemData;
+    //   if (!Array.isArray(innerElements)) {
+    //     break;
+    //   }
+    //   for (let i = 0; i < innerElements.length; i++) {
+    //     const element = innerElements[i];
+    //     const tag = element[0];
+    //     const attributes = element[1];
+    //     const elem = document.createElement(tag);
+    //     if (attributes) {
+    //       Object.entries(attributes).forEach(([key, val]) =>
+    //         elem.setAttribute(key, val)
+    //       );
+    //     }
+    //     if (tag == "TEXTAREA") {
+    //       elem.value = outsideElements[j].value;
+    //     }
 
-      miniCard.append(preview);
-    }
+    //     outerElement.append(elem);
+    //   }
+    //   miniCard.append(outerElement);
+    // }
 
     // adds the card name and timestamp
     const nameLabel = document.createElement("label");
