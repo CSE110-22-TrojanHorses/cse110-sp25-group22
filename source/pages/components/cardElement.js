@@ -65,7 +65,7 @@ class CardElement extends HTMLElement{
         detail: [this.type, this.elem]});
         window.dispatchEvent(event);
       });
-      this.makeDraggable(th);
+      this.makeDraggable(this.elem);
   }
 
   makeTextBox(){
