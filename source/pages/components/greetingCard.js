@@ -10,6 +10,7 @@ class GreetingCard extends HTMLElement {
     this.setupStructure();
     this.setupEventListeners();
     this.selectedElem;
+    this.selectedElemType;
   }
 
   setupStyles() {
@@ -18,7 +19,15 @@ class GreetingCard extends HTMLElement {
     style.setAttribute("href", "cardFormat.css");
     this.shadowRoot.append(style);
   }
-
+  // Closes the shape menu if it's already open
+  closeShapeMenuIfOpen() {
+    const existingMenu = this.shadowRoot.querySelector(".shape-menu");
+    if (existingMenu) {
+      existingMenu.remove();
+      this.shapeMenu = null;
+    }
+    console.log("removes it in the close shape menu");
+  }
   setupStructure() {
     // This is the container to encapsulate inside and outside
     const container = document.createElement("div");
@@ -73,6 +82,7 @@ class GreetingCard extends HTMLElement {
 
   handleClick(e) {
     const toolBar = document.getElementById("tBar");
+    
     if (toolBar.getMode() === "textBox") {
       this.addCardElement("textBox", e.clientX, e.clientY);
     } else if (toolBar.getMode() === "shape") {
@@ -108,7 +118,8 @@ class GreetingCard extends HTMLElement {
 
   handleElemClicked(e) {
     const colorPicker = this.shadowRoot.getElementById("colorPicker");
-    let [, elem] = e.detail;
+    let [type, elem] = e.detail;
+
 
     //border on click
     if (this.selectedElem) {
@@ -116,6 +127,15 @@ class GreetingCard extends HTMLElement {
     }
     if (elem != null) {
       elem.style.border = "2px solid cornflowerblue";
+      if(type !== "textBox"){
+        const resizer = elem.querySelector(".resizer");
+        resizer.style.backgroundColor = "black";
+      } 
+      else if(type === "textBox"){
+        elem.style.resize = "both";
+      }
+      else
+        console.error("Selected elem should not be null!");
     }
 
     //get xy of elem (to decide where to put colorpicker)
@@ -125,11 +145,17 @@ class GreetingCard extends HTMLElement {
     let y = rect.top;
     let height = rect.height;
     //set color picker
-    colorPicker.style.display = "block";
-    colorPicker.style.position = "absolute";
-    colorPicker.style.left = `${x}px`;
-    colorPicker.style.top = `${y + height}px`;
+    if(type === "shape"){
+      colorPicker.style.display = "block";
+      colorPicker.style.position = "absolute";
+      colorPicker.style.left = `${x}px`;
+      colorPicker.style.top = `${y + height}px`;
+    }
+    else{
+      colorPicker.style.display = "none";
+    }
     this.selectedElem = elem;
+    this.selectedElemType = type;
 
     //if click outside an element, want to hide colorPicker
     //check for existing global listeners: remove them
@@ -138,12 +164,24 @@ class GreetingCard extends HTMLElement {
     }
     //set up an listener to see if any clicks happen
     this._outsideClickListener = (event) => {
-      const elementClicked = this.selectedElem.contains(event.target);
-      const pickerClicked = colorPicker.contains(event.target);
+      const path = event.composedPath();
+      const elementClicked = path.includes(this.selectedElem);
+      const pickerClicked = path.includes(colorPicker);
+      
       if (!elementClicked && !pickerClicked) {
-        this.selectedElem.style.border = "none";
+        if(this.selectedElem){
+            this.selectedElem.style.border = "none";
+            if(this.selectedElemType !== "textBox"){
+              const resizer = this.selectedElem.querySelector(".resizer");
+              resizer.style.backgroundColor = "transparent";
+            }
+            else if(this.selectedElemType === "textBox"){
+              this.selectedElem.style.resize = "none"; //gets rid of resizer
+            }
+        }
         colorPicker.style.display = "none";
         this.selectedElem = null;
+        this.selectedElemType = null;
         //now remove global listener
         document.removeEventListener("click", this._outsideClickListener);
         this._outsideClickListener = null;
@@ -156,13 +194,9 @@ class GreetingCard extends HTMLElement {
   }
 
   handlePickColor(e) {
-    const toolBar = document.getElementById("tBar");
-    // toolBar.shapeType;
+  
     if (this.selectedElem) {
       const color = e.target.value;
-      if (toolBar.selectedShape == "triangle") {
-        this.selectedElem.style["border-bottom-color"] = color;
-      }
       this.selectedElem.style.backgroundColor = color;
     }
   }
@@ -170,16 +204,14 @@ class GreetingCard extends HTMLElement {
   handlerDeleteSelectedElem(e) {
     if (this.selectedElem) {
       const host = this.selectedElem.getRootNode().host;
-      // console.log(this.selectedElem);
-      console.log(host.writingToTextBox);
-      console.log(host.type);
-      if (host.type === "textBox" && host.writingToTextBox) {
-        // console.lo
+      if (this.selectedElemType === "textBox" && host.writingToTextBox) {
         return;
       }
       if ((e.key === "Backspace" || e.key === "Delete") && this.selectedElem) {
         this.selectedElem.remove();
         this.selectedElem = null;
+        const colorPicker = this.shadowRoot.getElementById("colorPicker");
+        colorPicker.style.display = "none";
       }
     }
   }
@@ -252,7 +284,6 @@ class GreetingCard extends HTMLElement {
     const cardElem = document.createElement("card-element");
     cardElem.setAttribute("type", type);
     cardElem.setAttribute("pos", `${newX},${newY}`);
-    // console.log("Appending card element:", cardElem);
     cardFace.append(cardElem);
   }
 }

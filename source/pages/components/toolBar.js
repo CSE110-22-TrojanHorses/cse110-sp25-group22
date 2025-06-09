@@ -49,12 +49,12 @@ class ToolBar extends HTMLElement {
   }
 
   getMode(){
-    // console.log(this.mode);
     return this.mode;
   }
 
   resetMode(){
     this.mode = "edit";
+    this.closeShapeMenuIfOpen();
   }
 
   customizeButton(button, buttonNum) {
@@ -64,7 +64,6 @@ class ToolBar extends HTMLElement {
         button.innerHTML = `<img src="../../assets/icons/tool-bar-icons/location-arrow.png" alt="Diagram">`;
         button.addEventListener("click", () => {
           closeMenu();
-          // alert("Select clicked!");
           this.addingCardElem = false;
           this.mode = "select";
         });
@@ -108,7 +107,6 @@ class ToolBar extends HTMLElement {
         button.innerHTML = `<img  src="../../assets/icons/tool-bar-icons/resources.png" alt="Diagram">`;
         button.addEventListener("click", () => {
           this.toggleShapeMenu();
-          // alert("Shapes clicked!");
           this.addingCardElem = true;
           this.mode = "shape";
         });
@@ -120,8 +118,6 @@ class ToolBar extends HTMLElement {
         closeMenu();
         this.addingCardElem = true;
         this.mode = "textBox";
-        // console.log("Mode set to:", this.mode);
-        // alert("Add Text clicked!");
         });
         button.className = "addText";
         break;
@@ -136,7 +132,6 @@ class ToolBar extends HTMLElement {
     window.addEventListener("shape-selected", (e) => {
       this.selectedShape = e.detail;
 
-      // console.log("BUDDY" + e.detail);
       // document.body.style.cursor = "pointer";
     });
   }
@@ -151,7 +146,7 @@ class ToolBar extends HTMLElement {
     }
 
     // We only support these shapes (no heart/star anymore)
-    const shapeList = ["square", "rectangle", "circle", "triangle"];
+    const shapeList = ["square", "rectangle", "circle"];
     this.shapeMenu = document.createElement("div");
     this.shapeMenu.classList.add("shape-menu");
 

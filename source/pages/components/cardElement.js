@@ -22,7 +22,6 @@ class CardElement extends HTMLElement{
 
   //calls upon cardElem setAttributes
   attributeChangedCallback(name, oldVal, newVal){
-    // console.log("callbac called");
     if(name === "type"){
         if(oldVal == null)
           this.createCardElement(newVal)
@@ -35,7 +34,6 @@ class CardElement extends HTMLElement{
   createCardElement(elemType){
     let [parentType, subType] = elemType.split("-");
     this.type = parentType;
-    console.log(parentType, subType);
     if(parentType === "textBox")
       this.makeTextBox();
     else if(parentType === "shape")
@@ -43,15 +41,13 @@ class CardElement extends HTMLElement{
     else if(parentType === "image")
       this.makeImage(subType);//subType is dataURL
     this.elem.addEventListener("click", (e) =>{
-      // console.log("Event read");
 
       if(this.type === "textBox"){
-        const textArea = this.elem.querySelector("textarea");
-        const rect = textArea.getBoundingClientRect();
+        const rect = this.elem.getBoundingClientRect();
         let x = e.clientX - rect.left;
         let y = e.clientY - rect.top;
-        const padding = 8; // match your CSS
-
+        const padding = 8;
+        
         const isInsideTextArea = (
           x > padding &&
           x < rect.width - padding &&
@@ -66,23 +62,21 @@ class CardElement extends HTMLElement{
       const event = new CustomEvent("elemClicked", { 
         bubbles: true,
         composed: true,
-        detail: [this.elemID, this.elem]});
-      window.dispatchEvent(event);
-    });
+        detail: [this.type, this.elem]});
+        window.dispatchEvent(event);
+      });
+      this.makeDraggable(this.elem);
   }
 
   makeTextBox(){
-    const form = document.createElement("form");
-    form.id = `${this.elemID}`;
-    this.elem = form;
     const textArea = document.createElement("textarea");
+    textArea.id = `${this.elemID}`;
+    this.elem = textArea;
     textArea.placeholder = "Start text here...";
-    form.appendChild(textArea);
     // form.style.border = "1px solid red";
-    this.shadow.appendChild(form);
+    this.shadow.appendChild(textArea);
     textArea.addEventListener("focus", () =>{
       this.writingToTextBox = true;
-      console.log("Writing to text box!");
     });
 
   }
@@ -111,22 +105,13 @@ class CardElement extends HTMLElement{
         shape.style.borderRadius = "50%";
         shape.style.backgroundColor = "red";
         break;
-      case "triangle":
-        shape.className = "triangle-shape";
-        shape.style.width = "0";
-        shape.style.height = "0";
-        shape.style.borderLeft = "100px solid transparent";
-        shape.style.borderRight = "100px solid transparent";
-        shape.style.borderBottom = "200px solid red";
-        shape.style.background = "none";
-        break;
     }
     const resizer = document.createElement("div");
     resizer.className = "resizer";
     Object.assign(resizer.style, {
       width: "10px",
       height: "10px",
-      background: "black",
+      background: "transparent",
       position: "absolute",
       right: "0",
       bottom: "0",
@@ -140,18 +125,11 @@ class CardElement extends HTMLElement{
       this.isResizing = true;
       document.addEventListener("mousemove", (b) => {
         if (!this.isResizing) return;
-        console.log("Bruh");
         const rect = shape.getBoundingClientRect();
         const newWidth = b.clientX - rect.left;
         const newHeight = b.clientY - rect.top;
-        if (shapeType === "triangle") {
-          shape.style.borderLeftWidth = `${newWidth / 2}px`;
-          shape.style.borderRightWidth = `${newWidth / 2}px`;
-          shape.style.borderBottomWidth = `${newHeight}px`;
-        } else {
-          shape.style.width = `${newWidth}px`;
-          shape.style.height = `${newHeight}px`;
-        }
+        shape.style.width = `${newWidth}px`;
+        shape.style.height = `${newHeight}px`;
       });
       document.addEventListener("mouseup", () => {
         this.isResizing = false;
@@ -171,7 +149,7 @@ class CardElement extends HTMLElement{
     Object.assign(resizer.style, {
       width: "10px",
       height: "10px",
-      background: "black",
+      background: "transparent",
       position: "absolute",
       right: "0",
       bottom: "0",
@@ -185,11 +163,11 @@ class CardElement extends HTMLElement{
       this.isResizing = true;
       document.addEventListener("mousemove", (b) => {
         if (!this.isResizing) return;
-        const rect = img.getBoundingClientRect();
+        const rect = wrapper.getBoundingClientRect();
         const newWidth = b.clientX - rect.left;
         const newHeight = b.clientY - rect.top;
-        img.style.width = `${newWidth}px`;
-        img.style.height = `${newHeight}px`;
+        wrapper.style.width = `${newWidth}px`;
+        wrapper.style.height = `${newHeight}px`;
       });
       document.addEventListener("mouseup", () => {
         this.isResizing = false;
@@ -201,16 +179,14 @@ class CardElement extends HTMLElement{
   }
 
   moveElem(pos){
-    // console.log("move elem called for: " + this.type);
     let [x, y] = pos.split(","); //gets str values of x and y
     this.x = Number(x);
     this.y = Number(y);
     if(this.type === "textBox"){
-      const form = this.elem;
-      const textArea = form.querySelector(`textarea`);
-      form.style.position = "absolute";
-      form.style.left = `${this.x}px`;
-      form.style.top = `${this.y}px`; //set
+      const textArea = this.elem;
+      textArea.style.position = "absolute";
+      textArea.style.left = `${this.x}px`;
+      textArea.style.top = `${this.y}px`; //set
       textArea.style.width = `300px`;
       textArea.style.height = `50px`;
       textArea.padding = `8px`;
@@ -221,18 +197,54 @@ class CardElement extends HTMLElement{
       shape.style.top = `${this.y}px`; //set
     } else if (this.type === "image"){
       const wrapper = this.elem;
+      wrapper.style.width = `500px`;
+      wrapper.style.height = `225px`;
+      //set position
+      wrapper.style.position = "absolute";
+      wrapper.style.left = `${this.x}px`;
+      wrapper.style.top = `${this.y}px`; //set
       const img = wrapper.querySelector("img");
 
-      //set position
-      img.style.position = "absolute";
-      img.style.left = `${this.x}px`;
-      img.style.top = `${this.y}px`; //set
-      //
-      img.style.width = `500px`;
-      img.style.height = `225px`;
+      //width heigh
+      img.style.width = `100%`;
+      img.style.height = `100%`;
     }
 
   }
+
+  //inspo: https://www.w3schools.com/howto/howto_js_draggable.asp 
+  makeDraggable(elem) {
+    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    
+    elem.onmousedown = dragMouseDown;
+
+    const self = this;
+
+    function dragMouseDown(e) {
+      if (self.isResizing || self.writingToTextBox) return;
+      e.preventDefault();
+      pos3 = e.clientX;
+      pos4 = e.clientY;
+      document.onmouseup = closeDragElement;
+      document.onmousemove = elementDrag;
+    }
+
+    function elementDrag(e) {
+      e.preventDefault();
+      pos1 = pos3 - e.clientX;
+      pos2 = pos4 - e.clientY;
+      pos3 = e.clientX;
+      pos4 = e.clientY;
+      elem.style.top = (elem.offsetTop - pos2) + "px";
+      elem.style.left = (elem.offsetLeft - pos1) + "px";
+    }
+
+    function closeDragElement() {
+      document.onmouseup = null;
+      document.onmousemove = null;
+    }
+  }
+
 }
 
 customElements.define("card-element", CardElement);
