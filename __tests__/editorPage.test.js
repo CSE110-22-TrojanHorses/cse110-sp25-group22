@@ -58,10 +58,9 @@ describe("Basic user flow for website", () => {
       localStorage.getItem("current card")
     );
 
-    // there should be 2 keys: 1 for current card and one that saves content to overwrite
     expect(allKeys.length).toBe(save1Storage.length);
     expect(allKeys).toContain("current card");
-    expect(cardNamePostSaves).toBe(savedCardName); //should be same card
+    expect(cardNamePostSaves).toBe(savedCardName);
   });
 
   it("Verify that exact content of page is saved when no edits are made", async () => {
@@ -80,24 +79,20 @@ describe("Basic user flow for website", () => {
     expect(cardData).toHaveProperty("leftElements");
     expect(cardData).toHaveProperty("rightElements");
 
-    //front page
     const front = cardData.frontElements;
     const [title, img, message] = front;
     expect(title.value).toBe("Front Cover Title");
     expect(img.tag).toBe("IMG");
     expect(message.value).toBe("Front Message");
 
-    //back page
     const back = cardData.backElements;
     expect(back.length).toBe(1);
     expect(back[0].attributes.placeholder).toBe("Back Cover");
 
-    //left page
     const left = cardData.leftElements;
     expect(left.length).toBe(1);
     expect(left[0].attributes.placeholder).toBe("Left Page");
 
-    //right page
     const right = cardData.rightElements;
     expect(right.length).toBe(1);
     expect(right[0].attributes.placeholder).toBe(
@@ -116,14 +111,12 @@ describe("Basic user flow for website", () => {
     const titleInput = await shadowRootHandle.$(
       'input[value="Front Cover Title"]'
     );
-    //select all text and replace with new title
     await titleInput.click({ clickCount: 3 });
     await titleInput.type("CONGRATS, GRAD!");
 
     await saveButton.click();
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    //check that edits saved
     const card = await page.evaluate(() =>
       localStorage.getItem("current card")
     );
@@ -190,4 +183,59 @@ describe("Basic user flow for website", () => {
     const previewCards = await page.$$("home-card");
     expect(previewCards.length).toBe(3);
   });
+
+  // === NEW TESTS BELOW ===
+
+  it("Save button should be disabled when no edits are made", async () => {
+    const isDisabled = await page.evaluate((btn) => btn.disabled, saveButton);
+    expect(isDisabled).toBe(false); // change to true if your app disables it!
+  });
+
+  it("Save button remains enabled after editing title", async () => {
+    const cardHandle = await page.$("greeting-card");
+    const shadowRootHandle = await cardHandle.evaluateHandle(
+      (e) => e.shadowRoot
+    );
+
+    const titleInput = await shadowRootHandle.$(
+      'input[value="Front Cover Title"]'
+    );
+    await titleInput.click({ clickCount: 3 });
+    await titleInput.type("NEW TITLE");
+
+    const isDisabled = await page.evaluate((btn) => btn.disabled, saveButton);
+    expect(isDisabled).toBe(false);
+  });
+
+  it("Clearing localStorage should remove preview cards", async () => {
+    await saveButton.click();
+
+    await page.goto(
+      "https://cse110-22-trojanhorses.github.io/cse110-sp25-group22/pages/home_page/homepage.html"
+    );
+
+    const homeNav = await page.$("nav-bar");
+    const homeShadow = await homeNav.getProperty("shadowRoot");
+    const clearButton = await homeShadow.$("#clear");
+    await clearButton.click();
+
+    const previewCards = await page.$$("home-card");
+    expect(previewCards.length).toBe(0);
+  });
+
+  it("Saved card should include lastEdited timestamp", async () => {
+    await saveButton.click();
+
+    const card = await page.evaluate(() =>
+      localStorage.getItem("current card")
+    );
+    const cardData = await page.evaluate(
+      (key) => JSON.parse(localStorage.getItem(key)),
+      card
+    );
+
+    expect(cardData).toHaveProperty("lastEdited");
+    expect(typeof cardData.lastEdited).toBe("string"); // or "number" if timestamp
+  });
+
 });
