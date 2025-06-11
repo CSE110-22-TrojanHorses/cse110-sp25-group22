@@ -2,7 +2,12 @@
 
 [View our Team page](admin/team.md)
 
-# Status Video 1
+# Demo Videos!
+
+[Public Product Demo]()
+[Private Team Refelction Video]()
+
+# Status Videos
 
 [Status Video #1 Youtube Link](https://youtu.be/EruypN3kkbo)  
 [Status Video #1 Repo Link](admin/videos/statusvideo1.mp4)
@@ -20,8 +25,8 @@ This is an interactive editor for custom digital greeting cards. Users can add, 
 ## To run tests locally:
 
 - Make sure you install Jest by typing it into the command line
-  - npm install --save-dev jest
-- npm run test:e2e within the command line.
+  - `npm install --save-dev jest`
+- `npm run test:e2e` within the command line.
 
 ## Contributing
 
@@ -33,9 +38,9 @@ If you want to build/copy off this project, follow the guidelines below on how t
 
 ### 2. **Clone your fork locally**
 
-- On the terminal of your preferred choice of Code Editor, type git clone https://github.com/CSE110-22-TrojanHorses/cse110-sp25-group22.git
-- cd cse110-sp25-group22 to go to that particular folder
-- Then run npm install in the terminal to download basic dependencies
+- On the terminal of your preferred choice of Code Editor, type `git clone https://github.com/CSE110-22-TrojanHorses/cse110-sp25-group22.git`
+- `cd cse110-sp25-group22` to go to that particular folder
+- Then `run npm install` in the terminal to download basic dependencies
 
 ### 3. **Creating a Branch**
 
@@ -45,20 +50,20 @@ If you want to build/copy off this project, follow the guidelines below on how t
 ### 4. **Installing ESLint Prettier**
 
 - If you want to follow our styling method, download the ESLint and Prettier extensions on VS Code if that’s the editor you’re using
-  - Then run npm install --save-dev eslint prettier
+  - Then run `npm install --save-dev eslint prettier`
 - Go to command palette (gear symbol in left nav)
 - Open settings.json
 - Make sure these are in it:
-  - "editor.formatOnSave": true,
-  - "eslint.format.enable": true,
+  - `"editor.formatOnSave": true,`
+  - `"eslint.format.enable": true,`
   - that allows formatting on save
 
 ### 5. **Committing & Pushing**
 
 - When committing your changes, ensure you commit with a clear statement on what is being added
-  - git add .
-  - git commit -m "Add feature: allow shape rotation"
-- git push origin feature/your-feature-name
+  - `git add .`
+  - `git commit -m "Add feature: allow shape rotation"`
+  - `git push origin feature/your-feature-name`
 
 ### 6. **Creating a Pull Request**
 
