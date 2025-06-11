@@ -8,7 +8,7 @@ class TopBar extends HTMLElement {
     const container = document.createElement("nav");
     container.classList.add("navcontainer");
     this.buttons = [];
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 3; i++) {
       let button = document.createElement("button");
       this.customizeButton(button, i);
       this.buttons.push(button);
@@ -16,11 +16,11 @@ class TopBar extends HTMLElement {
     }
     this.shadowRoot.append(style, container);
   }
-
   /**
-   * Sets functionality for button based on button number
-   * @param {HTMLButtonElement} button - button element to add the functionality to
-   * @param {number} buttonNum - number of the button
+   * Create and define functionality for features in the top bar
+   * @param button
+   * @param buttonNum
+   * @returns {void}
    */
   customizeButton(button, buttonNum) {
     switch (buttonNum) {
@@ -55,23 +55,19 @@ class TopBar extends HTMLElement {
       const card = document.querySelector("greeting-card").shadowRoot;
 
       // get inside and outside of cards
-      const pages = card.querySelectorAll(".page-wrapper");
-      const back = pages[0];
-      const front = pages[1];
-      const leftPage = pages[2];
-      const rightPage = pages[3];
+      const pages = card.querySelectorAll(".card");
+      const outside = pages[0];
+      const inside = pages[1];
 
       // storage object to stringify
       const storage = {};
 
       // gets elements in order within each container
-      storage.leftElements = getElements(leftPage);
-      storage.rightElements = getElements(rightPage);
-      storage.backElements = getElements(back);
-      storage.frontElements = getElements(front);
+      storage.outsideElements = getElements(outside);
+      storage.insideElements = getElements(inside);
 
       let date = new Date();
-      storage.time = `Last Sync: ${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDay() + 1).padStart(2, "0")}/${date.getFullYear()} @ 
+      storage.time = `Last Sync: ${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${date.getFullYear()} @ 
                       ${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}:${String(date.getSeconds()).padStart(2, "0")}`;
 
       // adds data to local storage
@@ -96,22 +92,55 @@ class TopBar extends HTMLElement {
      */
     function getElements(container) {
       // creates array from elements
-      const rawElements = container.getElementsByTagName("*");
+      const elementContainers = container.getElementsByTagName("card-element");
       const elements = [];
 
-      for (let elem of rawElements) {
+      for (let cardElem of elementContainers) {
         // get the tagname and format the desired attributes as JSON object
         // goal: avoid direct HTML injection
-        const tag = elem.tagName;
-        const data = { tag };
+        const root = cardElem.shadowRoot;
+        const rawElement = root.querySelectorAll("*");
 
-        data.attributes = {};
-        for (let attr of elem.attributes) {
-          data.attributes[attr.name] = attr.value;
+        if (!rawElement.length) continue;
+        let outerElement = rawElement[0];
+        const data = {};
+        let type = "";
+
+        if (outerElement.tagName == "TEXTAREA") {
+          type = "TEXT";
+          data.value = outerElement.value ?? "";
+        } else if (outerElement.className.includes("shape")) {
+          type = "SHAPE";
+        } else {
+          type = "IMAGE";
         }
 
-        if (tag === "TEXTAREA") {
-          data.value = elem.value;
+        data.type = type;
+        data.cardElementData = {};
+        for (let attr of cardElem.attributes) {
+          data.cardElementData[attr.name] = attr.value;
+        }
+        data.outerElemData = {};
+        for (let attr of outerElement.attributes) {
+          data.outerElemData[attr.name] = attr.value;
+        }
+
+        if (type != "TEXT") {
+          const innerElements = [];
+          const contents = outerElement.children;
+          for (const child of contents) {
+            const tag = child.tagName;
+            const attributes = {};
+            for (let attr of child.attributes) {
+              attributes[attr.name] = attr.value;
+            }
+            innerElements.push([tag, attributes]);
+
+            if (tag == "TEXTAREA") {
+              data.value = child.value ?? "";
+            }
+          }
+          data.innerElemData = innerElements;
         }
 
         elements.push(data);
