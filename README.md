@@ -5,6 +5,10 @@
 [Status Video #1 Youtube Link](https://youtu.be/EruypN3kkbo)    
 [Status Video #1 Repo Link](admin/videos/statusvideo1.mp4)
 
+# Team 22 Public Video   
+[Team 22 public youtube video](https://youtu.be/Y_Lo53wtrUE) 
+# Team 22 Private Video   
+[Team 22 private youtube video](https://youtu.be/0PaGcDRtl38)
 # Greeting Card Editor – CSE110 Group 22
 
 ## Overview
