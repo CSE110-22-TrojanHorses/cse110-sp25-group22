@@ -4,8 +4,8 @@
 
 # Demo Videos!
 
-[Public Product Demo]()
-[Private Team Refelction Video]()
+[Public Product Demo](https://youtu.be/Y_Lo53wtrUE)
+[Private Team Refelction Video](https://youtu.be/0PaGcDRtl38)
 
 # Status Videos
 
