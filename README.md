@@ -40,7 +40,7 @@ If you want to build/copy off this project, follow the guidelines below on how t
 ### 3. **Creating a Branch**
 
 - Always create a new branch for each feature or fix rather than committing directly to main
-- Use this command on the terminal: git checkout -b your-feature-name
+- Use this command on the terminal: `git checkout -b your-feature-name`
 
 ### 4. **Installing ESLint Prettier**
 
