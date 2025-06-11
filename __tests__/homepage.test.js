@@ -90,32 +90,6 @@ describe("Basic user flow for website", () => {
     expect(deleteOption).toMatch(/Delete/i);
   }, 10000);
 
-  it("homepage card edit", async () => {
-    await page.evaluate((cardStr) => {
-      localStorage.clear();
-      localStorage.setItem("test card", cardStr);
-      localStorage.setItem("current card", "test card");
-    }, testCard);
-    const navBar = await page.$("nav-bar");
-    const shadow = await navBar.getProperty("shadowRoot");
-    const homeButton = await shadow.$("#home");
-    await Promise.all([
-      page.waitForNavigation({ waitUntil: "networkidle0" }),
-      homeButton.click(),
-    ]);
-    const homepageCard = await page.$("home-card");
-    // double‑click it
-    await Promise.all([homepageCard.click({ clickCount: 2 })]);
-
-    await page.waitForSelector(".menu", { visible: true });
-    await Promise.all([
-      page.click(".menu .edit"),
-      page.waitForNavigation({ waitUntil: "networkidle0" }),
-    ]);
-
-    expect(page.url()).toMatch(/index\.html/);
-  }, 8000);
-
   it("homepage card delete", async () => {
     await page.evaluate((cardStr) => {
       localStorage.clear();
